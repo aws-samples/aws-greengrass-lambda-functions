@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: A SQL only IoT republish rule that sends Hello, World messages from the Greengrass group to a shared topic
+
+Parameters:
+  AWSIOTTHINGNAME:
+    Type: String
+
+  GROUPID:
+    Type: String
+
+  AWSIOTTHINGARN:
+    Type: String
+
+  AWSGREENGRASSGROUPNAME:
+    Type: String
+
+Resources:
+  HelloWorldRepublishTopicRule:
+    Type: AWS::IoT::TopicRule
+    Properties:
+      RuleName: !Join [ "", [ !Ref "AWSIOTTHINGNAME", "_HelloWorldRepublishRule" ] ]
+      TopicRulePayload:
+        RuleDisabled: false
+        Sql: !Join [ "", [ "SELECT 'Hello World received from ", !Ref "AWSGREENGRASSGROUPNAME", "' AS message FROM '", !Ref "AWSIOTTHINGNAME", "/python/hello/world'" ] ]
+        Actions:
+          - Republish:
+              Topic: !Join [ "/", [ "hello", "world" ] ]
+              RoleArn: !GetAtt HelloWorldRepublishRole.Arn
+  HelloWorldRepublishRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Join [ "", [ !Ref "AWSIOTTHINGNAME", "_HelloWorldRepublishRole" ] ]
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - iot.amazonaws.com
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: iot:Publish
+                Resource: !Join [ "", [ "arn:aws:iot:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":topic/hello/world" ] ]
