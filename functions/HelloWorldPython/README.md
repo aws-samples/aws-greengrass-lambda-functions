@@ -18,5 +18,5 @@ GG-provisioner.  They are:
 Every 5 seconds a message is sent on `${AWS_IOT_THING_NAME}/hello/world` topic that looks like this:
 
 ```
-Hello world! Sent from Greengrass Core running on platform: Linux-4.9.30-v7+-armv7l-with-debian-9.1 fe8a6893-c88a-4ba4-9016-8a1d61a7b2a7 pi3_Core arn:aws:iot:us-east-1:541589084637:thing/pi3_Core
+Hello world! Sent from Greengrass Core running on platform: Linux-4.9.30-v7+-armv7l-with-debian-9.1 fe8a6893-c88a-4ba4-9016-8a1d61a7b2a7 pi3_Core arn:aws:iot:us-east-1:123456789012:thing/pi3_Core
 ```
