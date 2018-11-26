@@ -12,6 +12,7 @@ Example local Lambda functions that can be used with AWS Greengrass and the AWS 
 - HelloWorldPythonWithCloudFormation - Hello, World in Python with a CloudFormation template that demonstrates how to build republish rules that the provisioner can launch automatically
 - LiFXPython - control LiFX bulbs
 - SocketServerPython - an example of how to listen on a socket in Python and relay the inbound TCP messages to the cloud via MQTT
+- CDDDMIJava - relays Desktop Management Interface (DMI) information to the cloud when requested via MQTT
 
 ## License Summary
 
