@@ -1,6 +1,7 @@
 ## AWS Greengrass Lambda Functions
 
-Example local Lambda functions that can be used with AWS Greengrass and the AWS Greengrass Provisioner.
+Example local Lambda functions that can be used with AWS Greengrass and the AWS Greengrass Provisioner.  This repo contains
+the functions and the deployment configurations to launch those functions in different configurations.
 
 ## Current function list
 
