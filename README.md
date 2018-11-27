@@ -14,6 +14,7 @@ the functions and the deployment configurations to launch those functions in dif
 - LiFXPython - control LiFX bulbs
 - SocketServerPython - an example of how to listen on a socket in Python and relay the inbound TCP messages to the cloud via MQTT
 - CDDDMIJava - relays Desktop Management Interface (DMI) information to the cloud when requested via MQTT
+- CDDBenchmarkJava - a naive Java benchmark that creates a pinned function that sends messages to itself
 
 ## License Summary
 
