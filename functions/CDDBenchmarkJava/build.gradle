@@ -1,0 +1,82 @@
+plugins {
+    // Processes Lombok annotations during build
+    id 'io.franzbecker.gradle-lombok' version '1.14'
+
+    // Creates fat JAR
+    id 'com.github.johnrengelman.shadow' version '4.0.1'
+
+    // Downloads binary dependencies
+    id 'de.undercouch.download' version '3.4.3'
+
+    // Adds dependencyUpdates task
+    id 'com.github.ben-manes.versions' version '0.20.0'
+}
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'idea'
+
+distZip.enabled = shadowDistZip.enabled = false
+distTar.enabled = shadowDistTar.enabled = false
+
+// Required by shadow but not necessary
+mainClassName = 'not-necessary'
+
+group = 'CDDBenchmarkJava'
+version = '1.0-SNAPSHOT'
+
+description = """"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+wrapper {
+    gradleVersion = '4.10.2'
+}
+
+lombok {
+    version = '1.18.2'
+    sha256 = ''
+}
+
+repositories {
+    mavenCentral()
+}
+
+def CDDBaselineJavaProject = 'CDDBaselineJava'
+
+task copyGreengrassLambdaJar(type: Copy) {
+    dependsOn gradle.includedBuild(CDDBaselineJavaProject).task(':build')
+    from ":${CDDBaselineJavaProject}.build.libs"
+    into 'libs'
+}
+
+compileJava.dependsOn copyGreengrassLambdaJar
+
+def commonsIoVersion = '2.6'
+def gsonVersion = '2.8.5'
+def guiceVersion = '4.2.1'
+def slf4jVersion = '1.7.25'
+def awsSdkVersion = '1.11.424'
+def jacksonVersion = '2.9.7'
+def httpClientVersion = '4.5.6'
+def awsLambdaJavaCoreVersion = '1.2.0'
+
+dependencies {
+compile files('libs/GreengrassJavaSDK-1.2.jar')
+    compile 'CDDBaseline:0.3'
+
+    compile "commons-io:commons-io:$commonsIoVersion"
+    compile "com.google.code.gson:gson:$gsonVersion"
+    compile "com.google.inject:guice:$guiceVersion"
+    compile "org.slf4j:slf4j-jdk14:$slf4jVersion"
+    compile "com.amazonaws:aws-java-sdk-core:$awsSdkVersion"
+    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
+    compile "com.amazonaws:aws-lambda-java-core:$awsLambdaJavaCoreVersion"
+}

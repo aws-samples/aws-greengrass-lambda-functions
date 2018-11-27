@@ -1,0 +1,9 @@
+rootProject.name = 'CDDBenchmarkJava'
+
+if (file("../../foundation/CDDBaselineJava").exists()) {
+    includeBuild("../../foundation/CDDBaselineJava") {
+        dependencySubstitution {
+            substitute module('CDDBaseline:0.3') with project(':')
+        }
+    }
+}
