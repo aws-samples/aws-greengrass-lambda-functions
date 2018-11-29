@@ -17,10 +17,9 @@ RUN cd n && make install && n 6.10.3 && NODEJS=`which node` && ln -s $NODEJS `di
 
 RUN pip install awscli
 
-COPY dist/greengrass-linux-x86-64-1.6.0.tar.gz dist/greengrass-linux-x86-64-1.6.0.tar.gz
-RUN tar tvf dist/greengrass-linux-x86-64-1.6.0.tar.gz && \
-    tar xzf dist/greengrass-linux-x86-64-1.6.0.tar.gz -C / && \
-    rm -rf dist/
+ADD https://d1onfpft10uf5o.cloudfront.net/greengrass-core/downloads/1.6.0/greengrass-linux-x86-64-1.6.0.tar.gz /
+RUN tar xzvf greengrass-linux-x86-64-1.6.0.tar.gz -C /
+RUN rm /greengrass-linux-x86-64-1.6.0.tar.gz
 
 ARG GROUP_NAME
 ADD foundation/docker/redeploy.sh /

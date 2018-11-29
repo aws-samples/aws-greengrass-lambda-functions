@@ -19,7 +19,9 @@ RUN cd node && ./configure && make -j4 install
 
 RUN pip install awscli
 
-COPY dist/greengrass-linux-aarch64-1.6.0.tar.gz dist/greengrass-linux-aarch64-1.6.0.tar.gz
+ADD https://d1onfpft10uf5o.cloudfront.net/greengrass-core/downloads/1.6.0/greengrass-linux-aarch64-1.6.0.tar.gz /
+RUN tar xzvf greengrass-linux-aarch64-1.6.0.tar.gz -C /
+RUN rm /greengrass-linux-aarch64-1.6.0.tar.gz
 
 ARG GROUP_NAME
 ADD foundation/docker/redeploy.sh /
