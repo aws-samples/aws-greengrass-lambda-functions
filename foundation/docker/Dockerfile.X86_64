@@ -21,9 +21,8 @@ ADD https://d1onfpft10uf5o.cloudfront.net/greengrass-core/downloads/1.6.0/greeng
 RUN tar xzvf greengrass-linux-x86-64-1.6.0.tar.gz -C /
 RUN rm /greengrass-linux-x86-64-1.6.0.tar.gz
 
-ARG GROUP_NAME
 ADD foundation/docker/redeploy.sh /
-ADD build/oem.$GROUP_NAME.tar /greengrass/
+ADD build/oem.GROUP_NAME.tar /greengrass/
 
 EXPOSE 8883
 
