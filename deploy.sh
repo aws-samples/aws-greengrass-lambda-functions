@@ -23,6 +23,7 @@ docker run \
    -v $PWD/ggds:/ggds \
    -v $PWD/build:/build \
    -v $HOME/.ssh:/root/.ssh \
+   -v /var/run/docker.sock:/var/run/docker.sock \
    -it --rm \
    -e AWS_REGION=$REGION \
    -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
