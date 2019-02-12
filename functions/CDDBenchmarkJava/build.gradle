@@ -23,7 +23,7 @@ distTar.enabled = shadowDistTar.enabled = false
 mainClassName = 'not-necessary'
 
 group = 'CDDBenchmarkJava'
-version = '1.0-SNAPSHOT'
+version = '1.0-SNAPSHOT-all'
 
 description = """"""
 
