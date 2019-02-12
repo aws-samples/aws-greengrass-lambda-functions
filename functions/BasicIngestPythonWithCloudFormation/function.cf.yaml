@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: A SQL only IoT republish rule that sends basic ingest messages from the Greengrass group to a shared topic
+
+Parameters:
+  AWSIOTTHINGNAME:
+    Type: String
+
+  GROUPID:
+    Type: String
+
+  AWSIOTTHINGARN:
+    Type: String
+
+  AWSGREENGRASSGROUPNAME:
+    Type: String
+
+Resources:
+  BasicIngestRepublishTopicRule:
+    Type: AWS::IoT::TopicRule
+    Properties:
+      RuleName: !Join [ "", [ !Ref "AWSIOTTHINGNAME", "_BasicIngestRepublishRule" ] ]
+      TopicRulePayload:
+        RuleDisabled: false
+        Sql: !Join [ "", [ "SELECT message, 'yes' AS processed_by_basic_ingest FROM 'topic'" ] ]
+        Actions:
+          - Republish:
+              Topic: "greengrass_basic_ingest"
+              RoleArn: !GetAtt BasicIngestRepublishRole.Arn
+  BasicIngestRepublishRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Join [ "", [ !Ref "AWSIOTTHINGNAME", "_BasicIngestRepublishRole" ] ]
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - iot.amazonaws.com
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: iot:Publish
+                Resource: !Join [ "", [ "arn:aws:iot:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":topic/greengrass_basic_ingest" ] ]
