@@ -21,7 +21,7 @@ look like this:
 
 ```json
 {
-  "message": "Basic ingest received from AWS_GREENGRASS_GROUP_NAME"
+  "message": "Basic ingest received from AWS_GREENGRASS_GROUP_NAME",
   "processed_by_basic_ingest": "yes"
 }
 ```
