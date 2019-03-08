@@ -1,15 +1,15 @@
 plugins {
     // Processes Lombok annotations during build
-    id 'io.franzbecker.gradle-lombok' version '1.14'
+    id 'io.franzbecker.gradle-lombok' version '2.1'
 
     // Creates fat JAR
-    id 'com.github.johnrengelman.shadow' version '4.0.4'
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
 
     // Downloads binary dependencies
     id 'de.undercouch.download' version '3.4.3'
 
     // Adds dependencyUpdates task
-    id 'com.github.ben-manes.versions' version '0.20.0'
+    id 'com.github.ben-manes.versions' version '0.21.0'
 }
 
 apply plugin: 'java'
@@ -39,7 +39,7 @@ wrapper {
 }
 
 lombok {
-    version = '1.18.4'
+    version = '1.18.6'
     sha256 = ''
 }
 
@@ -50,9 +50,9 @@ repositories {
 
 def commonsIoVersion = '2.6'
 def gsonVersion = '2.8.5'
-def guiceVersion = '4.2.1'
+def guiceVersion = '4.2.2'
 def slf4jVersion = '1.7.25'
-def awsSdkVersion = '1.11.424'
+def awsSdkVersion = '1.11.511'
 def jacksonVersion = '2.9.7'
 def httpClientVersion = '4.5.6'
 def awsLambdaJavaCoreVersion = '1.2.0'
