@@ -3,6 +3,11 @@
 Example local Lambda functions that can be used with AWS Greengrass and the AWS Greengrass Provisioner.  This repo contains
 the functions and the deployment configurations to launch those functions in different configurations.
 
+## How do I launch these functions with the provisioner?
+
+Step 1: Clone this repo
+
+Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/aws-greengrass-provisioner/blob/master/docs/CommandLine.md)
 ## Current function list
 
 - BenchmarkPython - a naive benchmark that creates a pinned function that sends messages to itself
