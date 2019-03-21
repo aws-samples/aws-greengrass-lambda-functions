@@ -11,7 +11,7 @@
  * Greengrass core.
  */
 
-const ggSdk = require('aws-greengrass-core-sdk');
+const ggSdk = require('aws-greengrass-core-sdk-js');
 
 const iotClient = new ggSdk.IotData();
 const os = require('os');
