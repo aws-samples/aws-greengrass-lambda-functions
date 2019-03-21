@@ -16,7 +16,7 @@ version = '0.3'
 
 description = """"""
 
-def gradleDependencyVersion = '5.2'
+def gradleDependencyVersion = '5.3'
 
 wrapper {
     gradleVersion = gradleDependencyVersion
@@ -42,9 +42,9 @@ def guiceVersion = '4.2.2'
 def slf4jVersion = '1.7.25'
 def jacksonVersion = '2.9.8'
 def httpClientVersion = '4.5.7'
-def awsLambdaJavaCoreVersion = '1.2.0'
+def awsLambdaJavaCoreVersion = '1.1.0'
 def commonsIoVersion = '2.6'
-def awsSdkVersion = '1.11.519'
+def awsSdkVersion = '1.11.522'
 
 def libsDir = file("$buildDir/libs")
 def tempDir = file("$buildDir/temp")
