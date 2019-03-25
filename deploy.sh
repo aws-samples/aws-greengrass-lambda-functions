@@ -7,10 +7,19 @@ AWS_CLI_ERROR_EXIT_CODE=1
 # Allow failures, we will catch them
 set +e
 
-# Is the AWS CLI configured?
-AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
+CLI=1
+
+hash aws 2> /dev/null
 
 if [ $? -ne 0 ]; then
+  echo "AWS CLI not installed, looking for credentials via instance metadata service (EC2 only)"
+  CLI=0
+else
+# Is the AWS CLI configured?
+  AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
+fi
+
+if [ $? -ne 0 ] || [ $CLI -eq 0 ]; then
   # AWS CLI is not configured.  Are we running on an EC2 instance with a role?
   ROLE=`curl -s --connect-timeout 3 http://169.254.169.254/latest/meta-data/iam/security-credentials/`
 
@@ -53,8 +62,7 @@ fi
 
 
 # Simple check to make sure docker is installed
-docker version > /dev/null
-
+hash docker 2> /dev/null
 
 if [ $? -ne 0 ]; then
   echo "Docker may not be installed on your system. If you received a permission denied error try running this script again as root. Otherwise, please install docker and try again."
