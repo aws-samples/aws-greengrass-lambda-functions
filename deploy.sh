@@ -12,7 +12,7 @@ AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
 
 if [ $? -ne 0 ]; then
   # AWS CLI is not configured.  Are we running on an EC2 instance with a role?
-  ROLE=`curl -s --connect-timeout 3 http://169.254.169.254/latest/meta-data/iam/security-credentials`
+  ROLE=`curl -s --connect-timeout 3 http://169.254.169.254/latest/meta-data/iam/security-credentials/`
 
   if [ $? -ne 0 ]; then
     echo $AWS_CLI_ERROR_MESSAGE_PREFIX access key ID $AWS_CLI_ERROR_MESSAGE_SUFFIX
