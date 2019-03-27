@@ -8,6 +8,7 @@ AWS_CLI_ERROR_EXIT_CODE=1
 set +e
 
 CLI=1
+DOCKER_SESSION_TOKEN=""
 
 hash aws 2> /dev/null
 
@@ -18,8 +19,6 @@ else
 # Is the AWS CLI configured?
   AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
 fi
-
-DOCKER_SESSION_TOKEN=""
 
 if [ $? -ne 0 ] || [ $CLI -eq 0 ]; then
   # AWS CLI is not configured.  Are we running on an EC2 instance with a role?
