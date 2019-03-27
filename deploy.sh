@@ -19,6 +19,8 @@ else
   AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
 fi
 
+DOCKER_SESSION_TOKEN=""
+
 if [ $? -ne 0 ] || [ $CLI -eq 0 ]; then
   # AWS CLI is not configured.  Are we running on an EC2 instance with a role?
   ROLE=`curl -s --connect-timeout 3 http://169.254.169.254/latest/meta-data/iam/security-credentials/`
@@ -39,6 +41,7 @@ if [ $? -ne 0 ] || [ $CLI -eq 0 ]; then
     AWS_ACCESS_KEY_ID=`echo $CREDENTIALS | sed -e 's/^.*AccessKeyId\" : \"\([^\"]*\).*/\1/'`
     AWS_SECRET_ACCESS_KEY=`echo $CREDENTIALS | sed -e 's/^.*SecretAccessKey\" : \"\([^\"]*\).*/\1/'`
     AWS_SESSION_TOKEN=`echo $CREDENTIALS | sed -e 's/^.*Token\" : \"\([^\"]*\).*/\1/'`
+    DOCKER_SESSION_TOKEN="-e AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN"
 
     # Get the region
     AVAILABILITY_ZONE=`curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone`
@@ -89,5 +92,5 @@ docker run \
    -e AWS_REGION=$REGION \
    -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
    -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-   -e AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN \
+   $DOCKER_SESSION_TOKEN \
    timmattison/aws-greengrass-provisioner:master $@
