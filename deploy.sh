@@ -76,7 +76,9 @@ set -e
 
 PWD=$(pwd)
 
-docker pull timmattison/aws-greengrass-provisioner:master
+BRANCH=master
+
+docker pull timmattison/aws-greengrass-provisioner:$BRANCH
 
 docker run \
    -v $PWD/foundation:/foundation \
@@ -92,4 +94,4 @@ docker run \
    -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
    -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
    $DOCKER_SESSION_TOKEN \
-   timmattison/aws-greengrass-provisioner:master $@
+   timmattison/aws-greengrass-provisioner:$BRANCH $@
