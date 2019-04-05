@@ -11,21 +11,21 @@ Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/
 ## Current function list
 
 - Python
-  - BenchmarkPython - a naive benchmark that creates a pinned function that sends messages to itself
-  - HTTPPython - sends HTTP requests from the core to any address (local network or otherwise), triggered by MQTT messages from the cloud
-  - HelloWorldPython - Hello, World in Python
-  - HelloWorldPythonWithCloudFormation - Hello, World in Python with a CloudFormation template that demonstrates how to build republish rules that the provisioner can launch automatically
-  - LiFXPython - control LiFX bulbs
-  - SocketServerPython - an example of how to listen on a socket in Python and relay the inbound TCP messages to the cloud via MQTT
+  - [BenchmarkPython](functions/BenchmarkPython) - a naive benchmark that creates a pinned function that sends messages to itself
+  - [HTTPPython](functions/HTTPPython) - sends HTTP requests from the core to any address (local network or otherwise), triggered by MQTT messages from the cloud
+  - [HelloWorldPython](functions/HelloWorldPython) - Hello, World in Python
+  - [HelloWorldPythonWithCloudFormation](functions/HelloWorldPythonWithCloudFormation) - Hello, World in Python with a CloudFormation template that demonstrates how to build republish rules that the provisioner can launch automatically
+  - [LiFXPython](functions/LiFXPython) - control LiFX bulbs
+  - [SocketServerPython](functions/SocketServerPython) - an example of how to listen on a socket in Python and relay the inbound TCP messages to the cloud via MQTT
 
 - NodeJS
-  - HelloWorldNode - Hello, World in Node
+  - [HelloWorldNode](functions/HelloWorldNode) - Hello, World in Node
 
 - Java with Cloud Device Driver framework
-  - CDDSkeletonJava - shows how the Java Cloud Device Driver framework can be used
-  - CDDDMIJava - relays Desktop Management Interface (DMI) information to the cloud when requested via MQTT
-  - CDDBenchmarkJava - a naive Java benchmark that creates a pinned function that sends messages to itself
-  - CDDSenseHatJava - shows how to control a SenseHat display on a Raspberry Pi
+  - [CDDSkeletonJava](functions/CDDSkeletonJava) - shows how the Java Cloud Device Driver framework can be used
+  - [CDDDMIJava](functions/CDDDMIJava) - relays Desktop Management Interface (DMI) information to the cloud when requested via MQTT
+  - [CDDBenchmarkJava](functions/CDDBenchmarkJava) - a naive Java benchmark that creates a pinned function that sends messages to itself
+  - [CDDSenseHatJava](functions/CDDSenseHatJava) - shows how to control a SenseHat display on a Raspberry Pi
 
 ## License Summary
 
