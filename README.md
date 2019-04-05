@@ -10,16 +10,21 @@ Step 1: Clone this repo
 Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/aws-greengrass-provisioner/blob/master/docs/CommandLine.md)
 ## Current function list
 
-- BenchmarkPython - a naive benchmark that creates a pinned function that sends messages to itself
-- CDDSkeletonJava - shows how the Java Cloud Device Driver framework can be used
-- HTTPPython - sends HTTP requests from the core to any address (local network or otherwise), triggered by MQTT messages from the cloud
-- HelloWorldNode - Hello, World in Node
-- HelloWorldPython - Hello, World in Python
-- HelloWorldPythonWithCloudFormation - Hello, World in Python with a CloudFormation template that demonstrates how to build republish rules that the provisioner can launch automatically
-- LiFXPython - control LiFX bulbs
-- SocketServerPython - an example of how to listen on a socket in Python and relay the inbound TCP messages to the cloud via MQTT
-- CDDDMIJava - relays Desktop Management Interface (DMI) information to the cloud when requested via MQTT
-- CDDBenchmarkJava - a naive Java benchmark that creates a pinned function that sends messages to itself
+- Python
+  - BenchmarkPython - a naive benchmark that creates a pinned function that sends messages to itself
+  - HTTPPython - sends HTTP requests from the core to any address (local network or otherwise), triggered by MQTT messages from the cloud
+  - HelloWorldPython - Hello, World in Python
+  - HelloWorldPythonWithCloudFormation - Hello, World in Python with a CloudFormation template that demonstrates how to build republish rules that the provisioner can launch automatically
+  - LiFXPython - control LiFX bulbs
+  - SocketServerPython - an example of how to listen on a socket in Python and relay the inbound TCP messages to the cloud via MQTT
+
+- NodeJS
+  - HelloWorldNode - Hello, World in Node
+
+- Java with Cloud Device Driver framework
+  - CDDSkeletonJava - shows how the Java Cloud Device Driver framework can be used
+  - CDDDMIJava - relays Desktop Management Interface (DMI) information to the cloud when requested via MQTT
+  - CDDBenchmarkJava - a naive Java benchmark that creates a pinned function that sends messages to itself
 
 ## License Summary
 
