@@ -25,6 +25,7 @@ Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/
   - CDDSkeletonJava - shows how the Java Cloud Device Driver framework can be used
   - CDDDMIJava - relays Desktop Management Interface (DMI) information to the cloud when requested via MQTT
   - CDDBenchmarkJava - a naive Java benchmark that creates a pinned function that sends messages to itself
+  - CDDSenseHatJava - shows how to control a SenseHat display on a Raspberry Pi
 
 ## License Summary
 
