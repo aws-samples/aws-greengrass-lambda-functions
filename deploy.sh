@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+BRANCH=master
+
 AWS_CLI_ERROR_MESSAGE_PREFIX="No"
 AWS_CLI_ERROR_MESSAGE_SUFFIX="found via aws configure get, do you have the AWS CLI configured on this system? This command does NOT retrieve credentials from EC2 instance metadata."
 AWS_CLI_ERROR_EXIT_CODE=1
@@ -75,8 +77,6 @@ fi
 set -e
 
 PWD=$(pwd)
-
-BRANCH=master
 
 docker pull timmattison/aws-greengrass-provisioner:$BRANCH
 
