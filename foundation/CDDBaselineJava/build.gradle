@@ -1,6 +1,6 @@
 plugins {
     // Processes Lombok annotations during build
-    id 'io.franzbecker.gradle-lombok' version '2.1'
+    id 'io.franzbecker.gradle-lombok' version '3.0.0'
 
     // Enables download tasks
     id "de.undercouch.download" version "3.4.3"
@@ -16,7 +16,7 @@ version = '0.3'
 
 description = """"""
 
-def gradleDependencyVersion = '5.3'
+def gradleDependencyVersion = '5.4'
 
 wrapper {
     gradleVersion = gradleDependencyVersion
@@ -44,7 +44,7 @@ def jacksonVersion = '2.9.8'
 def httpClientVersion = '4.5.8'
 def awsLambdaJavaCoreVersion = '1.2.0'
 def commonsIoVersion = '2.6'
-def awsSdkVersion = '1.11.534'
+def awsSdkVersion = '1.11.538'
 
 def libsDir = file("$buildDir/libs")
 def tempDir = file("$buildDir/temp")
