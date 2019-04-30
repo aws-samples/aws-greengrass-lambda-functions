@@ -16,7 +16,7 @@ version = '0.3'
 
 description = """"""
 
-def gradleDependencyVersion = '5.4'
+def gradleDependencyVersion = '5.4.1'
 
 wrapper {
     gradleVersion = gradleDependencyVersion
