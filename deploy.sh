@@ -88,6 +88,7 @@ docker run \
    -v $PWD/ggds:/ggds \
    -v $PWD/build:/build \
    -v $HOME/.ssh:/root/.ssh \
+   -v $PWD/dtoutput:/dtoutput \
    -v /var/run/docker.sock:/var/run/docker.sock \
    -it --rm \
    -e AWS_REGION=$REGION \
