@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-BRANCH=master
+BRANCH=`cd ../aws-greengrass-provisioner 2> /dev/null && git symbolic-ref --short HEAD`
+
+if [ $? -ne 0 ]; then
+  BRANCH=master
+else
+  echo Using aws-greengrass-provisioner repo branch $BRANCH
+fi
 
 AWS_CLI_ERROR_MESSAGE_PREFIX="No"
 AWS_CLI_ERROR_MESSAGE_SUFFIX="found via aws configure get, do you have the AWS CLI configured on this system? This command does NOT retrieve credentials from EC2 instance metadata."
