@@ -104,7 +104,7 @@ docker run \
    -v $HOME/.ssh:/root/.ssh \
    -v $PWD/dtoutput:/dtoutput \
    -v /var/run/docker.sock:/var/run/docker.sock \
-   -it --rm \
+   -i --rm \
    -e AWS_REGION=$REGION \
    -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
    -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
