@@ -24,4 +24,7 @@ public class Topics {
 
     @Getter(lazy = true)
     private final String listOutputTopic = String.join("/", getListTopic(), "output");
+
+    @Getter(lazy = true)
+    private final String debugOutputTopic = String.join("/", cddTopics.getCddDriverTopic(this), "debug");
 }

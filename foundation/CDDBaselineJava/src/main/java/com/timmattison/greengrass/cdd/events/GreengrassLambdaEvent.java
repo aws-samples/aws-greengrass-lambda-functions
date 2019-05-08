@@ -12,7 +12,7 @@ import java.util.Optional;
 @Data
 @Builder
 public class GreengrassLambdaEvent {
-    private Optional<String> topic;
+    private Optional<String> topic = Optional.empty();
     @Builder.Default
     private Optional<Map> jsonInput = Optional.empty();
     @Builder.Default

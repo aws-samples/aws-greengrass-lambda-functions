@@ -1,6 +1,7 @@
 package com.amazonaws.greengrass.cddsensehat.modules;
 
 import com.amazonaws.greengrass.cddsensehat.App;
+import com.amazonaws.greengrass.cddsensehat.data.Topics;
 import com.amazonaws.greengrass.cddsensehat.handlers.CddSenseHatListEventHandler;
 import com.amazonaws.greengrass.cddsensehat.handlers.CddSenseHatStartEventHandler;
 import com.amazonaws.greengrass.cddsensehat.handlers.CddSenseHatStopEventHandler;
@@ -24,11 +25,11 @@ import javax.inject.Singleton;
 public class AppModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(EventBus.class).toInstance(App.eventBus);
         bind(CddSenseHatStartEventHandler.class).asEagerSingleton();
         bind(CddSenseHatStopEventHandler.class).asEagerSingleton();
         bind(CddSenseHatListEventHandler.class).asEagerSingleton();
         bind(StartupHandler.class).asEagerSingleton();
+        bind(Topics.class);
 
         bind(AnimationRunner.class).to(BasicAnimationRunner.class).in(Singleton.class);
 
