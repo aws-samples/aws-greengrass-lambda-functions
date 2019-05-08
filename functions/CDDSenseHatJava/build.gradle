@@ -44,7 +44,6 @@ lombok {
 }
 
 repositories {
-    maven { url "http://maven.vaadin.com/vaadin-addons" }
     mavenCentral()
 }
 
@@ -58,8 +57,6 @@ def httpClientVersion = '4.5.6'
 def awsLambdaJavaCoreVersion = '1.2.0'
 
 def jettyVersion = '9.4.7.v20170914'
-def guiceVaadinVersion = '1.4.0-vaadin8'
-def vaadinVersion = '8.8.0'
 
 dependencies {
     compile files('libs/GreengrassJavaSDK-1.2.jar')
@@ -78,12 +75,6 @@ dependencies {
     compile "org.eclipse.jetty:jetty-servlet:$jettyVersion"
     compile "org.eclipse.jetty:jetty-continuation:$jettyVersion"
     compile "org.eclipse.jetty.websocket:websocket-server:$jettyVersion"
-
-    compile "com.vaadin:guice-vaadin:$guiceVaadinVersion"
-    compile "com.vaadin:vaadin-server:$vaadinVersion"
-    compile "com.vaadin:vaadin-push:$vaadinVersion"
-    compile "com.vaadin:vaadin-client-compiled:$vaadinVersion"
-    compile "com.vaadin:vaadin-themes:$vaadinVersion"
 
     compile "com.google.inject.extensions:guice-multibindings:$guiceVersion"
 }
