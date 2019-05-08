@@ -86,12 +86,20 @@ PWD=$(pwd)
 
 docker pull timmattison/aws-greengrass-provisioner:$BRANCH
 
+TEMP_CONTAINER=`docker create timmattison/aws-greengrass-provisioner:$BRANCH`
+
+docker cp $PWD/foundation $TEMP_CONTAINER:/foundation
+docker cp $PWD/deployments $TEMP_CONTAINER:/deployments
+docker cp $PWD/functions $TEMP_CONTAINER:/functions
+docker cp $PWD/ggds $TEMP_CONTAINER:/ggds
+
+TEMP_IMAGE=`uuidgen | tr '[:upper:]' '[:lower:]' | tr -d '-'`
+
+docker commit $TEMP_CONTAINER $TEMP_IMAGE
+docker rm $TEMP_CONTAINER
+
 docker run \
-   -v $PWD/foundation:/foundation \
-   -v $PWD/deployments:/deployments \
-   -v $PWD/functions:/functions \
    -v $PWD/credentials:/credentials \
-   -v $PWD/ggds:/ggds \
    -v $PWD/build:/build \
    -v $HOME/.ssh:/root/.ssh \
    -v $PWD/dtoutput:/dtoutput \
@@ -101,4 +109,4 @@ docker run \
    -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
    -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
    $DOCKER_SESSION_TOKEN \
-   timmattison/aws-greengrass-provisioner:$BRANCH $@
+   $TEMP_IMAGE $@
