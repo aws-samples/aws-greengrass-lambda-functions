@@ -58,7 +58,7 @@ def httpClientVersion = '4.5.8'
 def awsLambdaJavaCoreVersion = '1.2.0'
 
 def jettyVersion = '9.4.18.v20190429'
-def guiceVaadinVersion = '1.4.0-vaadin8'
+def guiceVaadinVersion = '2.0.1-vaadin8'
 def vaadinVersion = '8.8.2'
 
 dependencies {
