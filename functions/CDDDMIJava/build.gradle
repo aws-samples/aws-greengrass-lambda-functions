@@ -50,7 +50,7 @@ repositories {
 def commonsIoVersion = '2.6'
 def gsonVersion = '2.8.5'
 def guiceVersion = '4.2.2'
-def slf4jVersion = '1.7.25'
+def slf4jVersion = '1.7.26'
 def awsSdkVersion = '1.11.561'
 def jacksonVersion = '2.9.7'
 def httpClientVersion = '4.5.6'
