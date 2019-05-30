@@ -1,0 +1,12 @@
+{
+  "name": "WebServerNode",
+  "version": "1.0.0",
+  "description": "## Greengrass function to start a local web server ",
+  "main": "WebServerNode.js",
+  "keywords": [],
+  "author": "",
+  "license": "Apache",
+  "dependencies": {
+    "express": "4.17.1"
+  }
+}

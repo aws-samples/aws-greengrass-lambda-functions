@@ -4,14 +4,16 @@
 
 This function makes HTTP requests from the Greengrass Core.  This can be used to access HTTP
 resources on the Greengrass Core's local network by any client that has access to publish to
-the `cdd/http/request` topic.
+the `${AWS_IOT_THING_NAME}/http_python/request` topic.
 
 This can also be used by other functions that need to do simple HTTP requests but don't want to
 include or maintain HTTP related code.
 
 ## What does the output look like?
 
-When the function receives a message on the `cdd/http/request` topic that looks like this:
+`${AWS_IOT_THING_NAME}` is the name of the thing associated with your Core.
+
+When the function receives a message on the `${AWS_IOT_THING_NAME}/http_python/request` topic that looks like this:
 
 ```json
 {
@@ -22,7 +24,7 @@ When the function receives a message on the `cdd/http/request` topic that looks 
 ```
 
 It will initiate a `GET` request to `https://www.amazon.com`.  It will then respond with the content
-retrieved from that URL, wrapped in a JSON message, on the topic `cdd/http/response/ID` where `ID`
+retrieved from that URL, wrapped in a JSON message, on the topic `${AWS_IOT_THING_NAME}/http_python/response/ID` where `ID`
 is the `id` value included in the request.
 
 The `id`, `action`, and `url` fields are required.  If a required field is missing the request is

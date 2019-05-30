@@ -1,0 +1,9 @@
+{
+  "name": "HTTPNode",
+  "version": "1.0.0",
+  "description": "## Greengrass function to execute local HTTP requests",
+  "main": "HTTPNode.js",
+  "keywords": [],
+  "author": "",
+  "license": "Apache"
+}

@@ -2,6 +2,7 @@
 
 import json
 import logging
+import os
 import requests
 
 import greengrasssdk
@@ -16,10 +17,11 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 streamHandler.setFormatter(formatter)
 logger.addHandler(streamHandler)
 
-base_topic = 'cdd/http'
-request_topic = base_topic + "/request"
-response_topic = base_topic + "/response"
+THING_NAME = os.environ['AWS_IOT_THING_NAME']
 
+base_topic = THING_NAME + '/http_python'
+request_topic = base_topic + '/request'
+response_topic = base_topic + '/response'
 
 def function_handler(event, context):
     inbound_topic = context.client_context.custom['subject']
@@ -69,9 +71,15 @@ def function_handler(event, context):
         return
 
     reply = {}
-    reply['response'] = response.text
+
+    if (len(response.text) > (127 * 1024)):
+        reply['response'] = ''
+        reply['error'] = 'Data was too large to fit in a single MQTT message'
+    else:
+        reply['response'] = response.text
+
     json_reply = json.dumps(reply)
 
     logger.info('Publishing reply %s', json_reply)
-    client.publish(topic=response_topic + '/' + id, payload=json_reply)
+    client.publish(topic=response_topic + '/' + str(id), payload=json_reply)
     return

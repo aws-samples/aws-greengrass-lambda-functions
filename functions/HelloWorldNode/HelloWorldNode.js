@@ -40,7 +40,7 @@ function greengrassHelloWorldRun() {
 setInterval(greengrassHelloWorldRun, 5000);
 
 // This is a handler which does nothing for this example
-exports.handler = function handler(event, context) {
-    console.log(event);
-    console.log(context);
+exports.function_handler = function(event, context) {
+    console.log('event: ' + JSON.stringify(event));
+    console.log('context: ' + JSON.stringify(context));
 };

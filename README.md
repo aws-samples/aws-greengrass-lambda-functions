@@ -20,6 +20,8 @@ Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/
 
 - NodeJS
   - [HelloWorldNode](functions/HelloWorldNode) - Hello, World in Node
+  - [HTTPNode](functions/HTTPNode) - sends HTTP requests from the core to any address (local network or otherwise), triggered by MQTT messages from the cloud
+  - [WebServerNode](functions/WebServerNode) - an example of how to create an Express web server in a pinned Lambda function
 
 - Java with Cloud Device Driver framework
   - [CDDSkeletonJava](functions/CDDSkeletonJava) - shows how the Java Cloud Device Driver framework can be used
