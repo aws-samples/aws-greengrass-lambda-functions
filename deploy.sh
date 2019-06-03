@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-BRANCH=`cd ../aws-greengrass-provisioner 2> /dev/null && git symbolic-ref --short HEAD`
+TAG=`cd ../aws-greengrass-provisioner 2> /dev/null && git symbolic-ref --short HEAD | tr -cd '[:alnum:]._-'`
 
 if [ $? -ne 0 ]; then
-  BRANCH=master
+  TAG=master
 else
-  echo Using aws-greengrass-provisioner repo branch $BRANCH
+  echo Using aws-greengrass-provisioner repo branch $TAG
 fi
 
 AWS_CLI_ERROR_MESSAGE_PREFIX="No"
@@ -84,9 +84,9 @@ set -e
 
 PWD=$(pwd)
 
-docker pull timmattison/aws-greengrass-provisioner:$BRANCH
+docker pull timmattison/aws-greengrass-provisioner:$TAG
 
-TEMP_CONTAINER=`docker create timmattison/aws-greengrass-provisioner:$BRANCH`
+TEMP_CONTAINER=`docker create timmattison/aws-greengrass-provisioner:$TAG`
 
 docker cp $PWD/foundation $TEMP_CONTAINER:/foundation
 docker cp $PWD/deployments $TEMP_CONTAINER:/deployments
