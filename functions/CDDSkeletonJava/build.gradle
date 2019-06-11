@@ -45,8 +45,11 @@ lombok {
 
 repositories {
     mavenCentral()
+
+    maven { url 'https://jitpack.io' }
 }
 
+def cddBaselineVersion = 'cdd-baseline-java-0.3.8'
 def gsonVersion = '2.8.5'
 def guiceVersion = '4.2.2'
 def slf4jVersion = '1.7.26'
@@ -57,8 +60,7 @@ def commonsIoVersion = '2.6'
 def junitVersion = '4.12'
 
 dependencies {
-    compile files('libs/GreengrassJavaSDK-1.2.jar')
-    compile 'CDDBaseline:0.3'
+    compile "com.github.aws-samples:aws-greengrass-lambda-functions:$cddBaselineVersion"
     compile "com.google.code.gson:gson:$gsonVersion"
     compile "com.google.inject:guice:$guiceVersion"
     compile "org.slf4j:slf4j-jdk14:$slf4jVersion"

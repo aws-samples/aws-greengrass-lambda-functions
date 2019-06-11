@@ -1,7 +1,7 @@
 package com.amazonaws.greengrass.cddskeleton;
 
 import com.amazonaws.greengrass.cddskeleton.modules.AppModule;
-import com.timmattison.greengrass.cdd.BaselineAppInterface;
+import com.awslabs.aws.iot.greengrass.cdd.BaselineAppInterface;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
