@@ -1,19 +1,23 @@
 package com.amazonaws.greengrass.cddembeddedvaadinskeleton.handlers;
 
 import com.amazonaws.greengrass.cddembeddedvaadinskeleton.data.Topics;
-import com.amazonaws.greengrass.cddembeddedvaadinskeleton.events.MessageFromCloudEvent;
+import com.amazonaws.greengrass.cddembeddedvaadinskeleton.events.ImmutableMessageFromCloudEvent;
+import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
+import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
 import com.google.common.eventbus.EventBus;
 import com.google.gson.Gson;
-import com.timmattison.greengrass.cdd.events.GreengrassLambdaEvent;
-import com.timmattison.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
-import lombok.RequiredArgsConstructor;
 
 import javax.inject.Inject;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class InputHandler implements GreengrassLambdaEventHandler {
-    private final EventBus eventBus;
-    private final Topics topics;
+    @Inject
+    EventBus eventBus;
+    @Inject
+    Topics topics;
+
+    @Inject
+    public InputHandler() {
+    }
 
     @Override
     public boolean isTopicExpected(String topic) {
@@ -22,6 +26,6 @@ public class InputHandler implements GreengrassLambdaEventHandler {
 
     @Override
     public void execute(GreengrassLambdaEvent greengrassLambdaEvent) {
-        eventBus.post(MessageFromCloudEvent.builder().topic(greengrassLambdaEvent.getTopic().get()).message(new Gson().toJson(greengrassLambdaEvent.getInput())).build());
+        eventBus.post(ImmutableMessageFromCloudEvent.builder().topic(greengrassLambdaEvent.getTopic().get()).message(new Gson().toJson(greengrassLambdaEvent.getInput())).build());
     }
 }

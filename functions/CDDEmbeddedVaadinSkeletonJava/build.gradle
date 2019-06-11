@@ -1,7 +1,4 @@
 plugins {
-    // Processes Lombok annotations during build
-    id 'io.franzbecker.gradle-lombok' version '3.1.0'
-
     // Creates fat JAR
     id 'com.github.johnrengelman.shadow' version '5.0.0'
 
@@ -38,16 +35,13 @@ wrapper {
     gradleVersion = '5.4.1'
 }
 
-lombok {
-    version = '1.18.8'
-    sha256 = ''
-}
-
 repositories {
-    maven { url "http://maven.vaadin.com/vaadin-addons" }
     mavenCentral()
+    maven { url "http://maven.vaadin.com/vaadin-addons" }
+    maven { url 'https://jitpack.io' }
 }
 
+def cddBaselineVersion = 'cdd-baseline-java-0.3.8'
 def commonsIoVersion = '2.6'
 def gsonVersion = '2.8.5'
 def guiceVersion = '4.2.2'
@@ -56,14 +50,34 @@ def awsSdkVersion = '1.11.568'
 def jacksonVersion = '2.9.9'
 def httpClientVersion = '4.5.8'
 def awsLambdaJavaCoreVersion = '1.2.0'
+def immutablesValueVersion = '2.7.5'
 
 def jettyVersion = '9.4.18.v20190429'
 def guiceVaadinVersion = '2.0.1-vaadin8'
 def vaadinVersion = '8.8.2'
 
+// Workaround for https://github.com/gradle/gradle/issues/4956
+sourceSets.configureEach { sourceSet ->
+    tasks.named(sourceSet.compileJavaTaskName).configure {
+        options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/sources/annotationProcessor/java/${sourceSet.name}")
+    }
+}
+
+// Workaround for https://youtrack.jetbrains.com/issue/IDEA-182577
+idea {
+    module {
+        sourceDirs += compileJava.options.annotationProcessorGeneratedSourcesDirectory
+        generatedSourceDirs += compileJava.options.annotationProcessorGeneratedSourcesDirectory
+        testSourceDirs += compileTestJava.options.annotationProcessorGeneratedSourcesDirectory
+        generatedSourceDirs += compileTestJava.options.annotationProcessorGeneratedSourcesDirectory
+    }
+}
+
 dependencies {
-    compile files('libs/GreengrassJavaSDK-1.2.jar')
-    compile 'CDDBaseline:0.3'
+    annotationProcessor "org.immutables:value:$immutablesValueVersion"
+    compile "org.immutables:value:$immutablesValueVersion"
+
+    compile "com.github.aws-samples:aws-greengrass-lambda-functions:$cddBaselineVersion"
 
     compile "commons-io:commons-io:$commonsIoVersion"
     compile "com.google.code.gson:gson:$gsonVersion"

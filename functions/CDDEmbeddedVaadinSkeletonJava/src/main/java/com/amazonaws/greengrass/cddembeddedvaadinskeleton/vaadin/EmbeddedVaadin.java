@@ -1,25 +1,23 @@
 package com.amazonaws.greengrass.cddembeddedvaadinskeleton.vaadin;
 
-import com.timmattison.greengrass.cdd.providers.interfaces.EnvironmentProvider;
+import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
 import com.vaadin.server.VaadinServlet;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-@Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class EmbeddedVaadin {
-    private final EnvironmentProvider environmentProvider;
+    private final Logger log = LoggerFactory.getLogger(EmbeddedVaadin.class);
+    @Inject
+    EnvironmentProvider environmentProvider;
 
     public void start() {
-        Thread serverThread = new Thread(() -> innerStart());
+        Thread serverThread = new Thread(this::innerStart);
 
         serverThread.start();
     }
@@ -59,9 +57,8 @@ public class EmbeddedVaadin {
         try {
             server.start();
             server.join();
-
-        } catch (Exception ex) {
-            Logger.getLogger(EmbeddedVaadin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
     }
 }
