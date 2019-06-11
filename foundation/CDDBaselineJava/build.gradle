@@ -82,23 +82,6 @@ task unpackGreengrassJar(type: Copy, dependsOn: extractGreengrassJarFromJavaSdk)
 
 compileJava.dependsOn unpackGreengrassJar
 
-// Workaround for https://github.com/gradle/gradle/issues/4956
-sourceSets.configureEach { sourceSet ->
-    tasks.named(sourceSet.compileJavaTaskName).configure {
-        options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/sources/annotationProcessor/java/${sourceSet.name}")
-    }
-}
-
-// Workaround for https://youtrack.jetbrains.com/issue/IDEA-182577
-idea {
-    module {
-        sourceDirs += compileJava.options.annotationProcessorGeneratedSourcesDirectory
-        generatedSourceDirs += compileJava.options.annotationProcessorGeneratedSourcesDirectory
-        testSourceDirs += compileTestJava.options.annotationProcessorGeneratedSourcesDirectory
-        generatedSourceDirs += compileTestJava.options.annotationProcessorGeneratedSourcesDirectory
-    }
-}
-
 dependencies {
     annotationProcessor "org.immutables:value:$immutablesValueVersion"
     compile "org.immutables:value:$immutablesValueVersion"
