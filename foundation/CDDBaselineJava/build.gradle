@@ -14,7 +14,7 @@ apply plugin: 'idea'
 mainClassName = 'not-applicable'
 
 group = 'cdd-baseline-java'
-version = '0.3.3'
+version = '0.3.4'
 
 description = """"""
 
