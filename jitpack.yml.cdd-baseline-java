@@ -2,4 +2,4 @@ jdk:
   - openjdk8
 install:
    - echo "Running a custom install command"
-   - cd foundation/CDDBaseline/ && ./gradlew clean install -xtest
+   - cd foundation/CDDBaselineJava/ && ./gradlew clean install -xtest
