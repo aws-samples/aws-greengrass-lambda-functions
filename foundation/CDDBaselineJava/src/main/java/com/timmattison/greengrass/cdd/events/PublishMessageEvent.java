@@ -1,11 +1,10 @@
 package com.timmattison.greengrass.cdd.events;
 
-import lombok.Builder;
-import lombok.Data;
+import org.immutables.value.Value;
 
-@Data
-@Builder
-public class PublishMessageEvent {
-    private String topic;
-    private String message;
+@Value.Immutable
+public abstract class PublishMessageEvent {
+    public abstract String getTopic();
+
+    public abstract String getMessage();
 }

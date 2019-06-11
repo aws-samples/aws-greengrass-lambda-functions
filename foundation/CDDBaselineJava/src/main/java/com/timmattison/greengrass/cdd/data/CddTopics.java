@@ -1,22 +1,27 @@
 package com.timmattison.greengrass.cdd.data;
 
 import com.timmattison.greengrass.cdd.providers.interfaces.EnvironmentProvider;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class CddTopics {
+    @Inject
     private final EnvironmentProvider environmentProvider;
+    private Optional<String> cddBaselineTopic = Optional.empty();
 
-    @Getter(lazy = true)
-    private final String cddBaselineTopic = buildCddBaselineTopic();
+    public CddTopics(EnvironmentProvider environmentProvider) {
+        this.environmentProvider = environmentProvider;
+    }
 
     private String buildCddBaselineTopic() {
-        return String.join("/",
-                environmentProvider.getAwsIotThingName().orElseThrow(() -> new UnsupportedOperationException("Thing name missing from environment")),
-                "cdd");
+        if (!cddBaselineTopic.isPresent()) {
+            cddBaselineTopic = Optional.of(String.join("/",
+                    environmentProvider.getAwsIotThingName().orElseThrow(() -> new UnsupportedOperationException("Thing name missing from environment")),
+                    "cdd"));
+        }
+
+        return cddBaselineTopic.get();
     }
 
     public String getCddDriverTopic(Object object) {

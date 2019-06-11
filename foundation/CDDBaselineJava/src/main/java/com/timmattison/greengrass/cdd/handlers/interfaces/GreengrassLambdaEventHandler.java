@@ -2,6 +2,7 @@ package com.timmattison.greengrass.cdd.handlers.interfaces;
 
 import com.google.common.eventbus.Subscribe;
 import com.timmattison.greengrass.cdd.events.GreengrassLambdaEvent;
+import com.timmattison.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 
 import java.util.Optional;
 
@@ -35,7 +36,9 @@ public interface GreengrassLambdaEventHandler {
 
     default void executeInvoke(GreengrassLambdaEvent greengrassLambdaEvent) {
         // Default executeInvoke handler for legacy functions.  Make sure that the topic is never empty.
-        greengrassLambdaEvent.setTopic(Optional.of(greengrassLambdaEvent.getTopic().orElse("NULL")));
+        ImmutableGreengrassLambdaEvent immutableGreengrassLambdaEvent = ImmutableGreengrassLambdaEvent
+                .copyOf(greengrassLambdaEvent)
+                .withTopic(Optional.of(greengrassLambdaEvent.getTopic().orElse("NULL")));
 
         // Execute the normal message processing
         execute(greengrassLambdaEvent);

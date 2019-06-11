@@ -6,9 +6,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.greengrass.cdd.events.GreengrassLambdaEvent;
-import com.timmattison.greengrass.cdd.events.GreengrassStartEvent;
-import com.timmattison.greengrass.cdd.events.PublishMessageEvent;
+import com.timmattison.greengrass.cdd.events.*;
 import com.timmattison.greengrass.cdd.modules.BaselineAppModule;
 import com.timmattison.greengrass.cdd.modules.DummyCommunicationModule;
 import com.timmattison.greengrass.cdd.modules.GreengrassCommunicationModule;
@@ -60,19 +58,19 @@ public interface BaselineAppInterface {
 
         region.ifPresent(theRegion -> System.setProperty("aws.region", theRegion));
 
-        eventBus.post(GreengrassStartEvent.builder().build());
+        eventBus.post(ImmutableGreengrassStartEvent.builder().build());
 
         Instant initializeEnd = Instant.now();
         String debugTopic = String.join("/", environmentProvider.getAwsIotThingName().get(), "debug");
-        eventBus.post(PublishMessageEvent.builder().topic(debugTopic).message("Injector instantiation took: " + Duration.between(initializeStart, injectorEnd).toString()).build());
-        eventBus.post(PublishMessageEvent.builder().topic(debugTopic).message("Initialization took: " + Duration.between(initializeStart, initializeEnd).toString()).build());
+        eventBus.post(ImmutablePublishMessageEvent.builder().topic(debugTopic).message("Injector instantiation took: " + Duration.between(initializeStart, injectorEnd).toString()).build());
+        eventBus.post(ImmutablePublishMessageEvent.builder().topic(debugTopic).message("Initialization took: " + Duration.between(initializeStart, initializeEnd).toString()).build());
     }
 
     default void handleBinaryRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
         byte[] input = IOUtils.toByteArray(inputStream);
         String topic = getTopic(context);
 
-        GreengrassLambdaEvent greengrassLambdaEvent = GreengrassLambdaEvent.builder()
+        GreengrassLambdaEvent greengrassLambdaEvent = ImmutableGreengrassLambdaEvent.builder()
                 .binaryInput(Optional.ofNullable(input))
                 .topic(Optional.ofNullable(topic))
                 .context(context)
@@ -115,7 +113,7 @@ public interface BaselineAppInterface {
             map = (LinkedHashMap) input;
         }
 
-        GreengrassLambdaEvent greengrassLambdaEvent = GreengrassLambdaEvent.builder()
+        GreengrassLambdaEvent greengrassLambdaEvent = ImmutableGreengrassLambdaEvent.builder()
                 .jsonInput(Optional.ofNullable(map))
                 .topic(Optional.ofNullable(topic))
                 .context(context)

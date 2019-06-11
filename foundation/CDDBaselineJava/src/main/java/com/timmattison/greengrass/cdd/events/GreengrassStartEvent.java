@@ -1,9 +1,7 @@
 package com.timmattison.greengrass.cdd.events;
 
-import lombok.Builder;
-import lombok.Data;
+import org.immutables.value.Value;
 
-@Data
-@Builder
-public class GreengrassStartEvent {
+@Value.Immutable
+public abstract class GreengrassStartEvent {
 }

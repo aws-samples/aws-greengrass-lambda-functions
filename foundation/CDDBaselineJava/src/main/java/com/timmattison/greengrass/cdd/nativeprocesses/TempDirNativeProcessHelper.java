@@ -1,8 +1,8 @@
 package com.timmattison.greengrass.cdd.nativeprocesses;
 
 import com.timmattison.greengrass.cdd.nativeprocesses.interfaces.NativeProcessHelper;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,10 +12,9 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.util.*;
 import java.util.function.Consumer;
 
-@Slf4j
 public class TempDirNativeProcessHelper implements NativeProcessHelper {
-    @Getter(lazy = true)
-    private final String architecture = determineArchitecture();
+    private final Logger log = LoggerFactory.getLogger(TempDirNativeProcessHelper.class);
+    private Optional<String> architecture = Optional.empty();
 
     @Override
     public void runProgramAndBlock(String program, Optional<List<String>> arguments, Optional<Map<String, String>> environmentVariables, Optional<Consumer<String>> stdoutConsumer, Optional<Consumer<String>> stderrConsumer) {
@@ -49,6 +48,14 @@ public class TempDirNativeProcessHelper implements NativeProcessHelper {
         environmentVariables.ifPresent(env -> pb.environment().putAll(env));
 
         getOutputFromProcess(log, pb, true, stdoutConsumer, stderrConsumer);
+    }
+
+    private String getArchitecture() {
+        if (!architecture.isPresent()) {
+            architecture = Optional.of(determineArchitecture());
+        }
+
+        return architecture.get();
     }
 
     public Set<PosixFilePermission> getPosixFilePermissions() {

@@ -5,8 +5,8 @@ import com.amazonaws.greengrass.javasdk.LambdaClient;
 import com.amazonaws.greengrass.javasdk.model.*;
 import com.google.gson.Gson;
 import com.timmattison.greengrass.cdd.providers.interfaces.EnvironmentProvider;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.nio.ByteBuffer;
@@ -14,14 +14,22 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 
-@Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class GreengrassCommunication implements Communication {
+    private final Logger log = LoggerFactory.getLogger(GreengrassCommunication.class);
     public static final String EMPTY_CUSTOM_CONTEXT = "{}";
     public static final String ENCODED_EMPTY_CUSTOM_CONTEXT = Base64.getEncoder().encodeToString(EMPTY_CUSTOM_CONTEXT.getBytes());
+    @Inject
     private final IotDataClient iotDataClient;
+    @Inject
     private final LambdaClient lambdaClient;
+    @Inject
     private final EnvironmentProvider environmentProvider;
+
+    public GreengrassCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient, IotDataClient iotDataClient) {
+        this.environmentProvider = environmentProvider;
+        this.lambdaClient = lambdaClient;
+        this.iotDataClient = iotDataClient;
+    }
 
     @Override
     public void publish(String topic, Object object) throws GGIotDataException, GGLambdaException {

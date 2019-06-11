@@ -1,7 +1,4 @@
 plugins {
-    // Processes Lombok annotations during build
-    id 'io.franzbecker.gradle-lombok' version '3.1.0'
-
     // Enables download tasks
     id "de.undercouch.download" version "3.4.3"
 
@@ -10,6 +7,7 @@ plugins {
 }
 
 apply plugin: 'java'
+apply plugin: 'idea'
 
 group = 'cdd-baseline-java'
 version = '0.3.2'
@@ -22,11 +20,6 @@ wrapper {
     gradleVersion = gradleDependencyVersion
 }
 
-lombok {
-    version = '1.18.8'
-    sha256 = ''
-}
-
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 tasks.withType(JavaCompile) {
@@ -35,6 +28,7 @@ tasks.withType(JavaCompile) {
 
 repositories {
     mavenCentral()
+    maven { url "https://plugins.gradle.org/m2/" }
 }
 
 def gsonVersion = '2.8.5'
@@ -45,6 +39,7 @@ def httpClientVersion = '4.5.8'
 def awsLambdaJavaCoreVersion = '1.2.0'
 def commonsIoVersion = '2.6'
 def awsSdkVersion = '1.11.568'
+def immutablesValueVersion = '2.7.5'
 
 def libsDir = file("$buildDir/libs")
 def tempDir = file("$buildDir/temp")
@@ -74,7 +69,27 @@ task downloadJavaSdk(type: Copy, dependsOn: extractJavaSdk) {
 
 compileJava.dependsOn downloadJavaSdk
 
+// Workaround for https://github.com/gradle/gradle/issues/4956
+sourceSets.configureEach { sourceSet ->
+    tasks.named(sourceSet.compileJavaTaskName).configure {
+        options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/sources/annotationProcessor/java/${sourceSet.name}")
+    }
+}
+
+// Workaround for https://youtrack.jetbrains.com/issue/IDEA-182577
+idea {
+    module {
+        sourceDirs += compileJava.options.annotationProcessorGeneratedSourcesDirectory
+        generatedSourceDirs += compileJava.options.annotationProcessorGeneratedSourcesDirectory
+        testSourceDirs += compileTestJava.options.annotationProcessorGeneratedSourcesDirectory
+        generatedSourceDirs += compileTestJava.options.annotationProcessorGeneratedSourcesDirectory
+    }
+}
+
 dependencies {
+    annotationProcessor "org.immutables:value:$immutablesValueVersion"
+    compile "org.immutables:value:$immutablesValueVersion"
+
     compile fileTree(dir: "$libsDir", include: ["*.jar"])
 
     compile "com.google.code.gson:gson:$gsonVersion"

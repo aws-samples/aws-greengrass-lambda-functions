@@ -3,6 +3,7 @@ package com.timmattison.greengrass.cdd.communication;
 import com.amazonaws.greengrass.javasdk.model.GGIotDataException;
 import com.amazonaws.greengrass.javasdk.model.GGLambdaException;
 import com.google.common.eventbus.Subscribe;
+import com.timmattison.greengrass.cdd.events.ImmutablePublishMessageEvent;
 import com.timmattison.greengrass.cdd.events.PublishBinaryEvent;
 import com.timmattison.greengrass.cdd.events.PublishMessageEvent;
 import com.timmattison.greengrass.cdd.events.PublishObjectEvent;
@@ -25,7 +26,7 @@ public interface Communication {
             publish(publishObjectEvent.getTopic(), publishObjectEvent.getObject());
         } catch (Exception e) {
             // Do not throw exceptions in event bus subscriber methods, but publish the exception so debugging is easier
-            publishMessageEvent(PublishMessageEvent.builder().topic(publishObjectEvent.getTopic()).message("Publish or serialization of object failed [" + e.getMessage() + "]").build());
+            publishMessageEvent(ImmutablePublishMessageEvent.builder().topic(publishObjectEvent.getTopic()).message("Publish or serialization of object failed [" + e.getMessage() + "]").build());
         }
     }
 
@@ -55,7 +56,7 @@ public interface Communication {
 
     default void failOnBuilder(Object object) {
         if (isBuilder(object)) {
-            publishMessageEvent(PublishMessageEvent.builder().topic("debug").message("Attempted to publish a builder [" + object.getClass().getTypeName() + "]").build());
+            publishMessageEvent(ImmutablePublishMessageEvent.builder().topic("debug").message("Attempted to publish a builder [" + object.getClass().getTypeName() + "]").build());
         }
     }
 
