@@ -2,7 +2,8 @@ package com.amazonaws.greengrass.cddsensehat.leds.arrays;
 
 import com.amazonaws.greengrass.cddsensehat.leds.OutputStreamWriterFactory;
 import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLEDImage;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -12,15 +13,12 @@ import java.nio.charset.Charset;
 
 import static java.nio.file.Files.readAllBytes;
 
-/**
- * Created by timmatt on 2/20/17.
- */
-@Slf4j
 public class LinuxSenseHatLEDArray implements SenseHatLEDArray {
-    public static final String US_ASCII = "ISO-8859-1";
-    public static final Charset CHARSET = Charset.forName(US_ASCII);
+    private static final String US_ASCII = "ISO-8859-1";
+    private static final Charset CHARSET = Charset.forName(US_ASCII);
     private static final String framebufferDevice = "/dev/fb1";
     private static final File framebufferDeviceFile = new File(framebufferDevice);
+    private final Logger log = LoggerFactory.getLogger(LinuxSenseHatLEDArray.class);
     private final OutputStreamWriterFactory outputStreamWriterFactory;
 
     @Inject

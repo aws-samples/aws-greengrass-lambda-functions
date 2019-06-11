@@ -6,26 +6,29 @@ import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLEDOrientation;
 import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLEDPartialImage;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.interfaces.Animation;
 import com.amazonaws.greengrass.cddsensehat.leds.characters.Characters;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import javax.inject.Inject;
 import java.util.Random;
 
-/**
- * Created by timmatt on 3/6/17.
- */
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class GlitchNumber implements Animation {
-    public static final int GLITCH_RANDOM_LIMIT = 250;
-    private final Characters characters;
+    private static final int GLITCH_RANDOM_LIMIT = 250;
     private final Random random = new Random();
-    @Getter
-    long period = 10;
-    @Setter
-    @Getter
+    @Inject
+    Characters characters;
     private int versionNumber = 0;
+
+    public int getVersionNumber() {
+        return versionNumber;
+    }
+
+    public void setVersionNumber(int versionNumber) {
+        this.versionNumber = versionNumber;
+    }
+
+    @Override
+    public long getPeriod() {
+        return 10;
+    }
 
     @Override
     public SenseHatLEDImage nextImage() {

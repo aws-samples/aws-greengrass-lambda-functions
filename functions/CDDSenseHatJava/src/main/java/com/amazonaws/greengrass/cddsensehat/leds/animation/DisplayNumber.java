@@ -5,25 +5,30 @@ import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLEDOrientation;
 import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLEDPartialImage;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.interfaces.Animation;
 import com.amazonaws.greengrass.cddsensehat.leds.characters.Characters;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import javax.inject.Inject;
 
-/**
- * Created by timmatt on 3/6/17.
- */
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class DisplayNumber implements Animation {
-    private final Characters characters;
-
-    @Getter
-    long period = 5000;
-
-    @Setter
-    @Getter
+    @Inject
+    Characters characters;
     private int versionNumber = 0;
+
+    @Inject
+    public DisplayNumber() {
+    }
+
+    @Override
+    public long getPeriod() {
+        return 5000;
+    }
+
+    public int getVersionNumber() {
+        return versionNumber;
+    }
+
+    public void setVersionNumber(int versionNumber) {
+        this.versionNumber = versionNumber;
+    }
 
     @Override
     public SenseHatLEDImage nextImage() {

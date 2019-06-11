@@ -5,28 +5,34 @@ import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLEDOrientation;
 import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLEDPartialImage;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.interfaces.Animation;
 import com.amazonaws.greengrass.cddsensehat.leds.characters.Characters;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-/**
- * Created by timmatt on 3/6/17.
- */
-@Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class SpinNumber implements Animation {
-    private final Characters characters;
-    @Getter
-    long period = 5000;
-
-    @Setter
-    @Getter
+    private final Logger log = LoggerFactory.getLogger(SpinNumber.class);
+    @Inject
+    Characters characters;
     private int versionNumber = 0;
-
     private long counter = 0;
+
+    @Inject
+    public SpinNumber() {
+    }
+
+    public int getVersionNumber() {
+        return versionNumber;
+    }
+
+    public void setVersionNumber(int versionNumber) {
+        this.versionNumber = versionNumber;
+    }
+
+    @Override
+    public long getPeriod() {
+        return 5000;
+    }
 
     @Override
     public SenseHatLEDImage nextImage() {

@@ -4,22 +4,22 @@ import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLEDImage;
 import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLEDPartialImage;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.interfaces.Animation;
 import com.amazonaws.greengrass.cddsensehat.leds.characters.Characters;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import javax.inject.Inject;
 
-/**
- * Created by timmatt on 2/21/17.
- */
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class Counter implements Animation {
-    private final Characters characters;
-
-    @Getter
-    long period = 10;
-
+    @Inject
+    Characters characters;
     private long counter = 0;
+
+    @Inject
+    public Counter() {
+    }
+
+    @Override
+    public long getPeriod() {
+        return 10;
+    }
 
     @Override
     public SenseHatLEDImage nextImage() {

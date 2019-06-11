@@ -1,17 +1,16 @@
 package com.amazonaws.greengrass.cddsensehat.leds;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
-/**
- * Created by timmatt on 2/24/17.
- */
-@Slf4j
 public class MacOutputStreamWriterFactory implements OutputStreamWriterFactory {
+    private final Logger log = LoggerFactory.getLogger(MacOutputStreamWriterFactory.class);
+
     @Override
     public OutputStreamWriter get(File file, Charset charset) {
         return new OutputStreamWriter(new OutputStream() {

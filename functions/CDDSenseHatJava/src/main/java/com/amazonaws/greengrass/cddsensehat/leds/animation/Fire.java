@@ -4,24 +4,24 @@ import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLED;
 import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLEDImage;
 import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLEDOrientation;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.interfaces.Animation;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import javax.inject.Inject;
 import java.util.Random;
 
-/**
- * Created by timmatt on 2/21/17.
- */
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class Fire implements Animation {
-    protected SenseHatLED black = new SenseHatLED(0, 0, 0);
-    protected SenseHatLED red = new SenseHatLED(255, 0, 0);
-    SenseHatLED[][] senseHatLEDs;
-    Random random = new Random(4);
+    private final SenseHatLED black = new SenseHatLED(0, 0, 0);
+    private final Random random = new Random(4);
+    private final SenseHatLED red = new SenseHatLED(255, 0, 0);
+    private SenseHatLED[][] senseHatLEDs;
 
-    @Getter
-    long period = 10;
+    @Inject
+    public Fire() {
+    }
+
+    @Override
+    public long getPeriod() {
+        return 10;
+    }
 
     @Override
     public SenseHatLEDImage nextImage() {
