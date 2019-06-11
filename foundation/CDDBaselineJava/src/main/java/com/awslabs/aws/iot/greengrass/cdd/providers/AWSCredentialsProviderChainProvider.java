@@ -11,6 +11,7 @@ public class AWSCredentialsProviderChainProvider implements SafeProvider<AWSCred
     @Inject
     private final SdkErrorHandler sdkErrorHandler;
 
+    @Inject
     public AWSCredentialsProviderChainProvider(SdkErrorHandler sdkErrorHandler) {
         this.sdkErrorHandler = sdkErrorHandler;
     }

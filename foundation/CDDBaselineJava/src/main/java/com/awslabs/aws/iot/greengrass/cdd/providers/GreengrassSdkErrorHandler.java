@@ -3,6 +3,7 @@ package com.awslabs.aws.iot.greengrass.cdd.providers;
 import com.amazonaws.SdkClientException;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.SdkErrorHandler;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,10 @@ public class GreengrassSdkErrorHandler implements SdkErrorHandler {
     String BAD_CREDENTIALS_SOLUTION = "Make sure the credentials still exist in IAM and that they have permissions to use the services you are requesting.";
 
     String BAD_PERMISSIONS_SOLUTION = "Add the necessary permissions and try again.";
+
+    @Inject
+    public GreengrassSdkErrorHandler() {
+    }
 
     @Override
     public void handleSdkError(SdkClientException e) {

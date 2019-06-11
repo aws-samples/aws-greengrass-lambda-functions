@@ -25,6 +25,7 @@ public class GreengrassCommunication implements Communication {
     @Inject
     private final EnvironmentProvider environmentProvider;
 
+    @Inject
     public GreengrassCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient, IotDataClient iotDataClient) {
         this.environmentProvider = environmentProvider;
         this.lambdaClient = lambdaClient;

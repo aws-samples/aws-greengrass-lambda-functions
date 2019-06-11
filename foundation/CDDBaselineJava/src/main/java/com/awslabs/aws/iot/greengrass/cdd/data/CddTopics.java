@@ -10,6 +10,7 @@ public class CddTopics {
     private final EnvironmentProvider environmentProvider;
     private Optional<String> cddBaselineTopic = Optional.empty();
 
+    @Inject
     public CddTopics(EnvironmentProvider environmentProvider) {
         this.environmentProvider = environmentProvider;
     }

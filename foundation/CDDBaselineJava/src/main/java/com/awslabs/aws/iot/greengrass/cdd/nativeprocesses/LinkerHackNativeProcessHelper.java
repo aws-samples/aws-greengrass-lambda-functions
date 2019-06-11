@@ -4,6 +4,7 @@ import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.interfaces.NativeProce
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,10 @@ public class LinkerHackNativeProcessHelper implements NativeProcessHelper {
     private final Logger log = LoggerFactory.getLogger(LinkerHackNativeProcessHelper.class);
     private Optional<String> linker = Optional.empty();
     private Optional<String> architecture = Optional.empty();
+
+    @Inject
+    public LinkerHackNativeProcessHelper() {
+    }
 
     @Override
     public void runProgramAndBlock(String program, Optional<List<String>> arguments, Optional<Map<String, String>> environmentVariables, Optional<Consumer<String>> stdoutConsumer, Optional<Consumer<String>> stderrConsumer) {
