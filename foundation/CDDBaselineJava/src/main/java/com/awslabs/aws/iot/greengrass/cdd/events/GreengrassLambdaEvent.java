@@ -22,7 +22,7 @@ public abstract class GreengrassLambdaEvent {
 
     public abstract LambdaLogger getLogger();
 
-    Object getInput() {
+    public Object getInput() {
         if (getJsonInput().isPresent()) {
             return getJsonInput().get();
         }
