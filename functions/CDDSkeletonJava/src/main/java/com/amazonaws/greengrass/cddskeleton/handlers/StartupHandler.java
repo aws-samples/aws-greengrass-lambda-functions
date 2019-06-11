@@ -5,22 +5,22 @@ import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassStartEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
 import com.google.common.eventbus.EventBus;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@Slf4j
-@NoArgsConstructor
 public class StartupHandler implements GreengrassStartEventHandler {
     private static final int START_DELAY_MS = 5000;
     private static final int PERIOD_MS = 5000;
     @Inject
-    private EventBus eventBus;
+    EventBus eventBus;
     @Inject
-    private Topics topics;
+    Topics topics;
+
+    @Inject
+    public StartupHandler() {
+    }
 
     /**
      * Receives the Greengrass start event from the event bus, publishes a message indicating it has started, and creates

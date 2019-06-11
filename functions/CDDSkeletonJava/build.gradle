@@ -1,7 +1,4 @@
 plugins {
-    // Processes Lombok annotations during build
-    id 'io.franzbecker.gradle-lombok' version '3.1.0'
-
     // Creates fat JAR
     id 'com.github.johnrengelman.shadow' version '5.0.0'
 
@@ -36,11 +33,6 @@ tasks.withType(JavaCompile) {
 
 wrapper {
     gradleVersion = '5.4.1'
-}
-
-lombok {
-    version = '1.18.8'
-    sha256 = ''
 }
 
 repositories {

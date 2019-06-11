@@ -6,16 +6,18 @@ import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
 import com.google.common.eventbus.EventBus;
-import lombok.NoArgsConstructor;
 
 import javax.inject.Inject;
 
-@NoArgsConstructor
 public class InputHandler implements GreengrassLambdaEventHandler {
     @Inject
-    private EventBus eventBus;
+    EventBus eventBus;
     @Inject
-    private Topics topics;
+    Topics topics;
+
+    @Inject
+    public InputHandler() {
+    }
 
     /**
      * Only care about messages on the topics.getInputTopic() topic

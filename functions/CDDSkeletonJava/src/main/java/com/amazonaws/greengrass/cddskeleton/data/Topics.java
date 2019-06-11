@@ -1,19 +1,41 @@
 package com.amazonaws.greengrass.cddskeleton.data;
 
 import com.awslabs.aws.iot.greengrass.cdd.data.CddTopics;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
-@NoArgsConstructor
 public class Topics {
-    @Getter(lazy = true)
-    private final String inputTopic = String.join("/", getBaselineTopic(), "input");
-    @Getter(lazy = true)
-    private final String outputTopic = String.join("/", getBaselineTopic(), "output");
     @Inject
-    private CddTopics cddTopics;
-    @Getter(lazy = true)
-    private final String baselineTopic = cddTopics.getCddDriverTopic(this);
+    CddTopics cddTopics;
+    private Optional<String> inputTopic = Optional.empty();
+    private Optional<String> outputTopic = Optional.empty();
+    private Optional<String> baselineTopic = Optional.empty();
+
+    public Topics() {
+    }
+
+    private String getBaselineTopic() {
+        if (!baselineTopic.isPresent()) {
+            baselineTopic = Optional.of(cddTopics.getCddDriverTopic(this));
+        }
+
+        return baselineTopic.get();
+    }
+
+    public String getInputTopic() {
+        if (!inputTopic.isPresent()) {
+            inputTopic = Optional.of(String.join("/", getBaselineTopic(), "input"));
+        }
+
+        return inputTopic.get();
+    }
+
+    public String getOutputTopic() {
+        if (!outputTopic.isPresent()) {
+            outputTopic = Optional.of(String.join("/", getBaselineTopic(), "output"));
+        }
+
+        return outputTopic.get();
+    }
 }
