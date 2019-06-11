@@ -12,7 +12,7 @@ plugins {
 apply plugin: 'java'
 
 group = 'cdd-baseline-java'
-version = '0.3'
+version = '0.3.1'
 
 description = """"""
 
