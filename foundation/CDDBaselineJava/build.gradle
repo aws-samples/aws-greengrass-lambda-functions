@@ -18,7 +18,7 @@ apply plugin: 'idea'
 mainClassName = 'not-necessary'
 
 group = 'com.awslabs.aws.iot.greengrass.cdd'
-version = '0.3.8'
+version = '0.3.9'
 
 description = """"""
 
