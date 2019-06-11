@@ -17,10 +17,15 @@ apply plugin: 'idea'
 // Required by shadow but not necessary
 mainClassName = 'not-necessary'
 
-group = 'cdd-baseline-java'
-version = '0.3.5'
+group = 'com.awslabs.aws.iot.greengrass.cdd'
+version = '0.3.6'
 
 description = """"""
+
+//shadowJar {
+    // Create a shadow JAR with all of the necessary dependencies
+//    archiveFileName = "aws-greengrass-lambda-functions-cdd-baseline-java-$version" + ".jar"
+//}
 
 def gradleDependencyVersion = '5.4.1'
 
@@ -59,23 +64,28 @@ tempDir.mkdirs()
 def javaSdkTarGz = 'aws-greengrass-core-sdk-java-1.3.1.tar.gz'
 def javaSdkJar = 'GreengrassJavaSDK-1.3.1.jar'
 
-task fetchGreengrassJavaSdk(type: Download) {
+task fetchJavaSdk(type: Download) {
     src "https://d1onfpft10uf5o.cloudfront.net/greengrass-sdk/downloads/java/8/$javaSdkTarGz"
     dest new File(libsDir, javaSdkTarGz)
     overwrite false
 }
 
-task extractJavaSdk(type: Copy, dependsOn: fetchGreengrassJavaSdk) {
-    from tarTree(fetchGreengrassJavaSdk.dest)
+task extractJavaSdk(type: Copy, dependsOn: fetchJavaSdk) {
+    from tarTree(fetchJavaSdk.dest)
     into tempDir
 }
 
-task downloadJavaSdk(type: Copy, dependsOn: extractJavaSdk) {
+task extractGreengrassJarFromJavaSdk(type: Copy, dependsOn: extractJavaSdk) {
     from "$tempDir/aws-greengrass-core-sdk-java/sdk/$javaSdkJar"
     into "$libsDir"
 }
 
-compileJava.dependsOn downloadJavaSdk
+task unpackGreengrassJar(type: Copy, dependsOn: extractGreengrassJarFromJavaSdk) {
+    from zipTree("$libsDir/$javaSdkJar")
+    into "$buildDir/classes/java/main"
+}
+
+compileJava.dependsOn unpackGreengrassJar
 
 // Workaround for https://github.com/gradle/gradle/issues/4956
 sourceSets.configureEach { sourceSet ->
