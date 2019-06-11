@@ -16,14 +16,14 @@ import java.util.Optional;
 
 public class GreengrassCommunication implements Communication {
     private final Logger log = LoggerFactory.getLogger(GreengrassCommunication.class);
-    public static final String EMPTY_CUSTOM_CONTEXT = "{}";
-    public static final String ENCODED_EMPTY_CUSTOM_CONTEXT = Base64.getEncoder().encodeToString(EMPTY_CUSTOM_CONTEXT.getBytes());
+    private static final String EMPTY_CUSTOM_CONTEXT = "{}";
+    private static final String ENCODED_EMPTY_CUSTOM_CONTEXT = Base64.getEncoder().encodeToString(EMPTY_CUSTOM_CONTEXT.getBytes());
     @Inject
-    private final IotDataClient iotDataClient;
+    private IotDataClient iotDataClient;
     @Inject
-    private final LambdaClient lambdaClient;
+    private LambdaClient lambdaClient;
     @Inject
-    private final EnvironmentProvider environmentProvider;
+    private EnvironmentProvider environmentProvider;
 
     @Inject
     public GreengrassCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient, IotDataClient iotDataClient) {

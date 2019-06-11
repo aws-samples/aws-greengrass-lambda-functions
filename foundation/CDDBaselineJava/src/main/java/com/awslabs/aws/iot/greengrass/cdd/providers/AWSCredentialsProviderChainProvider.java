@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 public class AWSCredentialsProviderChainProvider implements SafeProvider<AWSCredentialsProviderChain> {
     @Inject
-    private final SdkErrorHandler sdkErrorHandler;
+    private SdkErrorHandler sdkErrorHandler;
 
     @Inject
     public AWSCredentialsProviderChainProvider(SdkErrorHandler sdkErrorHandler) {
