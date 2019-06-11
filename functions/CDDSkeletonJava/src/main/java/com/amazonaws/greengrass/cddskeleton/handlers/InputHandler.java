@@ -2,18 +2,22 @@ package com.amazonaws.greengrass.cddskeleton.handlers;
 
 import com.amazonaws.greengrass.cddskeleton.data.Topics;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
+import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
+import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
+import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
 import com.google.common.eventbus.EventBus;
-import com.timmattison.greengrass.cdd.events.GreengrassLambdaEvent;
-import com.timmattison.greengrass.cdd.events.PublishMessageEvent;
-import com.timmattison.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
-import lombok.RequiredArgsConstructor;
 
 import javax.inject.Inject;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class InputHandler implements GreengrassLambdaEventHandler {
-    private final EventBus eventBus;
-    private final Topics topics;
+    @Inject
+    EventBus eventBus;
+    @Inject
+    Topics topics;
+
+    @Inject
+    public InputHandler() {
+    }
 
     /**
      * Only care about messages on the topics.getInputTopic() topic
@@ -42,7 +46,7 @@ public class InputHandler implements GreengrassLambdaEventHandler {
 
         logger.log(message);
 
-        eventBus.post(PublishMessageEvent.builder().topic(topics.getOutputTopic()).message(message).build());
+        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getOutputTopic()).message(message).build());
     }
 
     @Override
@@ -55,10 +59,10 @@ public class InputHandler implements GreengrassLambdaEventHandler {
 
         logger.log(message);
 
-        eventBus.post(PublishMessageEvent.builder().topic(topics.getOutputTopic()).message(message).build());
+        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getOutputTopic()).message(message).build());
     }
 
-    public String getInputDescription(GreengrassLambdaEvent greengrassLambdaEvent) {
+    private String getInputDescription(GreengrassLambdaEvent greengrassLambdaEvent) {
         if (greengrassLambdaEvent.getBinaryInput().isPresent()) {
             return ", with BINARY input";
         }
