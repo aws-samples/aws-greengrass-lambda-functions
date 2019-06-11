@@ -22,11 +22,6 @@ version = '0.3.8'
 
 description = """"""
 
-//shadowJar {
-    // Create a shadow JAR with all of the necessary dependencies
-//    archiveFileName = "aws-greengrass-lambda-functions-cdd-baseline-java-$version" + ".jar"
-//}
-
 def gradleDependencyVersion = '5.4.1'
 
 wrapper {
