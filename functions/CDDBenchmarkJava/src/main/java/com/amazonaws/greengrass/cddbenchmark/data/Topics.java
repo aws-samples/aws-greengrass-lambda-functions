@@ -1,21 +1,43 @@
 package com.amazonaws.greengrass.cddbenchmark.data;
 
-import com.timmattison.greengrass.cdd.data.CddTopics;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.awslabs.aws.iot.greengrass.cdd.data.CddTopics;
 
 import javax.inject.Inject;
+import java.util.EmptyStackException;
+import java.util.Optional;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class Topics {
-    private final CddTopics cddTopics;
+    @Inject
+    CddTopics cddTopics;
 
-    @Getter(lazy = true)
-    private final String baselineTopic = cddTopics.getCddDriverTopic(this);
+    @Inject
+    public Topics() {
+    }
 
-    @Getter(lazy = true)
-    private final String resultsTopic = String.join("/", getBaselineTopic(), "results", "java");
+    private Optional<String> baselineTopic = Optional.empty();
+    private Optional<String> resultsTopic = Optional.empty();
+    private Optional<String> outputTopic = Optional.empty();
 
-    @Getter(lazy = true)
-    private final String outputTopic = String.join("/", getBaselineTopic(), "output", "java");
+    public String getBaselineTopic() {
+        if (!baselineTopic.isPresent()) {
+            baselineTopic = Optional.of(cddTopics.getCddDriverTopic(this));
+        }
+
+        return baselineTopic.get();
+    }
+
+    public String getResultsTopic() {
+        if (!resultsTopic.isPresent()) {
+            resultsTopic = Optional.of(String.join("/", getBaselineTopic(), "results", "java"));
+        }
+
+        return resultsTopic.get();
+    }
+    public String getOutputTopic() {
+        if (!outputTopic.isPresent()) {
+            outputTopic = Optional.of(String.join("/", getBaselineTopic(), "output", "java"));
+        }
+
+        return outputTopic.get();
+    }
 }
