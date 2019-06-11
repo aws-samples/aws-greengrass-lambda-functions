@@ -1,10 +1,9 @@
 package com.amazonaws.greengrass.cdddmi.dmi;
 
 import com.amazonaws.greengrass.cdddmi.dmi.interfaces.DmiFetcher;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -13,14 +12,13 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Stream;
 
-@Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class BasicDmiFetcher implements DmiFetcher {
-    public static final String ACCESS_DENIED = "ACCESS_DENIED";
-    public static final String IO_EXCEPTION = "IO_EXCEPTION";
-    public static final String ERROR = "ERROR";
+    private static final String ACCESS_DENIED = "ACCESS_DENIED";
+    private static final String IO_EXCEPTION = "IO_EXCEPTION";
+    private static final String ERROR = "ERROR";
     private static final String DMI_BASE_PATH_NAME = "/sys/class/dmi/id";
     private static final Path DMI_BASE_PATH = new File(DMI_BASE_PATH_NAME).toPath();
+    private final Logger log = LoggerFactory.getLogger(BasicDmiFetcher.class);
 
     @Override
     public Optional<Map<String, Object>> fetch() {

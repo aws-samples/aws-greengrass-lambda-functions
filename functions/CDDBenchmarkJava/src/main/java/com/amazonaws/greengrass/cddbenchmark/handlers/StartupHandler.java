@@ -3,11 +3,11 @@ package com.amazonaws.greengrass.cddbenchmark.handlers;
 import com.amazonaws.greengrass.cddbenchmark.data.Topics;
 import com.amazonaws.greengrass.javasdk.IotDataClient;
 import com.amazonaws.greengrass.javasdk.model.PublishRequest;
+import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassStartEvent;
+import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
 import com.google.gson.Gson;
-import com.timmattison.greengrass.cdd.events.GreengrassStartEvent;
-import com.timmattison.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.nio.ByteBuffer;
@@ -18,20 +18,24 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
-@Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class StartupHandler implements GreengrassStartEventHandler {
-    public static final int START_DELAY_MS = 0;
-    public static final int PERIOD_MS = 5000;
-
+    private static final int START_DELAY_MS = 0;
+    private static final int PERIOD_MS = 5000;
     // AtomicLongs for counters are overkill in the simple example but this code was watered down from a much more
     //   aggressive multithreaded test that I might revive later
     private static final AtomicLong messagesPublished = new AtomicLong(0);
     private static final AtomicLong errors = new AtomicLong(0);
     // Keep track of when the application started
     private static final long startTime = System.currentTimeMillis();
-    private final IotDataClient iotDataClient;
-    private final Topics topics;
+    private final Logger log = LoggerFactory.getLogger(StartupHandler.class);
+    @Inject
+    IotDataClient iotDataClient;
+    @Inject
+    Topics topics;
+
+    @Inject
+    public StartupHandler() {
+    }
 
     @Override
     public void execute(GreengrassStartEvent greengrassStartEvent) {
