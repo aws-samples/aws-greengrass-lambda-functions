@@ -2,6 +2,9 @@ plugins {
     // Enables download tasks
     id "de.undercouch.download" version "3.4.3"
 
+    // Creates fat JAR
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
+
     // Adds dependencyUpdates task
     id 'com.github.ben-manes.versions' version '0.21.0'
 }
@@ -11,10 +14,11 @@ apply plugin: 'maven'
 apply plugin: 'application'
 apply plugin: 'idea'
 
-mainClassName = 'not-applicable'
+// Required by shadow but not necessary
+mainClassName = 'not-necessary'
 
 group = 'cdd-baseline-java'
-version = '0.3.4'
+version = '0.3.5'
 
 description = """"""
 
