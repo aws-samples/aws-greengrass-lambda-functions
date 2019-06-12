@@ -1,12 +1,10 @@
 package com.amazonaws.greengrass.cddsensehat.events;
 
-import lombok.Builder;
-import lombok.Data;
+import org.immutables.value.Value;
 
-@Data
-@Builder
-public class MessageFromCloudEvent {
-    private String topic;
+@Value.Immutable
+public abstract class MessageFromCloudEvent {
+    public abstract String getTopic();
 
-    private String message;
+    public abstract String getMessage();
 }

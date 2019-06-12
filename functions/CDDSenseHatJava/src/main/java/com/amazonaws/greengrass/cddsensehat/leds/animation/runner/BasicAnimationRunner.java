@@ -3,8 +3,6 @@ package com.amazonaws.greengrass.cddsensehat.leds.animation.runner;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.interfaces.Animation;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.runner.interfaces.AnimationRunner;
 import com.amazonaws.greengrass.cddsensehat.leds.arrays.SenseHatLEDArray;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -12,10 +10,13 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class BasicAnimationRunner implements AnimationRunner {
-    private final SenseHatLEDArray senseHatLEDArray;
+    @Inject
+    SenseHatLEDArray senseHatLEDArray;
+
+    @Inject
+    public BasicAnimationRunner() {
+    }
 
     private Optional<Timer> timer = Optional.empty();
 

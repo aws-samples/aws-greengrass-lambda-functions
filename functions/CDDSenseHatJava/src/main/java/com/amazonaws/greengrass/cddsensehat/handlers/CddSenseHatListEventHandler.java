@@ -2,12 +2,12 @@ package com.amazonaws.greengrass.cddsensehat.handlers;
 
 import com.amazonaws.greengrass.cddsensehat.data.Topics;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.interfaces.Animation;
+import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
+import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishObjectEvent;
+import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
 import com.google.common.eventbus.EventBus;
-import com.timmattison.greengrass.cdd.events.GreengrassLambdaEvent;
-import com.timmattison.greengrass.cdd.events.PublishObjectEvent;
-import com.timmattison.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -16,12 +16,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class CddSenseHatListEventHandler implements GreengrassLambdaEventHandler {
-    private final EventBus eventBus;
-    private final Set<Animation> animationSet;
-    private final Topics topics;
+    private final Logger log = LoggerFactory.getLogger(CddSenseHatListEventHandler.class);
+    @Inject
+    EventBus eventBus;
+    @Inject
+    Set<Animation> animationSet;
+    @Inject
+    Topics topics;
+
+    @Inject
+    public CddSenseHatListEventHandler() {
+    }
 
     @Override
     public boolean isTopicExpected(String topic) {
@@ -39,6 +45,6 @@ public class CddSenseHatListEventHandler implements GreengrassLambdaEventHandler
                         .map(animation -> animation.getClass().getSimpleName())
                         .collect(Collectors.toList()));
 
-        eventBus.post(PublishObjectEvent.builder().topic(topics.getListOutputTopic()).object(animationList).build());
+        eventBus.post(ImmutablePublishObjectEvent.builder().topic(topics.getListOutputTopic()).object(animationList).build());
     }
 }

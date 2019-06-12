@@ -2,18 +2,23 @@ package com.amazonaws.greengrass.cddsensehat.handlers;
 
 import com.amazonaws.greengrass.cddsensehat.data.Topics;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.runner.interfaces.AnimationRunner;
-import com.timmattison.greengrass.cdd.events.GreengrassLambdaEvent;
-import com.timmattison.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
+import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-@Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class CddSenseHatStopEventHandler implements GreengrassLambdaEventHandler {
-    private final AnimationRunner animationRunner;
-    private final Topics topics;
+    private final Logger log = LoggerFactory.getLogger(CddSenseHatStopEventHandler.class);
+    @Inject
+    AnimationRunner animationRunner;
+    @Inject
+    Topics topics;
+
+    @Inject
+    public CddSenseHatStopEventHandler() {
+    }
 
     @Override
     public boolean isTopicExpected(String topic) {
