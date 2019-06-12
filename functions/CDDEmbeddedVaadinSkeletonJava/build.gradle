@@ -38,8 +38,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-def cddBaselineVersion = 'cdd-baseline-java-0.4.0'
-def greengrassJavaSdkVersion = 'greengrass-java-sdk-1.3.1'
+def cddBaselineVersion = 'cdd-baseline-java-0.3.9'
 def commonsIoVersion = '2.6'
 def gsonVersion = '2.8.5'
 def guiceVersion = '4.2.2'
