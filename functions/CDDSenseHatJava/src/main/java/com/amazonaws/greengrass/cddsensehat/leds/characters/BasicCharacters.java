@@ -1,8 +1,5 @@
 package com.amazonaws.greengrass.cddsensehat.leds.characters;
 
-/**
- * Created by timmatt on 3/6/17.
- */
 public class BasicCharacters implements Characters {
     public static final int MAX_CHARACTERS = 256;
     private AbstractCharacter[] characters;

@@ -1,14 +1,11 @@
 package com.amazonaws.greengrass.cddsensehat.leds;
 
-/**
- * Created by timmatt on 2/21/17.
- */
 public class SenseHatLEDPartialImage {
     private final SenseHatLED[][] senseHatLEDs;
     private final String renderedLEDs = null;
     private String framebufferData;
 
-    public SenseHatLEDPartialImage(SenseHatLED[][] senseHatLEDs) {
+    SenseHatLEDPartialImage(SenseHatLED[][] senseHatLEDs) {
         this.senseHatLEDs = senseHatLEDs;
     }
 

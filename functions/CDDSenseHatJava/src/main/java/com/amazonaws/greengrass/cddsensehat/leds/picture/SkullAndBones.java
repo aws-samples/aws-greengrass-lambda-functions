@@ -3,9 +3,6 @@ package com.amazonaws.greengrass.cddsensehat.leds.picture;
 import com.amazonaws.greengrass.cddsensehat.leds.AbstractImage;
 import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLED;
 
-/**
- * Created by timmatt on 2/21/17.
- */
 public class SkullAndBones extends AbstractImage {
     @Override
     protected int getWidth() {
@@ -19,7 +16,6 @@ public class SkullAndBones extends AbstractImage {
 
     @Override
     protected void draw(SenseHatLED[][] temp) {
-        // TODO: This is terrible
         setLine(temp, 0, black, white, white, white, white, white, white, black);
         setLine(temp, 1, white, black, white, black, black, white, black, white);
         setLine(temp, 2, white, white, black, white, white, black, white, white);

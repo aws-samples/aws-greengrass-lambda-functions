@@ -1,10 +1,7 @@
 package com.amazonaws.greengrass.cddsensehat.leds;
 
-/**
- * Created by timmatt on 2/20/17.
- */
 public class SenseHatLEDImage {
-    public static final int COUNT = 64;
+    private static final int COUNT = 64;
     private static final int CHARACTERS_PER_PIXEL = 2;
     private SenseHatLED[] senseHatLEDs;
     private String framebufferData;

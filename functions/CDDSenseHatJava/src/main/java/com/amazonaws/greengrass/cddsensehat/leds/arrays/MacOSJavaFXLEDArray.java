@@ -1,8 +1,5 @@
 package com.amazonaws.greengrass.cddsensehat.leds.arrays;
 
-/**
- * Created by timmatt on 3/6/17.
- */
 /*
 public class MacOSJavaFXLEDArray extends Application implements JavaFXLEDArray {
     public static final int PIXEL_SIZE = 80;

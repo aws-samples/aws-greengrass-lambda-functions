@@ -1,11 +1,7 @@
 package com.amazonaws.greengrass.cddsensehat.leds.characters;
 
-
 import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLED;
 
-/**
- * Created by timmatt on 2/21/17.
- */
 public class Character2 extends AbstractCharacter {
     @Override
     protected void draw(SenseHatLED[][] temp) {
