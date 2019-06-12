@@ -39,6 +39,7 @@ repositories {
 }
 
 def cddBaselineVersion = 'cdd-baseline-java-0.4.0'
+def greengrassJavaSdkVersion = 'greengrass-java-sdk-1.3.1'
 def gsonVersion = '2.8.5'
 def guiceVersion = '4.2.2'
 def slf4jVersion = '1.7.26'
@@ -50,6 +51,8 @@ def junitVersion = '4.12'
 
 dependencies {
     compile "com.github.aws-samples:aws-greengrass-lambda-functions:$cddBaselineVersion"
+    compile "com.github.aws-samples:aws-greengrass-lambda-functions:$greengrassJavaSdkVersion"
+
     compile "com.google.code.gson:gson:$gsonVersion"
     compile "com.google.inject:guice:$guiceVersion"
     compile "org.slf4j:slf4j-jdk14:$slf4jVersion"
@@ -58,5 +61,6 @@ dependencies {
     compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
     compile "com.amazonaws:aws-lambda-java-core:$awsLambdaJavaCoreVersion"
     compile "commons-io:commons-io:$commonsIoVersion"
+
     testCompile "junit:junit:$junitVersion"
 }
