@@ -58,7 +58,6 @@ dependencies {
     compile "org.immutables:value:$immutablesValueVersion"
 
     compile "com.github.aws-samples:aws-greengrass-lambda-functions:$cddBaselineVersion"
-    compile "com.github.aws-samples:aws-greengrass-lambda-functions:$greengrassJavaSdkVersion"
 
     compile "commons-io:commons-io:$commonsIoVersion"
     compile "com.google.code.gson:gson:$gsonVersion"

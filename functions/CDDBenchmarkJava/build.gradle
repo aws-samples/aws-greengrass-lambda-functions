@@ -49,7 +49,6 @@ def awsLambdaJavaCoreVersion = '1.2.0'
 
 dependencies {
     compile "com.github.aws-samples:aws-greengrass-lambda-functions:$cddBaselineVersion"
-    compile "com.github.aws-samples:aws-greengrass-lambda-functions:$greengrassJavaSdkVersion"
 
     compile "commons-io:commons-io:$commonsIoVersion"
     compile "com.google.code.gson:gson:$gsonVersion"

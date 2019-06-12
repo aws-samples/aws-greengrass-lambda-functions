@@ -50,7 +50,6 @@ def junitVersion = '4.12'
 
 dependencies {
     compile "com.github.aws-samples:aws-greengrass-lambda-functions:$cddBaselineVersion"
-    compile "com.github.aws-samples:aws-greengrass-lambda-functions:$greengrassJavaSdkVersion"
 
     compile "com.google.code.gson:gson:$gsonVersion"
     compile "com.google.inject:guice:$guiceVersion"

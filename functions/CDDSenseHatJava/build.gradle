@@ -51,7 +51,6 @@ def jettyVersion = '9.4.18.v20190429'
 
 dependencies {
     compile "com.github.aws-samples:aws-greengrass-lambda-functions:$cddBaselineVersion"
-    compile "com.github.aws-samples:aws-greengrass-lambda-functions:$greengrassJavaSdkVersion"
 
     compile "commons-io:commons-io:$commonsIoVersion"
     compile "com.google.code.gson:gson:$gsonVersion"
