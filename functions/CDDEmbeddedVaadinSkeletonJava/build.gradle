@@ -51,7 +51,7 @@ def immutablesValueVersion = '2.7.5'
 
 def jettyVersion = '9.4.19.v20190610'
 def guiceVaadinVersion = '2.0.1-vaadin8'
-def vaadinVersion = '8.8.2'
+def vaadinVersion = '8.8.3'
 
 dependencies {
     annotationProcessor "org.immutables:value:$immutablesValueVersion"
