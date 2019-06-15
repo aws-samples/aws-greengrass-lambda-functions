@@ -103,6 +103,7 @@ docker run \
    -v $PWD/build:/build \
    -v $HOME/.ssh:/root/.ssh \
    -v $PWD/dtoutput:/dtoutput \
+   -v $PWD/logs:/logs \
    -v /var/run/docker.sock:/var/run/docker.sock \
    -i --rm \
    -e AWS_REGION=$REGION \
