@@ -5,5 +5,9 @@ import com.amazonaws.greengrass.cddsensehat.leds.SenseHatLEDImage;
 public interface Animation {
     long getPeriod();
 
+    default void reset() {
+        // Do nothing
+    }
+
     SenseHatLEDImage nextImage();
 }

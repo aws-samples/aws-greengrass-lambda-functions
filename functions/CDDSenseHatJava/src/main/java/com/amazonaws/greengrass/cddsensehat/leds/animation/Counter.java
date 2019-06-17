@@ -17,6 +17,11 @@ public class Counter implements Animation {
     }
 
     @Override
+    public void reset() {
+        counter = 0;
+    }
+
+    @Override
     public long getPeriod() {
         return 10;
     }
