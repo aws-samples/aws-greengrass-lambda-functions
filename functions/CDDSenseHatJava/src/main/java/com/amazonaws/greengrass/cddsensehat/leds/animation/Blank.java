@@ -10,6 +10,11 @@ public class Blank implements Animation {
     }
 
     @Override
+    public void reset() {
+        // Do nothing
+    }
+
+    @Override
     public SenseHatLEDImage nextImage() {
         return new SenseHatLEDImage();
     }
