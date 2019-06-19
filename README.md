@@ -28,6 +28,7 @@ Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/
   - [CDDDMIJava](functions/CDDDMIJava) - relays Desktop Management Interface (DMI) information to the cloud when requested via MQTT
   - [CDDBenchmarkJava](functions/CDDBenchmarkJava) - a naive Java benchmark that creates a pinned function that sends messages to itself
   - [CDDSenseHatJava](functions/CDDSenseHatJava) - shows how to control a SenseHat display on a Raspberry Pi
+  - [CDDDockerJava](functions/CDDDockerJava) - shows how to control Docker with Greengrass
 
 ## License Summary
 
