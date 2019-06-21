@@ -51,7 +51,7 @@ Pull a Docker image from ECR (e.g. repository/image) with the Greengrass core's 
 Replace `ACCOUNT_ID`, `REGION`, `repository` and `image` with the appropriate values
 
 ```
-./pull.sh wirepas_Core ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/repository:image
+./pull.sh ${AWS_IOT_THING_NAME} ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/repository:image
 ```
 
 ## run.sh usage examples
