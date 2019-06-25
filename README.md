@@ -30,6 +30,10 @@ Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/
   - [CDDSenseHatJava](functions/CDDSenseHatJava) - shows how to control a SenseHat display on a Raspberry Pi
   - [CDDDockerJava](functions/CDDDockerJava) - shows how to control Docker with Greengrass
 
+- C
+  - [ARM32SampleC](functions/ARM32SampleC) - Hello World in C for ARM32 architectures
+  - [X86_64SampleC](functions/X86_64SampleC) - Hello World in C for X86_64 architectures
+
 ## License Summary
 
 This sample code is made available under a modified MIT license. See the LICENSE file.
