@@ -32,7 +32,7 @@ Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/
 
 - C
   - [ARM32SampleC](functions/ARM32SampleC) - Hello World in C for ARM32 architectures
-  - [X86_64SampleC](functionsX86_64SampleC) - Hello World in C for X86_64 architectures
+  - [X86_64SampleC](functions/X86_64SampleC) - Hello World in C for X86_64 architectures
 
 ## License Summary
 
