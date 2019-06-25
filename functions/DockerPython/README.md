@@ -14,4 +14,4 @@ GGP -g test-group -a X86_64 -d deployments/python-docker.conf --script
 ```
 where GGP is your provisioner method of choice (docker or jar)
 
-3. Copy the generated script in ./build
+3. Copy the generated script in ./build to your core device and run it. Then TBD
