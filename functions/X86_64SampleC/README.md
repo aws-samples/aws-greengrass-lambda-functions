@@ -6,7 +6,7 @@ This function is the Hello World example from the [AWS Greengrass Core C SDK](ht
 
 ## Build times
 
-The build script in this directory uses Docker to build the AWS C++ SDK and the example functions. Even on a fast machine this may take hours the first time the build runs.
+The build script in this directory uses Docker to build the AWS C++ SDK and the example functions. Even on a fast machine this may take hours the first time the build runs with Dockerfile.full. The normal Dockerfile pulls a pre-built image from Dockerhub.
 
 ## Compatibility
 
