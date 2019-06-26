@@ -10,7 +10,7 @@ from threading import Timer
 import greengrasssdk
 
 # Name of container to pull, read from, and manage
-MY_CONTAINER = "bfirsh/reticulate-splines"
+MY_CONTAINER = "armhf/hello-world"
 
 # Creating a greengrass core sdk client
 client = greengrasssdk.client('iot-data')
@@ -50,9 +50,10 @@ info_topic = base_docker_topic + '/info'
 def kill_all_containers():
     all_containers = docker_client.containers.list()
     for container in all_containers:
-        kill_msg = {"message":"Killing container: " + container.name}
+        kill_msg = {"message":"Killing and removing container: " + container.name}
         client.publish(topic=info_topic, payload=json.dumps(kill_msg))
         container.stop()
+        container.remove()
     survival_msg = {"message":"Containers surviving: " + str(docker_client.containers.list())}
     client.publish(topic=info_topic, payload=json.dumps(survival_msg))
 
