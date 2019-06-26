@@ -10,7 +10,7 @@ from threading import Timer
 import greengrasssdk
 
 # Name of container to pull, read from, and manage
-MY_CONTAINER = "armhf/hello-world"
+MY_IMAGE_NAMES = ["armhf/hello-world"]
 
 # Creating a greengrass core sdk client
 client = greengrasssdk.client('iot-data')
@@ -57,19 +57,24 @@ def kill_all_containers():
     survival_msg = {"message":"Containers surviving: " + str(docker_client.containers.list())}
     client.publish(topic=info_topic, payload=json.dumps(survival_msg))
 
-def pull_container():
+def pull_image(image_name):
     pull_msg = {"message":"Pulling container: " + MY_CONTAINER}
     client.publish(topic=info_topic, payload=json.dumps(pull_msg))
     docker_client.images.pull(MY_CONTAINER)
     pull_msg = {"message":"Pulled container: " + MY_CONTAINER}
     client.publish(topic=info_topic, payload=json.dumps(pull_msg))
-
-def run_container():
-    container = docker_client.containers.run(MY_CONTAINER,detach=True)
+# Run an arbitraruy number of containers from the same image
+def run_containers(image_name, number_to_run):
+    for i in range(number_to_run):
+        container = docker_client.containers.run(MY_CONTAINER,devices=["/dev/vchiq:/dev/vchiq:rwm","/dev/vcsm:/dev/vcsm:rwm"],detach=True)
+# Run exactly one container of a given image
+def run_single_container(image_name):
+    run_containers(image_name, 1)
+# Continually read and publish the logs of a container
+def stream_logs(container)
     for line in container.logs(stream=True):
         payload['message'] = 'Docker running with output {}.'.format(line.strip())
         client.publish(topic=logging_topic, payload=json.dumps(payload))
-
 
 
 # This is a dummy handler and will not be invoked
@@ -79,7 +84,8 @@ def function_handler(event, context):
 
 def main():
     kill_all_containers()
-    pull_container()
-    run_container()
+    for image_name in MY_IMAGE_NAMES:
+        pull_container(image_name)
+        run_single_container(image_name)
 
 main()
