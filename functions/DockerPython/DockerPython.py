@@ -59,7 +59,7 @@ def send_info(payload_json):
 def send_log(payload_json):
     client.publish(topic=log_topic, payload=json.dumps(payload_json))
 
-# Kill All running containers upon lambda startup
+# Kill and remove all running containers upon lambda startup
 def kill_all_containers():
     all_containers = docker_client.containers.list()
     for container in all_containers:
@@ -106,13 +106,12 @@ def spawn_all_logs():
 # ALL execution begins here, excepting the dummy function_handler below
 def main():
     send_info({"message":"Lambda starting. Executing main..."})
-    
     kill_all_containers()
     for image_name in MY_IMAGE_NAMES:
         pull_container(image_name)
         run_single_container(image_name)
-
     spawn_all_logs()
+
 main()
 
 # This is a dummy handler and will not be invoked
