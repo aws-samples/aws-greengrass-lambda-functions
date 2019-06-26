@@ -108,7 +108,7 @@ def main():
     send_info({"message":"Lambda starting. Executing main..."})
     kill_all_containers()
     for image_name in MY_IMAGE_NAMES:
-        pull_container(image_name)
+        pull_image(image_name)
         run_single_container(image_name)
     spawn_all_logs()
 
