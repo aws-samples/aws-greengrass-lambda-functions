@@ -73,18 +73,18 @@ def kill_all_containers():
 # pull a single image from dockerhub using it's string name
 # TODO: ECR integration
 def pull_image(image_name):
-    pull_msg = {"message":"Pulling container: " + MY_CONTAINER}
+    pull_msg = {"message":"Pulling container: " + image_name}
     send_info(pull_msg)
 
-    docker_client.images.pull(MY_CONTAINER)
+    docker_client.images.pull(image_name)
 
-    pull_msg = {"message":"Pulled container: " + MY_CONTAINER}
+    pull_msg = {"message":"Pulled container: " + image_name}
     send_info(pull_msg)
 
 # Run an arbitrary number of containers from the same image
 def run_containers(image_name, number_to_run):
     for i in range(number_to_run):
-        container = docker_client.containers.run(MY_CONTAINER, detach=True)
+        container = docker_client.containers.run(image_name, detach=True)
 
 # Run exactly one container of a given image
 def run_single_container(image_name):
