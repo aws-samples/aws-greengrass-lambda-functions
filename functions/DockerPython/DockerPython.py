@@ -94,7 +94,9 @@ def run_single_container(image_name):
 def log_stream_worker(container):
     for line in container.logs(stream=True):
         payload['message'] = 'Docker running with output {}.'.format(line.strip())
+        payload['container_name'] = container.name
         send_log(payload)
+        
 # creates log threads
 # TODO: kill threads gracefully
 def spawn_all_logs():
