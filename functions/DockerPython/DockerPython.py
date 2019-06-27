@@ -11,7 +11,7 @@ import threading
 import greengrasssdk
 
 # Name of containers to pull, read from, and manage
-MY_IMAGE_NAMES = ["armhf/hello-world"]
+MY_IMAGE_NAMES = ["bfirsh/reticulate-splines","bfirsh/reticulate-splines"]
 
 # Create a greengrass core sdk client
 client = greengrasssdk.client('iot-data')
@@ -85,6 +85,7 @@ def pull_image(image_name):
 def run_containers(image_name, number_to_run):
     for i in range(number_to_run):
         container = docker_client.containers.run(image_name, detach=True)
+        send_info({"message":"Running container with name: " + container.name})
 
 # Run exactly one container of a given image
 def run_single_container(image_name):
