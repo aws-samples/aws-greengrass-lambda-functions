@@ -11,8 +11,17 @@ import threading
 import greengrasssdk
 
 # Name of containers to pull, read from, and manage
-MY_IMAGE_NAMES = ["bfirsh/reticulate-splines","bfirsh/reticulate-splines"]
-
+MY_IMAGES = [
+    {
+        'image_name': 'bfirsh/reticulate-splines',
+        'needs_pull':False,
+        'num_containers': 2,
+        'docker_run_args': {
+            # 'devices': ['/dev/vchiq:/dev/vchiq:rwm','/dev/vcsm:/dev/vcsm:rwm'],
+            'detach':True
+        }
+    }
+]
 # Create a greengrass core sdk client
 client = greengrasssdk.client('iot-data')
 
@@ -81,9 +90,17 @@ def pull_image(image_name):
 
 
 # Run an arbitrary number of containers from the same image
-def run_containers(image_name, number_to_run):
-    for i in range(number_to_run):
-        container = docker_client.containers.run(image_name, detach=True)
+# According to additional information supplied by the image_info
+# dictionary.
+def run_containers(image_info):
+    num_containers = image_info['num_containers']
+    image_name = image_info['image_name']
+    docker_run_args = image_info['docker_run_args']
+
+    send_info({'message':'With image '+image_name+', running '+str(num_containers)+' containers.'})
+
+    for i in range(num_containers):
+        container = docker_client.containers.run(image_name, **docker_run_args)
         send_info({"message":"Running container with name: " + container.name})
 
 
@@ -110,14 +127,19 @@ def spawn_all_logs():
         t = threading.Thread(target=log_stream_worker, args=(container,))
         t.start()
 
+def process_image_info(image_info):
+    send_info({"message":"Working on image " + image_info['image_name'] + "."})
+    if image_info['needs_pull']:
+        pull_image(image_info['image_name'])
+
+    run_containers(image_info)
+
 # ALL execution begins here, excepting the dummy function_handler below
 def main():
     send_info({"message":"Lambda starting. Executing main..."})
     kill_all_containers()
-    for image_name in MY_IMAGE_NAMES:
-        send_info({"message":"Working on image " + image_name + "."})
-        pull_image(image_name)
-        run_single_container(image_name)
+    for image_info in MY_IMAGES:
+        process_image_info(image_info)
     spawn_all_logs()
 
 main()
