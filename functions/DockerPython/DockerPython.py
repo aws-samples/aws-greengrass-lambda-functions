@@ -10,14 +10,27 @@ import threading
 # from threading import Timer
 import greengrasssdk
 
-# Name of containers to pull, read from, and manage
+# List of dictionaries that specify image information
 MY_IMAGES = [
     {
+        # Which image to pull from dockerhub
+        # TODO: pull from Amazon ECR
         'image_name': 'bfirsh/reticulate-splines',
-        'needs_pull':False,
+        # whether to pull the image or, if it is already local
+        # on the greengrass device, to skip pulling it.
+        'needs_pull':True,
+        # The number of containers to run based off the image
         'num_containers': 2,
+        # Additional arguments passed to docker run as **kwargs
+        # See below for options
+        # https://docker-py.readthedocs.io/en/stable/containers.html
         'docker_run_args': {
+            # Add raspberry pi camera device
             # 'devices': ['/dev/vchiq:/dev/vchiq:rwm','/dev/vcsm:/dev/vcsm:rwm'],
+            
+            # MUST be true unless you wish the container to die with
+            # the lambda. You'll likely have to raise the memory limit
+            # on the lambda if you'd like this
             'detach':True
         }
     }
@@ -45,7 +58,7 @@ GROUP_ID = os.environ['GROUP_ID']
 THING_NAME = os.environ['AWS_IOT_THING_NAME']
 THING_ARN = os.environ['AWS_IOT_THING_ARN']
 
-# initialize response
+# initialize generic response
 payload = {}
 payload['group_id'] = GROUP_ID
 payload['thing_name'] = THING_NAME
