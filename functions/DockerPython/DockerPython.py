@@ -73,13 +73,12 @@ def kill_all_containers():
 # pull a single image from dockerhub using it's string name
 # TODO: ECR integration
 def pull_image(image_name):
-    pull_msg = {"message":"Pulling container: " + image_name}
-    send_info(pull_msg)
+    send_info({"message":"Pulling container: " + image_name})
 
     docker_client.images.pull(image_name)
 
-    pull_msg = {"message":"Pulled container: " + image_name}
-    send_info(pull_msg)
+    send_info({"message":"Pulled container: " + image_name})
+
 
 # Run an arbitrary number of containers from the same image
 def run_containers(image_name, number_to_run):
@@ -87,16 +86,21 @@ def run_containers(image_name, number_to_run):
         container = docker_client.containers.run(image_name, detach=True)
         send_info({"message":"Running container with name: " + container.name})
 
+
 # Run exactly one container of a given image
 def run_single_container(image_name):
     run_containers(image_name, 1)
 
+
 # Continually read and publish the logs of a container
 def log_stream_worker(container):
+    container_payload = {}
+    container_payload['thing_name'] = THING_NAME
+    container_payload['container_name'] = container.name
+
     for line in container.logs(stream=True):
-        payload['message'] = 'Docker running with output {}.'.format(line.strip())
-        payload['container_name'] = container.name
-        send_log(payload)
+        container_payload['container_output'] = line.strip()
+        send_log(container_payload)
         
 # creates log threads
 # TODO: kill threads gracefully
