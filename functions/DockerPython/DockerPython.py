@@ -140,6 +140,8 @@ def logger_timer(container, timeout):
     time.sleep(timeout)
     stopevent.set()
     testthread.join()
+    send_info({"message":"Stopping container "+ container.name + " after timeout."})
+    container.stop()
     return
 
 # Continually read and publish the logs of a container
