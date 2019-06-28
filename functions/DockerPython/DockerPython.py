@@ -153,7 +153,7 @@ def log_stream_worker(container, stopevent):
     for line in container.logs(stream=True):
         container_payload['container_output'] = line.strip()
         send_log(container_payload)
-        if stopevent.isSet()
+        if stopevent.isSet():
             return
 
 # ALL execution begins here, excepting the dummy function_handler below
