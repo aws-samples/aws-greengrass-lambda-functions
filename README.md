@@ -17,6 +17,7 @@ Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/
   - [HelloWorldPythonWithCloudFormation](functions/HelloWorldPythonWithCloudFormation) - Hello, World in Python with a CloudFormation template that demonstrates how to build republish rules that the provisioner can launch automatically
   - [LiFXPython](functions/LiFXPython) - control LiFX bulbs
   - [SocketServerPython](functions/SocketServerPython) - an example of how to listen on a socket in Python and relay the inbound TCP messages to the cloud via MQTT
+  - [DockerPython](functions/DockerPython) - shows how to control Docker with Greengrass in Python
 
 - NodeJS
   - [HelloWorldNode](functions/HelloWorldNode) - Hello, World in Node
