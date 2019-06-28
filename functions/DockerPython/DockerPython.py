@@ -142,7 +142,7 @@ def logger_timer(container, time_out):
     testthread.join(timeout=time_out)
     stopevent.set()
     
-    send_info({"message":"Stopping container "+ container.name + " after timeout."})
+    send_info({"message":"Stopping container "+ container.name + " after given timeout."})
     container.stop()
     return
 
@@ -157,8 +157,6 @@ def log_stream_worker(container, stopevent):
         send_log(container_payload)
         if stopevent.isSet():
             return
-        else:
-            send_info({"stopevent" : str(stopevent.isSet())})
 
 # ALL execution begins here, excepting the dummy function_handler below
 def main():
