@@ -21,7 +21,7 @@ MY_IMAGES = [
         'needs_pull':True,
         # how long to run the container before stopping it
         # in seconds
-        'timeout': 60,
+        'timeout': 30,
         # The number of containers to run based off the image
         'num_containers': 2,
         # Additional arguments passed to docker run as **kwargs
