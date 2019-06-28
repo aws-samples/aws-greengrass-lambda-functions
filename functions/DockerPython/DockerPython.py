@@ -119,27 +119,29 @@ def run_containers(image_info):
     num_containers = image_info['num_containers']
     image_name = image_info['image_name']
     docker_run_args = image_info['docker_run_args']
+    image_time_out = image_info['timeout']
 
     send_info({'message':'With image '+image_name+', running '+str(num_containers)+' containers.'})
 
     for i in range(num_containers):
         container = docker_client.containers.run(image_name, **docker_run_args)
-        send_info({"message":"Running container with name: " + container.name})
+        send_info({"message":"Running container with name: " + container.name + " and timeout " + str(image_time_out)})
         # Spawn a logger_timer thread. note that this in turn will spawn its own thread,
         # this is the only way I could think of doing this without extending the scope
         # of the thread information
-        t = threading.Thread(target=logger_timer, args=(container,image_info['timeout'],))
+        t = threading.Thread(target=logger_timer, args=(container,image_time_out,))
         t.start()
 
 # Spawns a log_stream_worker thread on container
 # that is terminated after timeout
-def logger_timer(container, timeout):
+def logger_timer(container, time_out):
     stopevent = threading.Event()
-    testthread = threading.Thread(target=log_stream_worker, args=(container,stopevent,))
+    testthread = threading.Thread(target=log_stream_worker, args=(container,stopevent))
     testthread.start()
-    time.sleep(timeout)
+    # time.sleep(time_out)
+    testthread.join(timeout=time_out)
     stopevent.set()
-    testthread.join()
+    
     send_info({"message":"Stopping container "+ container.name + " after timeout."})
     container.stop()
     return
@@ -155,6 +157,8 @@ def log_stream_worker(container, stopevent):
         send_log(container_payload)
         if stopevent.isSet():
             return
+        else:
+            send_info({"stopevent" : str(stopevent.isSet())})
 
 # ALL execution begins here, excepting the dummy function_handler below
 def main():
