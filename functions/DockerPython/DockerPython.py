@@ -39,7 +39,7 @@ MY_IMAGES = [
     }
 ]
 # Create a greengrass core sdk client
-client = greengrasssdk.client('iot-data')
+ggc_client = greengrasssdk.client('iot-data')
 
 # create client for interacting with docker
 # additional options may be needed if networking containers
@@ -77,12 +77,12 @@ log_topic = base_docker_topic + '/logs'
 # publishes info json to the THING_NAME/docker/info topic
 # for general information from the lambda
 def send_info(payload_json):
-    client.publish(topic=info_topic, payload=json.dumps(payload_json))
+    ggc_client.publish(topic=info_topic, payload=json.dumps(payload_json))
 
 # publishes log json to the THING_NAME/docker/log topic
 # ONLY for logs from docker containers
 def send_log(payload_json):
-    client.publish(topic=log_topic, payload=json.dumps(payload_json))
+    ggc_client.publish(topic=log_topic, payload=json.dumps(payload_json))
 
 # Kill and remove all running containers upon lambda startup
 def kill_all_containers():
@@ -161,9 +161,10 @@ def log_stream_worker(container, stopevent):
 # ALL execution begins here, excepting the dummy function_handler below
 def main():
     send_info({"message":"Lambda starting. Executing main..."})
-    kill_all_containers()
-    for image_info in MY_IMAGES:
-        process_image_info(image_info)
+    send_info({"shadowstuff":ggc_client.get_thing_shadow()})
+    # kill_all_containers()
+    # for image_info in MY_IMAGES:
+    #     process_image_info(image_info)
 
 main()
 
