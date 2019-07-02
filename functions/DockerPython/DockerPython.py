@@ -7,6 +7,7 @@ import os
 import platform
 import docker
 import threading
+import time
 from multiprocessing import Process
 import greengrasssdk
 
@@ -161,7 +162,20 @@ def log_stream_worker(container, stopevent):
 # ALL execution begins here, excepting the dummy function_handler below
 def main():
     send_info({"message":"Lambda starting. Executing main..."})
+    send_info({"message":"finna update_thing_shadow"})
+    # shad = {"state":{"fresh":"fruit"}}
+    shad =  {
+        "state": {
+            "reported": {
+                "color": "red"
+            }
+        }
+    } 
+    ggc_client.update_thing_shadow(thingName=THING_NAME, payload=json.dumps(shad))
     send_info({"shadowstuff":ggc_client.get_thing_shadow(thingName=THING_NAME)})
+    while True:
+        time.sleep(10)
+        send_info({"shadowstuff":ggc_client.get_thing_shadow(thingName=THING_NAME)})
     # kill_all_containers()
     # for image_info in MY_IMAGES:
     #     process_image_info(image_info)
