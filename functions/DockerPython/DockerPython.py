@@ -72,7 +72,7 @@ def kill_all_containers():
 # Clears all current containers and updates them to match
 # the container_config
 def refresh_containers(container_config):
-    send_info({"message":"refreshing to version "+str(container_config['deploy_version'])})
+    send_info({"message":"refreshing containers..."})
     kill_all_containers()
     for image_info in container_config['my_images']:
         process_image_info(image_info)
@@ -192,9 +192,7 @@ def function_handler(event, context):
     # if refresh_containers succeeds, report the new state
     reported_state =  {
         "state": {
-            "reported": {
-                desired_config
-            }
+            "reported": desired_state
         }
     }
     update_my_shadow(reported_state)

@@ -25,10 +25,22 @@ and architecture is the architecture of your core device, either X86_64 or ARM32
 5. Copy the generated script located in ./build to your core device and run it.
 6. In the AWS console, subscribe to the topics `NAME_OF_CORE/docker/logs` and `NAME_OF_CORE/docker/info`. Note that the name of the core is the name of the group concatenated with "_Core"
 7. Also subscribe to `$aws/things/NAME_OF_CORE/shadow/update/delta`
-8. Open the AWS IoT Core console. Hit greengrass in the left menu. Select the submenu groups. Select your group. Go to Cores and select your core. Hit shadow, then, edit, and delete anything already there. Paste in the contents of example_container_config.txt
+
+8. Run the python script in the utils directory of this repository to allow shadow syncing. 
+```
+python ggcore_enable_sync.py GROUP_ID
+```
+where GROUP_ID is the full hex group id found in the Group page of the AWS console under settings.
+TODO: make shadow sync a part of the provisioner.
+
+9. Redeploy the group from the console to update the shadowsync setting.
+
+10. Open the AWS IoT Core console. Hit greengrass in the left menu. Select the submenu groups. Select your group. Go to Cores and select your core. Hit shadow, then, edit, and delete anything already there. Paste in the contents of example_container_config.txt
 
 > NOTE: you must run docker containers that are compatible with your architecture. Recommended containers are "bfirsh/reticulate-splines" for X86_64 Core devices and "cea2aj/reticulate-splines-arm" for ARM32 Core devices. These will containers print a simple counter message every second. Replace the "image_name" field in the example_container_config.txt file to switch containers.
 
-9. In the `NAME_OF_CORE/docker/info` topic you'll see diagnostic messages from the lambda, in `NAME_OF_CORE/docker/info` you'll see logs read directly from the standard output of the containers. These logs have been forwarded over MQTT by the lambda. In the `$aws/things/NAME_OF_CORE/shadow/update/delta` topic, you'll see the delta of the shadow. Since this core had no container config to start with, you should see the container config you just pasted into the shadow in the AWS Console.
+11. If you already have these docker images pulled to your Core device, awesome! If not, change the "use_local" field to false in the configuration.
 
-10. Repeat step 8, but try changing a configuration option, like timeout. You should see new containers start with the new configuration. 
+12. In the `NAME_OF_CORE/docker/info` topic you'll see diagnostic messages from the lambda, in `NAME_OF_CORE/docker/info` you'll see logs read directly from the standard output of the containers. These logs have been forwarded over MQTT by the lambda. In the `$aws/things/NAME_OF_CORE/shadow/update/delta` topic, you'll see the delta of the shadow. Since this core had no container config to start with, you should see the container config you just pasted into the shadow in the AWS Console.
+
+13. Repeat step 10, but try changing a configuration option, like timeout. You should see new containers start with the new configuration. 

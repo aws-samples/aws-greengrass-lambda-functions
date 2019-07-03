@@ -1,7 +1,6 @@
 {
   "desired": {
     "container_config":{ 
-      "deploy_version":1,
       "my_images":[
             {
                 "image_name": "bfirsh/reticulate-splines",
