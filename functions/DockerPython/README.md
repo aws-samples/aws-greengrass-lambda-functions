@@ -1,21 +1,20 @@
 # DockerPython
 
 ## What is this function?
-
-DockerPython presents way to manage docker containers.
+DockerPython presents way to manage docker containers on core devices.
 This lambda uses an alternative model to the CDDDockerJava way of managing containers.
 
-Instead of instructing the lambda to pull containers over MQTT, the DockerPython lambda has information about the containers it should pull hard-coded into it. 
-This means that every lambda deployment roughly corresponds to every container deployment. 
-This model fits better with some use cases by avoiding complications from missing or repeated MQTT messages. 
+## How it works
+The DockerPython lambda reads container_config objects from its shadow. These objects have information what docker images to run and with what options.
+This model fits better with some use cases by avoiding complications from missing or repeated MQTT messages that could arise with CDDDockerJava's model. 
 Additionally, this model allows you to specify optional arguments to pass to _docker run_ through the Docker Python SDK, such as specifying the path to a camera device.
 
-By submitting this pull request, I confirm that you can use, modify, copy, and redistribute this contribution, under the terms of your choice.
-
 ## Setup
-
-1. Clone this repository.
-2. Run the following command
+1. On you GreenGrass Core device, install docker. This setup can vary widely, look up how to install docker for your specific platform
+2. On your GreenGrass Core device, start the docker daemon by running `sudo systemctl start docker` for Ubuntu devices, or `sudo service docker start` on Amazon Linux. Other platforms may have other commands to start the daemon. This code was tested on Ubuntu.
+or on 
+3. Clone this repository.
+4. Run the following command
 ```
 GGP -g groupname -a architecture -d deployments/python-docker.conf --script
 ```
@@ -23,12 +22,13 @@ where GGP is your provisioner method of choice (docker or jar),
 groupname is the name of the group you'd like to create,
 and architecture is the architecture of your core device, either X86_64 or ARM32 or ARM64.
 
-> NOTE: you must run docker containers that are compatible with your architecture. The default containers in DockerPython.py are X86_64. If you need to change this, modify MY_IMAGES in the python script to use the image name "armhf/hello-world"
+5. Copy the generated script located in ./build to your core device and run it.
+6. In the AWS console, subscribe to the topics `NAME_OF_CORE/docker/logs` and `NAME_OF_CORE/docker/info`. Note that the name of the core is the name of the group concatenated with "_Core"
+7. Also subscribe to `$aws/things/NAME_OF_CORE/shadow/update/delta`
+8. Open the AWS IoT Core console. Hit greengrass in the left menu. Select the submenu groups. Select your group. Go to Cores and select your core. Hit shadow, then, edit, and delete anything already there. Paste in the contents of example_container_config.txt
 
-3. Copy the generated script located in ./build to your core device and run it.
-4. In the AWS console, subscribe to the topics NAME_OF_CORE/docker/logs and NAME_OF_CORE/docker/info. Note that the name of the core is the name of the group concatenated with "_Core"
-5. In the /docker/info topic you'll see diagnostic messages from the lambda, in /docker/logs you'll see logs read directly from the standard output of the containers. These logs have been forwarded over MQTT by the lambda.
-6. If you'd like, modify MY_IMAGES with additional options and redeploy with
-```
-GGP -g groupname -a architecture -d deployments/python-docker.conf
-```
+> NOTE: you must run docker containers that are compatible with your architecture. Recommended containers are "bfirsh/reticulate-splines" for X86_64 Core devices and "cea2aj/reticulate-splines-arm" for ARM32 Core devices. These will containers print a simple counter message every second. Replace the "image_name" field in the example_container_config.txt file to switch containers.
+
+9. In the `NAME_OF_CORE/docker/info` topic you'll see diagnostic messages from the lambda, in `NAME_OF_CORE/docker/info` you'll see logs read directly from the standard output of the containers. These logs have been forwarded over MQTT by the lambda. In the `$aws/things/NAME_OF_CORE/shadow/update/delta` topic, you'll see the delta of the shadow. Since this core had no container config to start with, you should see the container config you just pasted into the shadow in the AWS Console.
+
+10. Repeat step 8, but try changing a configuration option, like timeout. You should see new containers start with the new configuration. 

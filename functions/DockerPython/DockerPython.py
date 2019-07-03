@@ -1,5 +1,6 @@
 # DockerPython.py
 # Demonstrates an alternative to CDDDockerJava for managing docker containers
+# See README.md
 
 import json
 import logging
@@ -11,48 +12,6 @@ import time
 from multiprocessing import Process
 import greengrasssdk
 
-# List of dictionaries that specify image information
-"container_config":{ "deploy_version":"1",
-  "my_images":[
-        {
-            'image_name': 'bfirsh/reticulate-splines',
-            'use_local':True,
-            'timeout': 30,
-            'num_containers': 2,
-            'docker_run_args': {
-                # 'devices': ['/dev/vchiq:/dev/vchiq:rwm','/dev/vcsm:/dev/vcsm:rwm'],
-                'detach':True
-            }
-        }
-    ]
-}
-# MY_IMAGES = [
-#     {
-#         # Which image to pull from dockerhub
-#         # TODO: pull from Amazon ECR
-#         'image_name': 'bfirsh/reticulate-splines',
-#         # whether to pull the image or, if it is already local
-#         # on the greengrass device, to skip pulling it.
-#         'use_local':True,
-#         # how long to run the container before stopping it
-#         # in seconds
-#         'timeout': 30,
-#         # The number of containers to run based off the image
-#         'num_containers': 2,
-#         # Additional arguments passed to docker run as **kwargs
-#         # See below for options
-#         # https://docker-py.readthedocs.io/en/stable/containers.html
-#         'docker_run_args': {
-#             # Add raspberry pi camera device
-#             # 'devices': ['/dev/vchiq:/dev/vchiq:rwm','/dev/vcsm:/dev/vcsm:rwm'],
-            
-#             # MUST be true unless you wish the container to die with
-#             # the lambda. You'll likely have to raise the memory limit
-#             # on the lambda if you'd like this
-#             'detach':True
-#         }
-#     }
-# ]
 # Create a greengrass core sdk client
 ggc_client = greengrasssdk.client('iot-data')
 
@@ -113,7 +72,7 @@ def kill_all_containers():
 # Clears all current containers and updates them to match
 # the container_config
 def refresh_containers(container_config):
-    send_info({"message":"refreshing to version "+container_config['deploy_version']})
+    send_info({"message":"refreshing to version "+str(container_config['deploy_version'])})
     kill_all_containers()
     for image_info in container_config['my_images']:
         process_image_info(image_info)
