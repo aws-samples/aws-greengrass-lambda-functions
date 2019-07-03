@@ -35,12 +35,13 @@ TODO: make shadow sync a part of the provisioner.
 
 9. Redeploy the group from the console to update the shadowsync setting.
 
-10. Open the AWS IoT Core console. Hit greengrass in the left menu. Select the submenu groups. Select your group. Go to Cores and select your core. Hit shadow, then, edit, and delete anything already there. Paste in the contents of example_container_config.txt
+10. Open the AWS IoT Core console. Hit greengrass in the left menu. Select the submenu groups. Select your group. Go to Cores and select your core. Hit shadow, then, edit, and delete anything already there. Paste in the contents of example_container_config.json
 
-> NOTE: you must run docker containers that are compatible with your architecture. Recommended containers are "bfirsh/reticulate-splines" for X86_64 Core devices and "cea2aj/reticulate-splines-arm" for ARM32 Core devices. These will containers print a simple counter message every second. Replace the "image_name" field in the example_container_config.txt file to switch containers.
+> NOTE: you must run docker containers that are compatible with your architecture. Recommended containers are "bfirsh/reticulate-splines" for X86_64 Core devices and "cea2aj/reticulate-splines-arm" for ARM32 Core devices. These will containers print a simple counter message every second. Replace the "image_name" field in the example_container_config.json file to switch containers.
 
 11. If you already have these docker images pulled to your Core device, awesome! If not, change the "use_local" field to false in the configuration.
 
 12. In the `NAME_OF_CORE/docker/info` topic you'll see diagnostic messages from the lambda, in `NAME_OF_CORE/docker/info` you'll see logs read directly from the standard output of the containers. These logs have been forwarded over MQTT by the lambda. In the `$aws/things/NAME_OF_CORE/shadow/update/delta` topic, you'll see the delta of the shadow. Since this core had no container config to start with, you should see the container config you just pasted into the shadow in the AWS Console.
 
-13. Repeat step 10, but try changing a configuration option, like timeout. You should see new containers start with the new configuration. 
+13. Repeat step 10, but try changing a configuration option, like timeout. You should see new containers start with the new configuration.
+14. If you instead paste in an identical configuration and save the shadow, nothing happens. There is no difference between desired and reported states, so no work is done.
