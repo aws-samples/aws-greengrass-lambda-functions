@@ -1,0 +1,19 @@
+# List of dictionaries that specify image information
+{
+  "desired": {
+    "container_config":{ 
+      "deploy_version":1,
+      "my_images":[
+            {
+                "image_name": "bfirsh/reticulate-splines",
+                "use_local":true,
+                "timeout": 12,
+                "num_containers": 3,
+                "docker_run_args": {
+                    "detach":true
+                }
+            }
+        ]
+    }
+  }
+}
