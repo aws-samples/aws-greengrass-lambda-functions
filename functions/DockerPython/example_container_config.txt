@@ -1,0 +1,17 @@
+{
+  "desired": {
+    "container_config":{ 
+      "my_images":[
+            {
+                "image_name": "bfirsh/reticulate-splines",
+                "use_local":true,
+                "timeout": 12,
+                "num_containers": 1,
+                "docker_run_args": {
+                    "detach":true
+                }
+            }
+        ]
+    }
+  }
+}

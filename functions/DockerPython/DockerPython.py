@@ -1,5 +1,6 @@
 # DockerPython.py
 # Demonstrates an alternative to CDDDockerJava for managing docker containers
+# See README.md
 
 import json
 import logging
@@ -7,39 +8,12 @@ import os
 import platform
 import docker
 import threading
+import time
 from multiprocessing import Process
 import greengrasssdk
 
-# List of dictionaries that specify image information
-MY_IMAGES = [
-    {
-        # Which image to pull from dockerhub
-        # TODO: pull from Amazon ECR
-        'image_name': 'bfirsh/reticulate-splines',
-        # whether to pull the image or, if it is already local
-        # on the greengrass device, to skip pulling it.
-        'needs_pull':True,
-        # how long to run the container before stopping it
-        # in seconds
-        'timeout': 30,
-        # The number of containers to run based off the image
-        'num_containers': 2,
-        # Additional arguments passed to docker run as **kwargs
-        # See below for options
-        # https://docker-py.readthedocs.io/en/stable/containers.html
-        'docker_run_args': {
-            # Add raspberry pi camera device
-            # 'devices': ['/dev/vchiq:/dev/vchiq:rwm','/dev/vcsm:/dev/vcsm:rwm'],
-            
-            # MUST be true unless you wish the container to die with
-            # the lambda. You'll likely have to raise the memory limit
-            # on the lambda if you'd like this
-            'detach':True
-        }
-    }
-]
 # Create a greengrass core sdk client
-client = greengrasssdk.client('iot-data')
+ggc_client = greengrasssdk.client('iot-data')
 
 # create client for interacting with docker
 # additional options may be needed if networking containers
@@ -77,12 +51,12 @@ log_topic = base_docker_topic + '/logs'
 # publishes info json to the THING_NAME/docker/info topic
 # for general information from the lambda
 def send_info(payload_json):
-    client.publish(topic=info_topic, payload=json.dumps(payload_json))
+    ggc_client.publish(topic=info_topic, payload=json.dumps(payload_json))
 
 # publishes log json to the THING_NAME/docker/log topic
 # ONLY for logs from docker containers
 def send_log(payload_json):
-    client.publish(topic=log_topic, payload=json.dumps(payload_json))
+    ggc_client.publish(topic=log_topic, payload=json.dumps(payload_json))
 
 # Kill and remove all running containers upon lambda startup
 def kill_all_containers():
@@ -95,10 +69,18 @@ def kill_all_containers():
     survival_msg = {"message":"Containers surviving: " + str(docker_client.containers.list())}
     send_info(survival_msg)
 
-# Work on a single image definition, ie one entry in MY_IMAGES
+# Clears all current containers and updates them to match
+# the container_config
+def refresh_containers(container_config):
+    send_info({"message":"refreshing containers..."})
+    kill_all_containers()
+    for image_info in container_config['my_images']:
+        process_image_info(image_info)
+
+# Work on a single image definition, ie one entry in my_images
 def process_image_info(image_info):
     send_info({"message":"Working on image " + image_info['image_name'] + "."})
-    if image_info['needs_pull']:
+    if image_info['use_local']:
         pull_image(image_info['image_name'])
     run_containers(image_info)
 
@@ -113,9 +95,10 @@ def pull_image(image_name):
 
 
 # Run an arbitrary number of containers from the same image
-# According to additional information supplied by the image_info
+# According to additional options supplied by the image_info
 # dictionary.
 def run_containers(image_info):
+    # pull information from the image_info object
     num_containers = image_info['num_containers']
     image_name = image_info['image_name']
     docker_run_args = image_info['docker_run_args']
@@ -123,7 +106,9 @@ def run_containers(image_info):
 
     send_info({'message':'With image '+image_name+', running '+str(num_containers)+' containers.'})
 
+    # repeat for multiple containers according to the info above
     for i in range(num_containers):
+        # use the docker_run_args specified in the image_info as docker run's kwargs
         container = docker_client.containers.run(image_name, **docker_run_args)
         send_info({"message":"Running container with name: " + container.name + " and timeout " + str(image_time_out)})
         # Spawn a logger_timer thread. note that this in turn will spawn its own thread,
@@ -138,36 +123,78 @@ def logger_timer(container, time_out):
     stopevent = threading.Event()
     testthread = threading.Thread(target=log_stream_worker, args=(container,stopevent))
     testthread.start()
-    # time.sleep(time_out)
+    # Join the thread after the timeout
+    # regardless of exit status
     testthread.join(timeout=time_out)
+    # toggle the event so the thread will stop
+    # otherwise the thread would continue
     stopevent.set()
-    
     send_info({"message":"Stopping container "+ container.name + " after given timeout."})
     container.stop()
     return
 
 # Continually read and publish the logs of a container
 def log_stream_worker(container, stopevent):
+    # initilize an initial payload
     container_payload = {}
     container_payload['thing_name'] = THING_NAME
     container_payload['container_name'] = container.name
-
+    # stream the container logs
+    # note this for loop does not terminate unless the stopevent is set
     for line in container.logs(stream=True):
         container_payload['container_output'] = line.strip()
         send_log(container_payload)
         if stopevent.isSet():
             return
 
-# ALL execution begins here, excepting the dummy function_handler below
+# update the shadow of this AWS Thing
+def update_my_shadow(json_payload):
+    ggc_client.update_thing_shadow(thingName=THING_NAME, payload=json.dumps(json_payload))
+
+# This main is executed upon the start of the lambda runtime
 def main():
     send_info({"message":"Lambda starting. Executing main..."})
-    kill_all_containers()
-    for image_info in MY_IMAGES:
-        process_image_info(image_info)
+    send_info({"message":"finna update_my_shadow"})
+    shad =  {
+        "state": {
+            "reported": {
+                "color": "red"
+            }
+        }
+    } 
+    update_my_shadow(shad)
+    send_info({"shadowstuff":ggc_client.get_thing_shadow(thingName=THING_NAME)})
+    shadowpayload = ggc_client.get_thing_shadow(thingName=THING_NAME)['payload']
+    send_info(json.loads(shadowpayload))
+   
 
 main()
 
-# This is a dummy handler and will not be invoked
-# Instead the main function below will be executed
+# handler for updates on the topic 
+# $aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta
+# which means it will be invoked whenever the shadow is changed
+# "event" parameter is a description of the delta
 def function_handler(event, context):
+    send_info({"message":"Handling delta function"})
+    send_info({"event":event})
+    # if no state info present, nothing we can do
+    if 'state' not in event:
+        return
+
+    desired_state = event['state']
+
+    # if no config present, no updates needed, at least not on our end
+    if 'container_config' not in desired_state:
+        return
+
+    desired_config = desired_state['container_config']
+    refresh_containers(desired_config)
+    # if refresh_containers succeeds, report the new state
+    reported_state =  {
+        "state": {
+            "reported": desired_state
+        }
+    }
+    update_my_shadow(reported_state)
+
     return
