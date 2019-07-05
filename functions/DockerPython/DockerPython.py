@@ -1,6 +1,8 @@
 # DockerPython.py
 # Demonstrates an alternative to CDDDockerJava for managing docker containers
 # See README.md
+# NOTE: until support for local shadow service is added to the GGProvisioner,
+# this will not work offline
 
 import json
 import logging
@@ -71,8 +73,8 @@ def kill_all_containers():
 
 # Clears all current containers and updates them to match
 # the container_config
-def refresh_containers(container_config):
-    send_info({"message":"refreshing containers..."})
+def update_containers(container_config):
+    send_info({"message":"updating containers..."})
     kill_all_containers()
     for image_info in container_config['my_images']:
         process_image_info(image_info)
@@ -149,25 +151,40 @@ def log_stream_worker(container, stopevent):
 
 # update the shadow of this AWS Thing
 def update_my_shadow(json_payload):
+    # NOTE: until support for local shadow service is added to the GGProvisioner,
+    # this will not work offline
     ggc_client.update_thing_shadow(thingName=THING_NAME, payload=json.dumps(json_payload))
 
-# This main is executed upon the start of the lambda runtime
+# Takes a desired state, updates containers, and reports new state
+def update_to_desired_state(desired_state):
+    # if no config present, no updates needed, at least not on our end
+    if 'container_config' not in desired_state:
+        return
+
+    desired_config = desired_state['container_config']
+    # update containers. if this fails the runtime will crash
+    # so updating the reported state below will never execute
+    update_containers(desired_config)
+    # if update_containers succeeds, report the new state
+    reported_state =  {
+        "state": {
+            "reported": desired_state
+        }
+    }
+    update_my_shadow(reported_state)
+
+# Executed upon startup of GG daemon or upon deployment of this lambda
+# note: this is not the only entry point, the function_handler below
+# is invoked upon shadow delta update
 def main():
     send_info({"message":"Lambda starting. Executing main..."})
-    send_info({"message":"finna update_my_shadow"})
-    shad =  {
-        "state": {
-            "reported": {
-                "color": "red"
-            }
-        }
-    } 
-    update_my_shadow(shad)
-    send_info({"shadowstuff":ggc_client.get_thing_shadow(thingName=THING_NAME)})
-    shadowpayload = ggc_client.get_thing_shadow(thingName=THING_NAME)['payload']
-    send_info(json.loads(shadowpayload))
-   
+    # NOTE: until support for local shadow service is added to the GGProvisioner,
+    # this will not work offline
+    my_shadow = ggc_client.get_thing_shadow(thingName=THING_NAME)
+    desired_state = my_shadow['desired']
+    update_to_desired_state(desired_state)
 
+# invoke main
 main()
 
 # handler for updates on the topic 
@@ -181,20 +198,10 @@ def function_handler(event, context):
     if 'state' not in event:
         return
 
+    # the delta channel spits back the desired state
+    # if desired and reported states differ
     desired_state = event['state']
 
-    # if no config present, no updates needed, at least not on our end
-    if 'container_config' not in desired_state:
-        return
-
-    desired_config = desired_state['container_config']
-    refresh_containers(desired_config)
-    # if refresh_containers succeeds, report the new state
-    reported_state =  {
-        "state": {
-            "reported": desired_state
-        }
-    }
-    update_my_shadow(reported_state)
+    update_to_desired_state(desired_state)
 
     return
