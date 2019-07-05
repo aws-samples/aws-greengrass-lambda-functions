@@ -23,9 +23,9 @@ groupname is the name of the group you'd like to create,
 and architecture is the architecture of your core device, either X86_64 or ARM32 or ARM64.
 
 5. Copy the generated script located in ./build to your core device and run it.
-6. In the AWS console, subscribe to the topics `NAME_OF_CORE/docker/logs`. Note that the name of the core is the name of the group concatenated with "_Core"
-7. Subscribe to `NAME_OF_CORE/docker/info` also.
+6. Install python3.7 on your GG Core device. This lambda runs as root without containerization, so you should install it separately. `sudo apt install python3.7` works with apt. You may have to `pip install greengrasssdk`, and make sure that when you run `pip -V` the output corresponds to python 3.7
 
+7. In the AWS console, subscribe to the topics `NAME_OF_CORE/docker/logs` and `NAME_OF_CORE/docker/info`. Note that the name of the core is the name of the group concatenated with "_Core"
 8. Run the python script in the utils directory of this repository to allow shadow syncing. 
 ```
 python utils/ggcore_enable_sync.py GROUP_ID
