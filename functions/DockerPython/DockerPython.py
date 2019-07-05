@@ -80,7 +80,7 @@ def update_containers(container_config):
 # Work on a single image definition, ie one entry in my_images
 def process_image_info(image_info):
     send_info({"message":"Working on image " + image_info['image_name'] + "."})
-    if image_info['use_local']:
+    if not image_info['use_local']:
         pull_image(image_info['image_name'])
     run_containers(image_info)
 
@@ -188,7 +188,7 @@ main()
 # which means it will be invoked whenever the shadow is changed
 # "event" parameter is a description of the delta
 def function_handler(event, context):
-    send_info({"message":"Handling delta function"})
+    send_info({"message":"Handling delta..."})
     # if no state info present, nothing we can do
     if 'state' not in event:
         return
