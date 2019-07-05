@@ -1,8 +1,6 @@
 # DockerPython.py
 # Demonstrates an alternative to CDDDockerJava for managing docker containers
 # See README.md
-# NOTE: until support for local shadow service is added to the GGProvisioner,
-# this will not work offline
 
 import json
 import logging
@@ -151,8 +149,6 @@ def log_stream_worker(container, stopevent):
 
 # update the shadow of this AWS Thing
 def update_my_shadow(json_payload):
-    # NOTE: until support for local shadow service is added to the GGProvisioner,
-    # this will not work offline
     ggc_client.update_thing_shadow(thingName=THING_NAME, payload=json.dumps(json_payload))
 
 # Takes a desired state, updates containers, and reports new state
@@ -178,8 +174,6 @@ def update_to_desired_state(desired_state):
 # is invoked upon shadow delta update
 def main():
     send_info({"message":"Lambda starting. Executing main..."})
-    # NOTE: until support for local shadow service is added to the GGProvisioner,
-    # this will not work offline
     my_shadow = json.loads(ggc_client.get_thing_shadow(thingName=THING_NAME)['payload'])
     send_info({"my_shadow":my_shadow})
     if 'desired' in my_shadow['state']:
@@ -195,7 +189,6 @@ main()
 # "event" parameter is a description of the delta
 def function_handler(event, context):
     send_info({"message":"Handling delta function"})
-    send_info({"event":event})
     # if no state info present, nothing we can do
     if 'state' not in event:
         return

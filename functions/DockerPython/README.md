@@ -13,7 +13,7 @@ Additionally, this model allows you to specify optional arguments to pass to _do
 1. On you GreenGrass Core device, install docker. This setup can vary widely, look up how to install docker for your specific platform
 2. On your GreenGrass Core device, start the docker daemon by running `sudo systemctl start docker` for Ubuntu devices, or `sudo service docker start` on Amazon Linux. Other platforms may have other commands to start the daemon. This code was tested on Ubuntu.
 or on 
-3. Clone this repository.
+3. Clone this repository and cd to the parent directory.
 4. Run the following command
 ```
 GGP -g groupname -a architecture -d deployments/python-docker.conf --script
@@ -23,12 +23,12 @@ groupname is the name of the group you'd like to create,
 and architecture is the architecture of your core device, either X86_64 or ARM32 or ARM64.
 
 5. Copy the generated script located in ./build to your core device and run it.
-6. In the AWS console, subscribe to the topics `NAME_OF_CORE/docker/logs` and `NAME_OF_CORE/docker/info`. Note that the name of the core is the name of the group concatenated with "_Core"
-7. Also subscribe to `$aws/things/NAME_OF_CORE/shadow/update/delta`
+6. In the AWS console, subscribe to the topics `NAME_OF_CORE/docker/logs`. Note that the name of the core is the name of the group concatenated with "_Core"
+7. Subscribe to `NAME_OF_CORE/docker/info` also.
 
 8. Run the python script in the utils directory of this repository to allow shadow syncing. 
 ```
-python ggcore_enable_sync.py GROUP_ID
+python utils/ggcore_enable_sync.py GROUP_ID
 ```
 where GROUP_ID is the full hex group id found in the Group page of the AWS console under settings.
 TODO: make shadow sync a part of the provisioner.
@@ -41,7 +41,7 @@ TODO: make shadow sync a part of the provisioner.
 
 11. If you already have these docker images pulled to your Core device, awesome! If not, change the "use_local" field to false in the configuration.
 
-12. In the `NAME_OF_CORE/docker/info` topic you'll see diagnostic messages from the lambda, in `NAME_OF_CORE/docker/info` you'll see logs read directly from the standard output of the containers. These logs have been forwarded over MQTT by the lambda. In the `$aws/things/NAME_OF_CORE/shadow/update/delta` topic, you'll see the delta of the shadow. Since this core had no container config to start with, you should see the container config you just pasted into the shadow in the AWS Console.
+12. In the `NAME_OF_CORE/docker/info` topic you'll see diagnostic messages from the lambda, in `NAME_OF_CORE/docker/info` you'll see logs read directly from the standard output of the containers. These logs have been forwarded over MQTT by the lambda.
 
 13. Repeat step 10, but try changing a configuration option, like timeout. You should see new containers start with the new configuration.
 14. If you instead paste in an identical configuration and save the shadow, nothing happens. There is no difference between desired and reported states, so no work is done.
