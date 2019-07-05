@@ -51,12 +51,12 @@ log_topic = base_docker_topic + '/logs'
 # publishes info json to the THING_NAME/docker/info topic
 # for general information from the lambda
 def send_info(payload_json):
-    ggc_client.publish(topic=info_topic, payload=json.dumps(payload_json))
+    ggc_client.publish(topic=info_topic, payload=json.dumps(payload_json).encode())
 
 # publishes log json to the THING_NAME/docker/log topic
 # ONLY for logs from docker containers
 def send_log(payload_json):
-    ggc_client.publish(topic=log_topic, payload=json.dumps(payload_json))
+    ggc_client.publish(topic=log_topic, payload=json.dumps(payload_json).encode())
 
 # Kill and remove all running containers upon lambda startup
 def kill_all_containers():
@@ -142,14 +142,14 @@ def log_stream_worker(container, stopevent):
     # stream the container logs
     # note this for loop does not terminate unless the stopevent is set
     for line in container.logs(stream=True):
-        container_payload['container_output'] = line.strip()
+        container_payload['container_output'] = line.decode().strip()
         send_log(container_payload)
         if stopevent.isSet():
             return
 
 # update the shadow of this AWS Thing
 def update_my_shadow(json_payload):
-    ggc_client.update_thing_shadow(thingName=THING_NAME, payload=json.dumps(json_payload))
+    ggc_client.update_thing_shadow(thingName=THING_NAME, payload=json.dumps(json_payload).encode())
 
 # Takes a desired state, updates containers, and reports new state
 def update_to_desired_state(desired_state):
