@@ -8,10 +8,9 @@ import os
 import platform
 import docker
 import threading
-import time
-from multiprocessing import Process
 import greengrasssdk
 
+# main is located at the bottom of this file
 # Create a greengrass core sdk client
 ggc_client = greengrasssdk.client('iot-data')
 
