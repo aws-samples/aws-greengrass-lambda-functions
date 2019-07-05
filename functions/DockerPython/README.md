@@ -13,7 +13,7 @@ Additionally, this model allows you to specify optional arguments to pass to _do
 1. On you GreenGrass Core device, install docker. This setup can vary widely, look up how to install docker for your specific platform
 2. On your GreenGrass Core device, start the docker daemon by running `sudo systemctl start docker` for Ubuntu devices, or `sudo service docker start` on Amazon Linux. Other platforms may have other commands to start the daemon. This code was tested on Ubuntu.
 or on 
-3. Clone this repository.
+3. Clone this repository and cd to the parent directory.
 4. Run the following command
 ```
 GGP -g groupname -a architecture -d deployments/python-docker.conf --script
@@ -28,7 +28,7 @@ and architecture is the architecture of your core device, either X86_64 or ARM32
 
 8. Run the python script in the utils directory of this repository to allow shadow syncing. 
 ```
-python ggcore_enable_sync.py GROUP_ID
+python utils/ggcore_enable_sync.py GROUP_ID
 ```
 where GROUP_ID is the full hex group id found in the Group page of the AWS console under settings.
 TODO: make shadow sync a part of the provisioner.
