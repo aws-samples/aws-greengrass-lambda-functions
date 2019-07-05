@@ -195,7 +195,6 @@ main()
 # "event" parameter is a description of the delta
 def function_handler(event, context):
     send_info({"message":"Handling delta function"})
-    send_info({"event":event})
     # if no state info present, nothing we can do
     if 'state' not in event:
         return

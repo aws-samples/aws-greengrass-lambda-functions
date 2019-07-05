@@ -4,7 +4,7 @@
       "my_images":[
             {
                 "image_name": "bfirsh/reticulate-splines",
-                "use_local":true,
+                "use_local":false,
                 "timeout": 12,
                 "num_containers": 1,
                 "docker_run_args": {
