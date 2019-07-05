@@ -180,9 +180,11 @@ def main():
     send_info({"message":"Lambda starting. Executing main..."})
     # NOTE: until support for local shadow service is added to the GGProvisioner,
     # this will not work offline
-    my_shadow = ggc_client.get_thing_shadow(thingName=THING_NAME)
-    desired_state = my_shadow['desired']
-    update_to_desired_state(desired_state)
+    my_shadow = json.loads(ggc_client.get_thing_shadow(thingName=THING_NAME)['payload'])
+    send_info({"my_shadow":my_shadow})
+    if 'desired' in my_shadow['state']:
+        desired_state = my_shadow['state']['desired']
+        update_to_desired_state(desired_state)
 
 # invoke main
 main()
