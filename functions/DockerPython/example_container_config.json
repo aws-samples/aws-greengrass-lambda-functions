@@ -1,16 +1,35 @@
 {
   "desired": {
+    
     "container_config":{ 
       "my_images":[
             {
+                // Which image to pull from dockerhub
+                // TODO: pull from Amazon ECR
                 "image_name": "bfirsh/reticulate-splines",
+                // whether to pull the image or, if it is already local
+                // on the greengrass device, to skip pulling it.
                 "use_local":false,
+                // how long to run the container before stopping it
+                // in seconds
                 "timeout": 12,
+                // The number of containers to run based off the image
                 "num_containers": 1,
+                // Additional arguments passed to docker run as **kwargs
+                // See below for options
+                // https://docker-py.readthedocs.io/en/stable/containers.html
                 "docker_run_args": {
+                    // Add raspberry pi camera device
+                    // 'devices': ['/dev/vchiq:/dev/vchiq:rwm','/dev/vcsm:/dev/vcsm:rwm'],
+            
+                    // detach MUST be true unless you wish the docker processes to be child
+                    // processes of the lambda. You'll have to modify the lambda to get this
+                    // to work, currently it causes errors.
                     "detach":true
                 }
             }
+            // add more image_info objects here like the dictionary above, my_images is a list
+            // and every entry will be processed.
         ]
     }
   }
