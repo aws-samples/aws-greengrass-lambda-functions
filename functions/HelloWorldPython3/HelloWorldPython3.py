@@ -5,7 +5,7 @@
 # HelloWorldPython.py
 # Demonstrates a simple publish to a topic using Greengrass core sdk
 # This lambda function will retrieve underlying platform information and send
-# a hello world message along with the platform information to the topic 'hello/world'
+# a hello world message along with the platform information to the topic 'python3/hello/world'
 # The function will sleep for five seconds, then repeat.  Since the function is
 # long-lived it will run forever when deployed to a Greengrass core.  The handler
 # will NOT be invoked in our example since the we are executing an infinite loop.
@@ -23,6 +23,7 @@ client = greengrasssdk.client('iot-data')
 
 # Retrieving platform information to send from Greengrass Core
 my_platform = platform.platform()
+python_version = platform.python_version()
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -50,12 +51,12 @@ payload['thing_arn'] = THING_ARN
 
 def greengrass_hello_world_run():
     if not my_platform:
-        payload['message'] = 'Hello world! Sent from Greengrass Core from Python {} {} {}'.format(
-                GROUP_ID, THING_NAME, THING_ARN)
+        payload['message'] = 'Hello world! Sent from Greengrass Core from Python {} {} {} {}'.format(
+                python_version, GROUP_ID, THING_NAME, THING_ARN)
     else:
-        payload['message'] = 'Hello world! Sent from Greengrass Core from Python running on platform {} {} {} {}'.format(
-            my_platform, GROUP_ID, THING_NAME, THING_ARN)
-    client.publish(topic=THING_NAME + '/python/hello/world',
+        payload['message'] = 'Hello world! Sent from Greengrass Core from Python {} running on platform {} {} {} {}'.format(
+            python_version, my_platform, GROUP_ID, THING_NAME, THING_ARN)
+    client.publish(topic=THING_NAME + '/python3/hello/world',
                    payload=json.dumps(payload))
 
     # Asynchronously schedule this function to be run again in 5 seconds
