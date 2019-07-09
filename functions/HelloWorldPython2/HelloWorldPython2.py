@@ -2,7 +2,7 @@
 # Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
 
-# HelloWorldPython.py
+# HelloWorldPython2.py
 # Demonstrates a simple publish to a topic using Greengrass core sdk
 # This lambda function will retrieve underlying platform information and send
 # a hello world message along with the platform information to the topic 'python2/hello/world'
