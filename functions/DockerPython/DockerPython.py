@@ -173,7 +173,7 @@ def update_to_desired_state(desired_state):
 # is invoked upon shadow delta update
 def main():
     send_info({"message":"Lambda starting. Executing main..."})
-    my_shadow = json.loads(ggc_client.get_thing_shadow(thingName=THING_NAME)['payload'])
+    my_shadow = json.loads(ggc_client.get_thing_shadow(thingName=THING_NAME)['payload'].decode())
     send_info({"my_shadow":my_shadow})
     if 'desired' in my_shadow['state']:
         desired_state = my_shadow['state']['desired']
