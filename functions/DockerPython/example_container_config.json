@@ -1,3 +1,24 @@
+//use the version here without comments if pasting into aws console, aws will not recognize comments
+{
+  "desired": {
+    
+    "container_config":{ 
+      "my_images":[
+            {
+                "image_name": "bfirsh/reticulate-splines",
+                "use_local":false,
+                "timeout": 12,
+                "num_containers": 1,
+                "docker_run_args": {
+                    "detach":true
+                }
+            }
+        ]
+    }
+  }
+}
+
+//with comments for readability convenience
 {
   "desired": {
     

@@ -28,22 +28,13 @@ and architecture is the architecture of your core device, either X86_64 or ARM32
 > NOTE: This code is also compatible with python2.7. If the 2.7 runtime is preferred, change the function.conf line to `language = "PYTHON2_7"`. You'll have to install python2.7 on your GG Core device similarly to the instructions in step #6.
 
 7. In the AWS console, subscribe to the topics `NAME_OF_CORE/docker/logs` and `NAME_OF_CORE/docker/info`. Note that the name of the core is the name of the group concatenated with "_Core"
-8. Run the python script in the utils directory of this repository to allow shadow syncing. 
-```
-python utils/ggcore_enable_sync.py GROUP_ID
-```
-where GROUP_ID is the full hex group id found in the Group page of the AWS console under settings.
-TODO: make shadow sync a part of the provisioner.
-
-9. Redeploy the group from the console to update the shadowsync setting.
-
-10. Open the AWS IoT Core console. Hit greengrass in the left menu. Select the submenu groups. Select your group. Go to Cores and select your core. Hit shadow, then, edit, and delete anything already there. Paste in the contents of example_container_config.json
+8. Open the AWS IoT Core console. Hit greengrass in the left menu. Select the submenu groups. Select your group. Go to Cores and select your core. Hit shadow, then, edit, and delete anything already there. Paste in the first object in example_container_config.json
 
 > NOTE: you must run docker containers that are compatible with your architecture. Recommended containers are "bfirsh/reticulate-splines" for X86_64 Core devices and "cea2aj/reticulate-splines-arm" for ARM32 Core devices. These will containers print a simple counter message every second. Replace the "image_name" field in the example_container_config.json file to switch containers.
 
-11. If you already have these docker images pulled to your Core device, awesome! If not, change the "use_local" field to false in the configuration.
+9. If you already have these docker images pulled to your Core device, awesome! If not, change the "use_local" field to false in the configuration.
 
-12. In the `NAME_OF_CORE/docker/info` topic you'll see diagnostic messages from the lambda, in `NAME_OF_CORE/docker/info` you'll see logs read directly from the standard output of the containers. These logs have been forwarded over MQTT by the lambda.
+10. In the `NAME_OF_CORE/docker/info` topic you'll see diagnostic messages from the lambda, in `NAME_OF_CORE/docker/info` you'll see logs read directly from the standard output of the containers. These logs have been forwarded over MQTT by the lambda.
 
-13. Repeat step 10, but try changing a configuration option, like timeout. You should see new containers start with the new configuration.
-14. If you instead paste in an identical configuration and save the shadow, nothing happens. There is no difference between desired and reported states, so no work is done.
+11. Repeat step 10, but try changing a configuration option, like timeout. You should see new containers start with the new configuration.
+12. If you instead paste in an identical configuration and save the shadow, nothing happens. There is no difference between desired and reported states, so no work is done.
