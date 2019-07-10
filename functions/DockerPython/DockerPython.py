@@ -9,6 +9,8 @@ import platform
 import docker
 import threading
 import greengrasssdk
+import boto3
+import base64
 
 # main is located at the bottom of this file
 # Create a greengrass core sdk client
@@ -44,8 +46,6 @@ payload['thing_arn'] = THING_ARN
 base_docker_topic = THING_NAME +'/docker'
 info_topic = base_docker_topic + '/info'
 log_topic = base_docker_topic + '/logs'
-
-
 
 # publishes info json to the THING_NAME/docker/info topic
 # for general information from the lambda
@@ -84,14 +84,12 @@ def process_image_info(image_info):
     run_containers(image_info)
 
 # pull a single image from dockerhub using it's string name
-# TODO: ECR integration
 def pull_image(image_name):
     send_info({"message":"Pulling container: " + image_name})
 
     docker_client.images.pull(image_name)
 
     send_info({"message":"Pulled container: " + image_name})
-
 
 # Run an arbitrary number of containers from the same image
 # According to additional options supplied by the image_info
@@ -173,6 +171,11 @@ def update_to_desired_state(desired_state):
 # is invoked upon shadow delta update
 def main():
     send_info({"message":"Lambda starting. Executing main..."})
+    ecr_cli = boto3.client('ecr', region_name='us-east-1')
+    token = ecr_cli.get_authorization_token()
+    username, password = base64.b64decode(token['authorizationData'][0]['authorizationToken']).decode().split(':')
+    registry = token['authorizationData'][0]['proxyEndpoint']
+    docker_client.login(username, password, registry=registry)
     my_shadow = json.loads(ggc_client.get_thing_shadow(thingName=THING_NAME)['payload'].decode())
     send_info({"my_shadow":my_shadow})
     if 'desired' in my_shadow['state']:
@@ -182,7 +185,7 @@ def main():
 # invoke main
 main()
 
-# handler for updates on the topic 
+# handler for updates on the topic
 # $aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta
 # which means it will be invoked whenever the shadow is changed
 # "event" parameter is a description of the delta
