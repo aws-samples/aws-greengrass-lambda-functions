@@ -1,8 +1,8 @@
 //use the version here without comments if pasting into aws console, aws will not recognize comments
 {
   "desired": {
-    
-    "container_config":{ 
+
+    "container_config":{
       "my_images":[
             {
                 "image_name": "bfirsh/reticulate-splines",
@@ -21,13 +21,15 @@
 //with comments for readability convenience
 {
   "desired": {
-    
-    "container_config":{ 
+
+    "container_config":{
       "my_images":[
             {
                 // Which image to pull from dockerhub
-                // TODO: pull from Amazon ECR
-                "image_name": "bfirsh/reticulate-splines",
+                // To pull from Amazon ECR, just use the ECR Repo URL with tag
+                // Example for dockerhub: cea2aj/reticulate-splines-arm
+                // Example for ECR: ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/REPO_NAME:IMAGE_TAG
+                "image_name": "cea2aj/reticulate-splines",
                 // whether to pull the image or, if it is already local
                 // on the greengrass device, to skip pulling it.
                 "use_local":false,
@@ -42,7 +44,7 @@
                 "docker_run_args": {
                     // Add raspberry pi camera device
                     // 'devices': ['/dev/vchiq:/dev/vchiq:rwm','/dev/vcsm:/dev/vcsm:rwm'],
-            
+
                     // detach MUST be true unless you wish the docker processes to be child
                     // processes of the lambda. You'll have to modify the lambda to get this
                     // to work, currently it causes errors.

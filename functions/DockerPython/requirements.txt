@@ -1,2 +1,4 @@
 greengrasssdk==1.4.0
 docker
+boto3==1.9.181
+pybase64
