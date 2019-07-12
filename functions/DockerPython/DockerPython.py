@@ -138,11 +138,16 @@ def log_stream_worker(container, stopevent):
     container_payload = {}
     container_payload['thing_name'] = THING_NAME
     container_payload['container_name'] = container.name
+    container_payload['container_output'] = ""
+    container_payload['container_image'] = container.image
     # stream the container logs
     # note this for loop does not terminate unless the stopevent is set
     for line in container.logs(stream=True):
-        container_payload['container_output'] = line.decode().strip()
-        send_log(container_payload)
+        container_payload['container_output'] += line.decode()
+        if "\n" in line.decode():
+            container_payload['container_output'] = container_payload['container_output'].strip()
+            send_log(container_payload)
+            container_payload['container_output'] = ""
         if stopevent.isSet():
             return
 
