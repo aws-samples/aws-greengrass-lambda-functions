@@ -113,14 +113,14 @@ def run_containers(image_info):
         # Spawn a logger_timer thread. note that this in turn will spawn its own thread,
         # this is the only way I could think of doing this without extending the scope
         # of the thread information
-        t = threading.Thread(target=logger_timer, args=(container,image_time_out,))
+        t = threading.Thread(target=logger_timer, args=(container, image_name, image_time_out,))
         t.start()
 
 # Spawns a log_stream_worker thread on container
 # that is terminated after timeout
-def logger_timer(container, time_out):
+def logger_timer(container, image_name, time_out):
     stopevent = threading.Event()
-    testthread = threading.Thread(target=log_stream_worker, args=(container,stopevent))
+    testthread = threading.Thread(target=log_stream_worker, args=(container, image_name, stopevent))
     testthread.start()
     # Join the thread after the timeout
     # regardless of exit status
@@ -133,13 +133,13 @@ def logger_timer(container, time_out):
     return
 
 # Continually read and publish the logs of a container
-def log_stream_worker(container, stopevent):
+def log_stream_worker(container, image_name, stopevent):
     # initilize an initial payload
     container_payload = {}
     container_payload['thing_name'] = THING_NAME
     container_payload['container_name'] = container.name
     container_payload['container_output'] = ""
-    container_payload['container_image'] = container.image
+    container_payload['container_image'] = image_name
     # stream the container logs
     # note this for loop does not terminate unless the stopevent is set
     for line in container.logs(stream=True):
@@ -183,7 +183,16 @@ def main():
     username, password = base64.b64decode(token['authorizationData'][0]['authorizationToken']).decode().split(':')
     registry = token['authorizationData'][0]['proxyEndpoint']
     docker_client.login(username, password, registry=registry)
-    my_shadow = json.loads(ggc_client.get_thing_shadow(thingName=THING_NAME)['payload'].decode())
+    try:
+        my_shadow = json.loads(ggc_client.get_thing_shadow(thingName=THING_NAME)['payload'].decode())
+    except:
+        send_info({"message": "No shadow was created! Automatically generating empty shadow"})
+        update_my_shadow({
+            "state":{
+                "desired":{},
+                "reported":{},
+            }
+        })
     send_info({"my_shadow":my_shadow})
     if 'desired' in my_shadow['state']:
         desired_state = my_shadow['state']['desired']
