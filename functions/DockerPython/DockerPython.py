@@ -69,14 +69,14 @@ def kill_all_containers():
     send_info(survival_msg)
 
 # Clears all current containers and updates them to match
-# the container_config
-def update_containers(container_config):
+# the docker_config
+def update_containers(docker_config):
     send_info({"message":"updating containers..."})
     kill_all_containers()
-    for image_info in container_config['my_images']:
+    for image_info in docker_config['image_config_list']:
         process_image_info(image_info)
 
-# Work on a single image definition, ie one entry in my_images
+# Work on a single image definition, ie one entry in image_config_list
 def process_image_info(image_info):
     send_info({"message":"Working on image " + image_info['image_name'] + "."})
     if not image_info['use_local']:
@@ -128,7 +128,7 @@ def logger_timer(container, image_name, time_out):
     # toggle the event so the thread will stop
     # otherwise the thread would continue
     stopevent.set()
-    send_info({"message":"Stopping container "+ container.name + " after given timeout."})
+    send_info({"message":"Container "+ container.name + " has stopped (whether by timeout or error)"})
     container.stop()
     return
 
@@ -158,10 +158,10 @@ def update_my_shadow(json_payload):
 # Takes a desired state, updates containers, and reports new state
 def update_to_desired_state(desired_state):
     # if no config present, no updates needed, at least not on our end
-    if 'container_config' not in desired_state:
+    if 'docker_config' not in desired_state:
         return
 
-    desired_config = desired_state['container_config']
+    desired_config = desired_state['docker_config']
     # update containers. if this fails the runtime will crash
     # so updating the reported state below will never execute
     update_containers(desired_config)

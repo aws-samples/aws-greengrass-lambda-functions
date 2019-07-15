@@ -1,9 +1,8 @@
 //use the version here without comments if pasting into aws console, aws will not recognize comments
 {
   "desired": {
-
-    "container_config":{
-      "my_images":[
+    "docker_config":{
+      "image_config_list":[
             {
                 "image_name": "bfirsh/reticulate-splines",
                 "use_local":false,
@@ -22,8 +21,8 @@
 {
   "desired": {
 
-    "container_config":{
-      "my_images":[
+    "docker_config":{
+      "image_config_list":[
             {
                 // Which image to pull from dockerhub
                 // To pull from Amazon ECR, just use the ECR Repo URL with tag
@@ -51,7 +50,7 @@
                     "detach":true
                 }
             }
-            // add more image_info objects here like the dictionary above, my_images is a list
+            // add more image_info objects here like the dictionary above, image_config_list is a list
             // and every entry will be processed.
         ]
     }
