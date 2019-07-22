@@ -48,7 +48,7 @@ def jacksonVersion = '2.9.9'
 def httpClientVersion = '4.5.9'
 def awsLambdaJavaCoreVersion = '1.2.0'
 def immutablesValueVersion = '2.7.5'
-def dockerJavaVersion = '3.1.3'
+def dockerJavaVersion = '3.1.4'
 def vavrVersion = '0.10.0'
 
 dependencies {
