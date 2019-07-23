@@ -79,6 +79,7 @@ def update_containers(docker_config):
 # Work on a single image definition, ie one entry in image_config_list
 def process_image_info(image_info):
     send_info({"message":"Working on image " + image_info['image_name'] + "."})
+    update_status_of_container(image_info['image_name'], "yellow")
     if not image_info['use_local']:
         pull_image(image_info['image_name'])
     run_containers(image_info)
@@ -114,6 +115,7 @@ def run_containers(image_info):
         # this is the only way I could think of doing this without extending the scope
         # of the thread information
         t = threading.Thread(target=logger_timer, args=(container, image_name, image_time_out,))
+        update_status_of_container(image_name, "green")
         t.start()
 
 # Spawns a log_stream_worker thread on container
@@ -128,6 +130,7 @@ def logger_timer(container, image_name, time_out):
     # toggle the event so the thread will stop
     # otherwise the thread would continue
     stopevent.set()
+    update_status_of_container(image_name, "red")
     send_info({"message":"Container "+ container.name + " has stopped (whether by timeout or error)"})
     container.stop()
     return
@@ -151,6 +154,32 @@ def log_stream_worker(container, image_name, stopevent):
         if stopevent.isSet():
             return
 
+def convert_keys_to_string(dictionary):
+    """Recursively converts dictionary keys to strings."""
+    if not isinstance(dictionary, dict):
+        return dictionary
+    return dict((str(k), convert_keys_to_string(v))
+        for k, v in dictionary.items())
+
+# Set the status of the container in the shadow to "green" (currently running), "yellow" (starting up), or red (not running due to shut-down, pre-initialization or error)
+def update_status_of_container(image_name, status):
+    my_shadow = json.loads(ggc_client.get_thing_shadow(thingName=THING_NAME)['payload'])
+    my_reported_shadow = my_shadow["state"]['reported']
+    for container in my_reported_shadow['docker_config']['image_config_list']:
+        if image_name == container["image_name"]:
+            container['status'] = status
+            reported_state = {
+                "state": {
+                    "desired": json.loads(convert_keys_to_string(json.dumps(my_reported_shadow))),
+                    "reported": json.loads(convert_keys_to_string(json.dumps(my_reported_shadow)))
+                }
+            }
+            print(reported_state)
+            update_my_shadow(reported_state)
+            send_info({"my_shadow":reported_state})
+            return
+    return "ERROR - Docker image with that name was not deployed"
+
 # update the shadow of this AWS Thing
 def update_my_shadow(json_payload):
     ggc_client.update_thing_shadow(thingName=THING_NAME, payload=json.dumps(json_payload).encode())
@@ -164,7 +193,7 @@ def update_to_desired_state(desired_state):
     desired_config = desired_state['docker_config']
     # update containers. if this fails the runtime will crash
     # so updating the reported state below will never execute
-    update_containers(desired_config)
+
     # if update_containers succeeds, report the new state
     reported_state =  {
         "state": {
@@ -172,6 +201,8 @@ def update_to_desired_state(desired_state):
         }
     }
     update_my_shadow(reported_state)
+
+    update_containers(desired_config)
 
 # Executed upon startup of GG daemon or upon deployment of this lambda
 # note: this is not the only entry point, the function_handler below
@@ -189,8 +220,8 @@ def main():
         send_info({"message": "No shadow was created! Automatically generating empty shadow"})
         update_my_shadow({
             "state":{
-                "desired":{},
-                "reported":{},
+                "desired":{"welcome": "AWS-Test"},
+                "reported":{"welcome": "AWS-Test"},
             }
         })
     send_info({"my_shadow":my_shadow})
