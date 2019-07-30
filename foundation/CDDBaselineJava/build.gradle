@@ -45,7 +45,7 @@ def jacksonVersion = '2.9.9'
 def httpClientVersion = '4.5.9'
 def awsLambdaJavaCoreVersion = '1.2.0'
 def commonsIoVersion = '2.6'
-def awsSdkVersion = '1.11.594'
+def awsSdkVersion = '1.11.601'
 def immutablesValueVersion = '2.7.5'
 
 dependencies {
