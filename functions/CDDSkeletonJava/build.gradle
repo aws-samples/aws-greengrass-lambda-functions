@@ -41,7 +41,7 @@ repositories {
 def cddBaselineVersion = 'cdd-baseline-java-0.3.9'
 def gsonVersion = '2.8.5'
 def guiceVersion = '4.2.2'
-def slf4jVersion = '1.7.26'
+def slf4jVersion = '1.7.27'
 def jacksonVersion = '2.9.9'
 def httpClientVersion = '4.5.9'
 def awsLambdaJavaCoreVersion = '1.2.0'
