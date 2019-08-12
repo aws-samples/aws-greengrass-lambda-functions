@@ -40,7 +40,7 @@ repositories {
 def greengrassJavaSdkVersion = 'greengrass-java-sdk-1.3.1'
 def gsonVersion = '2.8.5'
 def guiceVersion = '4.2.2'
-def slf4jVersion = '1.7.26'
+def slf4jVersion = '1.7.28'
 def jacksonVersion = '2.9.9'
 def httpClientVersion = '4.5.9'
 def awsLambdaJavaCoreVersion = '1.2.0'
