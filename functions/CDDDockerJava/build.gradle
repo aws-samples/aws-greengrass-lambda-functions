@@ -47,7 +47,7 @@ def awsSdkVersion = '1.11.614'
 def jacksonVersion = '2.9.9'
 def httpClientVersion = '4.5.9'
 def awsLambdaJavaCoreVersion = '1.2.0'
-def immutablesValueVersion = '2.7.5'
+def immutablesValueVersion = '2.8.0-CriteriaPreview2'
 def dockerJavaVersion = '3.1.5'
 def vavrVersion = '0.10.2'
 
