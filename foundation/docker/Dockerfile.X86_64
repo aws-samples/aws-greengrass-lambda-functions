@@ -1,4 +1,4 @@
-FROM 216483018798.dkr.ecr.us-west-2.amazonaws.com/aws-greengrass-docker/amazonlinux:latest
+FROM 216483018798.dkr.ecr.us-west-2.amazonaws.com/aws-iot-greengrass:latest
 
 RUN ln -sf /usr/bin/java /usr/local/bin/java8
 RUN yum install -y awscli jq
