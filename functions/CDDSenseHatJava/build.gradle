@@ -28,8 +28,10 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
+def gradleDependencyVersion = '5.4.1'
+
 wrapper {
-    gradleVersion = '5.4.1'
+    gradleVersion = gradleDependencyVersion
 }
 
 repositories {
