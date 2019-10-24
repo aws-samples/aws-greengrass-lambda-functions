@@ -48,7 +48,7 @@ def jacksonVersion = '2.9.9'
 def httpClientVersion = '4.5.9'
 def awsLambdaJavaCoreVersion = '1.2.0'
 
-def jettyVersion = '9.4.20.v20190813'
+def jettyVersion = '9.4.22.v20191022'
 
 dependencies {
     compile "com.github.aws-samples:aws-greengrass-lambda-functions:$cddBaselineVersion"
