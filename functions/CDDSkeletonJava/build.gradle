@@ -39,7 +39,7 @@ repositories {
 }
 
 def cddBaselineVersion = 'cdd-baseline-java-0.3.9'
-def gsonVersion = '2.8.5'
+def gsonVersion = '2.8.6'
 def guiceVersion = '4.2.2'
 def slf4jVersion = '1.7.28'
 def jacksonVersion = '2.9.10'
