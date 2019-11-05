@@ -8,6 +8,7 @@ the functions and the deployment configurations to launch those functions in dif
 Step 1: Clone this repo
 
 Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/aws-greengrass-provisioner/blob/master/docs/CommandLine.md)
+
 ## Current function list
 
 - Python
@@ -34,6 +35,9 @@ Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/
 - C
   - [ARM32SampleC](functions/ARM32SampleC) - Hello World in C for ARM32 architectures
   - [X86_64SampleC](functions/X86_64SampleC) - Hello World in C for X86_64 architectures
+
+- Greengrass Provisioner functionality examples
+  - [Reusing functions from other groups (benchmark example)](deployments/benchmark-reuse.conf) - shows how to reuse existing functions in the Greengrass Provisioner by using the tilde `~` wildcard
 
 ## License Summary
 
