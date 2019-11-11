@@ -27,7 +27,7 @@ done
 docker rm -v $id
 
 # Zip up the samples
-rm ARM32SampleC.zip
+rm -f ARM32SampleC.zip
 
 for sample in $SAMPLES
 do
