@@ -1,15 +1,14 @@
 plugins {
+    id 'java'
+    id 'application'
+    id 'idea'
+
     // Enables download tasks
     id "de.undercouch.download" version "3.4.3"
 
     // Creates fat JAR
     id 'com.github.johnrengelman.shadow' version '5.0.0'
 }
-
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'application'
-apply plugin: 'idea'
 
 // Required by shadow but not necessary
 mainClassName = 'not-necessary'
@@ -19,7 +18,7 @@ version = '1.3.1'
 
 description = """"""
 
-def gradleDependencyVersion = '5.6.3'
+def gradleDependencyVersion = '6.0'
 
 wrapper {
     gradleVersion = gradleDependencyVersion

@@ -1,15 +1,14 @@
 plugins {
+    id 'java'
+    id 'application'
+    id 'idea'
+
     // Creates fat JAR
     id 'com.github.johnrengelman.shadow' version '5.2.0'
 
     // Adds dependencyUpdates task
     id 'com.github.ben-manes.versions' version '0.27.0'
 }
-
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'application'
-apply plugin: 'idea'
 
 // Required by shadow but not necessary
 mainClassName = 'not-necessary'
@@ -19,7 +18,7 @@ version = '0.4.0'
 
 description = """"""
 
-def gradleDependencyVersion = '5.6.3'
+def gradleDependencyVersion = '6.0'
 
 wrapper {
     gradleVersion = gradleDependencyVersion
