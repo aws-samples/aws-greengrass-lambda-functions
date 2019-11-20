@@ -52,7 +52,7 @@ def httpClientVersion = '4.5.10'
 def awsLambdaJavaCoreVersion = '1.2.0'
 def immutablesValueVersion = '2.8.2'
 
-def jettyVersion = '9.4.22.v20191022'
+def jettyVersion = '9.4.23.v20191118'
 def guiceVaadinVersion = '2.0.1-vaadin8'
 def vaadinVersion = '8.9.2'
 
