@@ -48,7 +48,6 @@ payload['group_id'] = GROUP_ID
 payload['thing_name'] = THING_NAME
 payload['thing_arn'] = THING_ARN
 
-
 def greengrass_hello_world_run():
     if not my_platform:
         payload['message'] = 'Hello world! Sent from Greengrass Core from Python {} {} {} {}'.format(

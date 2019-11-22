@@ -18,5 +18,10 @@ GG-provisioner.  They are:
 Every 5 seconds a message is sent on `${AWS_IOT_THING_NAME}/python3/hello/world` topic that looks like this:
 
 ```
-{"group_id": "d27247c1-c714-4f9d-81bc-70dbf8b7a5c2", "thing_name": "xxxxxxxxxxxxxxx_Core", "thing_arn": "arn:aws:iot:us-east-1:5xxxxxxxxxx7:thing/xxxxxxxxxxxxxxx_Core", "message": "Hello world! Sent from Greengrass Core from Python 3.7.3 running on platform Linux-4.15.0-1031-aws-x86_64-with-Ubuntu-18.04-bionic d27247c1-c714-4f9d-81bc-70dbf8b7a5c2 xxxxxxxxxxxxxxx_Core arn:aws:iot:us-east-1:5xxxxxxxxxx7:thing/xxxxxxxxxxxxxxx_Core"}
+{
+  "group_id": "d27247c1-c714-4f9d-81bc-70dbf8b7a5c2",
+  "thing_name": "xxxxxxxxxxxxxxx_Core",
+  "thing_arn": "arn:aws:iot:us-east-1:5xxxxxxxxxx7:thing/xxxxxxxxxxxxxxx_Core", "message": "Hello world! Sent from Greengrass Core from Python 3.7.3 running on platform Linux-4.15.0-1031-aws-x86_64-with-Ubuntu-18.04-bionic d27247c1-c714-4f9d-81bc-70dbf8b7a5c2 xxxxxxxxxxxxxxx_Core arn:aws:iot:us-east-1:5xxxxxxxxxx7:thing/xxxxxxxxxxxxxxx_Core",
+  "message": "Hello world! Sent from Greengrass Core from Python ..."
+}
 ```
