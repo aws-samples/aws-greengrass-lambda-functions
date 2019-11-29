@@ -22,6 +22,7 @@ Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/
   - [RaspberryPiGpioPython3](functions/RaspberryPiGpioPython3) - Event driven GPIO handler for the Raspberry Pi (no polling)
   - [LatencyTesterPython3](functions/LatencyTesterPython3) - Sends ping requests to a fixed list of hosts and publishes the round trip ICMP ping time via MQTT
   - [CloudWatchMetricHandlerPython3](functions/CloudWatchMetricHandlerPython3) - Sends latency information to AWS as CloudWatch Metric values (used with LatencyTesterPython3)
+  - [SecretsManagerPython3](functions/SecretsManagerPython3) - Retrives a secret from Secrets Manager and publishes the value on a topic for testing purposes
 
 - NodeJS
   - [HelloWorldNode](functions/HelloWorldNode) - Hello, World in Node
