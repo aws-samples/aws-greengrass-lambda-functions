@@ -2,4 +2,4 @@ jdk:
   - openjdk8
 install:
   - echo "Running a custom install command"
-  - cd foundation/CDDBaselineJava/ && ./gradlew clean && ./gradlew build && ./gradlew installShadowDist -xtest && mv install/CDDBaselineJava-shadow/lib/CDDBaselineJava-*-all.jar .
+  - cd foundation/CDDBaselineJava/ && ./gradlew clean && ./gradlew build && ./gradlew installShadowDist -xtest && mv build/install/CDDBaselineJava-shadow/lib/CDDBaselineJava-*-all.jar build/
