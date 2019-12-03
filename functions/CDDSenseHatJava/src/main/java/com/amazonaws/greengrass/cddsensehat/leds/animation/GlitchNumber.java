@@ -31,6 +31,11 @@ public class GlitchNumber implements Animation {
     }
 
     @Override
+    public void reset() {
+        // Do nothing
+    }
+
+    @Override
     public SenseHatLEDImage nextImage() {
         SenseHatLEDPartialImage v = characters.get('v').getPartialImage();
 

@@ -22,6 +22,11 @@ public class DisplayNumber implements Animation {
         return 5000;
     }
 
+    @Override
+    public void reset() {
+        // Do nothing
+    }
+
     public int getVersionNumber() {
         return versionNumber;
     }

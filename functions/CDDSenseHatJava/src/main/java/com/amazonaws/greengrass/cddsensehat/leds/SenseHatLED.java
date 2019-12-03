@@ -1,12 +1,9 @@
 package com.amazonaws.greengrass.cddsensehat.leds;
 
-/**
- * Created by timmatt on 2/20/17.
- */
 public class SenseHatLED {
-    public static final int BLUE_SHIFT = 10;
-    public static final int RED_SHIFT = 5;
-    public static final int MASK_5_BITS = 0x1F;
+    private static final int BLUE_SHIFT = 10;
+    private static final int RED_SHIFT = 5;
+    private static final int MASK_5_BITS = 0x1F;
     private final int red;
     private final int green;
     private final int blue;
@@ -29,7 +26,7 @@ public class SenseHatLED {
         this.green = (int) (temp & MASK_5_BITS);
     }
 
-    public String getValue() {
+    String getValue() {
         if (stringValue == null) {
             binaryValue = 0;
             binaryValue |= ((blue & MASK_5_BITS) << BLUE_SHIFT);
@@ -76,10 +73,6 @@ public class SenseHatLED {
         return result;
     }
 
-    //    @Override
-//    public String toString() {
-//        return "[" + red + ", " + green + ", " + blue + "]";
-//    }
     @Override
     public String toString() {
         return ((red != 0) || (green != 0) || (blue != 0)) ? "X" : "_";

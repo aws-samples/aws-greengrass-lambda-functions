@@ -1,8 +1,5 @@
 package com.amazonaws.greengrass.cddsensehat.leds.arrays;
 
-/**
- * Created by timmatt on 2/20/17.
- */
 /*
 public class MacOSSenseHatLEDArray implements SenseHatLEDArray {
     private final JavaFXLEDArray javaFXLEDArray;

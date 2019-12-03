@@ -40,7 +40,7 @@ public class DummyEnvironmentProvider implements EnvironmentProvider {
 
     @Override
     public Optional<String> getAwsGgHttpEndpoint() {
-        return Optional.of("greengrass.iot.us-east-1.amazonaws.com:8443");
+        return Optional.of("greengrass-ats.iot.us-east-1.amazonaws.com:8443");
     }
 
     @Override
@@ -50,7 +50,7 @@ public class DummyEnvironmentProvider implements EnvironmentProvider {
 
     @Override
     public Optional<String> getAwsGgMqttEndpoint() {
-        return Optional.of("greengrass.iot.us-east-1.amazonaws.com:8883");
+        return Optional.of("greengrass-ats.iot.us-east-1.amazonaws.com:8883");
     }
 
     @Override

@@ -1,15 +1,12 @@
 package com.amazonaws.greengrass.cddsensehat.leds;
 
-/**
- * Created by timmatt on 2/21/17.
- */
 public abstract class AbstractImage {
     protected final SenseHatLED black = new SenseHatLED(0, 0, 0);
     protected final SenseHatLED white = new SenseHatLED(255, 255, 255);
     protected final SenseHatLED red = new SenseHatLED(255, 0, 0);
     protected final SenseHatLED green = new SenseHatLED(0, 255, 0);
     protected final SenseHatLED blue = new SenseHatLED(0, 0, 255);
-    protected SenseHatLEDPartialImage partialImage;
+    private SenseHatLEDPartialImage partialImage;
 
     public SenseHatLEDPartialImage getPartialImage() {
         if (partialImage != null) {

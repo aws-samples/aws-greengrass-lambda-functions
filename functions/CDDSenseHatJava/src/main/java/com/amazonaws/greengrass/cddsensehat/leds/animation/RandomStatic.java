@@ -20,6 +20,11 @@ public class RandomStatic implements Animation {
     }
 
     @Override
+    public void reset() {
+        // Do nothing
+    }
+
+    @Override
     public SenseHatLEDImage nextImage() {
         SenseHatLED[] senseHatLEDs = new SenseHatLED[64];
 

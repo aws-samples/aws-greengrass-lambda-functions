@@ -24,6 +24,11 @@ public class Fire implements Animation {
     }
 
     @Override
+    public void reset() {
+        // Do nothing
+    }
+
+    @Override
     public SenseHatLEDImage nextImage() {
         boolean[] generatedLine = new boolean[8];
         SenseHatLED[][] temp = new SenseHatLED[8][8];

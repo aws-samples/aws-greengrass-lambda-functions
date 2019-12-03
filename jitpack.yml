@@ -1,1 +1,5 @@
-jitpack.yml.cdd-baseline-java
+jdk:
+  - openjdk8
+install:
+   - echo "Running a custom install command"
+   - cd foundation/CDDBaselineJava/ && ./gradlew clean install -xtest

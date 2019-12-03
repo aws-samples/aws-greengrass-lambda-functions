@@ -24,6 +24,9 @@ public class BasicAnimationRunner implements AnimationRunner {
     public void startAnimation(Animation animation) {
         stopAnimation();
 
+        // Reset the animation
+        animation.reset();
+
         timer = Optional.of(new Timer(true));
         timer.get().schedule(new TimerTask() {
             @Override

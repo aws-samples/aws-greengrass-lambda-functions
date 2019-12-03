@@ -1,15 +1,14 @@
 plugins {
+    id 'java'
+    id 'application'
+    id 'idea'
+
     // Creates fat JAR
-    id 'com.github.johnrengelman.shadow' version '5.0.0'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 
     // Adds dependencyUpdates task
-    id 'com.github.ben-manes.versions' version '0.21.0'
+    id 'com.github.ben-manes.versions' version '0.27.0'
 }
-
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'application'
-apply plugin: 'idea'
 
 // Required by shadow but not necessary
 mainClassName = 'not-necessary'
@@ -19,7 +18,7 @@ version = '0.4.0'
 
 description = """"""
 
-def gradleDependencyVersion = '5.4.1'
+def gradleDependencyVersion = '6.0'
 
 wrapper {
     gradleVersion = gradleDependencyVersion
@@ -31,29 +30,42 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
+// Guidance from: https://stackoverflow.com/questions/23446233/compile-jar-from-url-in-gradle
+def githubJar = { organization, module, revision, name ->
+    File file = new File("$buildDir/libs/${name}.jar")
+    file.parentFile.mkdirs()
+    if (!file.exists()) {
+        def url = "https://github.com/$organization/$module/raw/v$revision/sdk/GreengrassJavaSDK-1.0.jar"
+        new URL(url).withInputStream { downloadStream ->
+            file.withOutputStream { fileOut ->
+                fileOut << downloadStream
+            }
+        }
+    }
+    files(file.absolutePath)
+}
+
 repositories {
     mavenCentral()
     maven { url "https://plugins.gradle.org/m2/" }
-    maven { url 'https://jitpack.io' }
 }
 
-def greengrassJavaSdkVersion = 'greengrass-java-sdk-1.3.1'
-def gsonVersion = '2.8.5'
+def gsonVersion = '2.8.6'
 def guiceVersion = '4.2.2'
-def slf4jVersion = '1.7.26'
-def jacksonVersion = '2.9.9'
-def httpClientVersion = '4.5.8'
+def slf4jVersion = '1.7.29'
+def jacksonVersion = '2.10.1'
+def httpClientVersion = '4.5.10'
 def awsLambdaJavaCoreVersion = '1.2.0'
 def commonsIoVersion = '2.6'
-def awsSdkVersion = '1.11.568'
-def immutablesValueVersion = '2.7.5'
+def awsSdkVersion = '1.11.683'
+def immutablesValueVersion = '2.8.2'
+def awsGreengrassCoreSdkJava = '1.4.0'
 
 dependencies {
     annotationProcessor "org.immutables:value:$immutablesValueVersion"
     compile "org.immutables:value:$immutablesValueVersion"
 
-    compile "com.github.aws-samples:aws-greengrass-lambda-functions:$greengrassJavaSdkVersion"
-
+    compile githubJar('aws', 'aws-greengrass-core-sdk-java', awsGreengrassCoreSdkJava, 'GreengrassJavaSDK')
     compile "com.google.code.gson:gson:$gsonVersion"
     compile "com.google.inject:guice:$guiceVersion"
     compile "org.slf4j:slf4j-jdk14:$slf4jVersion"

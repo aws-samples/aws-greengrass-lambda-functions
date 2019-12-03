@@ -1,2 +1,2 @@
-greengrasssdk==1.4.0
+greengrasssdk==1.5.0
 requests==2.22.0
