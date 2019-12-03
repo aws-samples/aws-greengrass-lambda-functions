@@ -14,7 +14,7 @@ plugins {
 mainClassName = 'not-necessary'
 
 group = 'com.awslabs.aws.iot.greengrass.cdd'
-version = '0.5.3'
+version = '0.5.4'
 
 description = """"""
 
