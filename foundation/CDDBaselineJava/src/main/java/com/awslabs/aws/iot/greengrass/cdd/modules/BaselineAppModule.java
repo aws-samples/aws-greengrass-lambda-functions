@@ -2,6 +2,8 @@ package com.awslabs.aws.iot.greengrass.cdd.modules;
 
 import com.amazonaws.auth.AWSCredentialsProviderChain;
 import com.awslabs.aws.iot.greengrass.cdd.BaselineAppInterface;
+import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
+import com.awslabs.aws.iot.greengrass.cdd.helpers.implementations.BasicJsonHelper;
 import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.TempDirNativeProcessHelper;
 import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.interfaces.NativeProcessHelper;
 import com.awslabs.aws.iot.greengrass.cdd.providers.AWSCredentialsProviderChainProvider;
@@ -42,5 +44,8 @@ public class BaselineAppModule extends AbstractModule {
 
         // Use a default credentials provider chain
         bind(AWSCredentialsProviderChain.class).toProvider(AWSCredentialsProviderChainProvider.class);
+
+        // JSON helper that auto-wires Immutables type adapters
+        bind(JsonHelper.class).to(BasicJsonHelper.class);
     }
 }
