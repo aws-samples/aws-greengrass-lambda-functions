@@ -40,6 +40,6 @@ public class BasicJsonHelper implements JsonHelper {
     @Override
     public <T> T fromJson(Class<T> clazz, String json) {
         return getGsonBuilder().create()
-                .fromJson(new String(json), clazz);
+                .fromJson(json, clazz);
     }
 }
