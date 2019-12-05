@@ -1,7 +1,7 @@
 package com.awslabs.aws.iot.greengrass.cdd.providers;
 
-import com.amazonaws.SdkClientException;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.SdkErrorHandler;
+import software.amazon.awssdk.core.exception.SdkClientException;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
