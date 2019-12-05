@@ -2,11 +2,11 @@ package com.awslabs.aws.iot.greengrass.cdd.communication;
 
 import com.amazonaws.greengrass.javasdk.model.GGIotDataException;
 import com.amazonaws.greengrass.javasdk.model.GGLambdaException;
-import com.google.common.eventbus.Subscribe;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.PublishBinaryEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.PublishMessageEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.PublishObjectEvent;
+import com.google.common.eventbus.Subscribe;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -6,14 +6,14 @@ import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassStartEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
-import com.google.common.eventbus.EventBus;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.awslabs.aws.iot.greengrass.cdd.modules.BaselineAppModule;
 import com.awslabs.aws.iot.greengrass.cdd.modules.DummyCommunicationModule;
 import com.awslabs.aws.iot.greengrass.cdd.modules.GreengrassCommunicationModule;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
+import com.google.common.eventbus.EventBus;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;

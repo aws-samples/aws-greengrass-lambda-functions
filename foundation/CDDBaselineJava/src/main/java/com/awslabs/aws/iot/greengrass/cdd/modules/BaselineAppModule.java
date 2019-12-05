@@ -14,13 +14,10 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matchers;
-import com.google.inject.spi.DefaultBindingScopingVisitor;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
-
-import java.util.concurrent.Callable;
 
 public class BaselineAppModule extends AbstractModule {
     @Override
