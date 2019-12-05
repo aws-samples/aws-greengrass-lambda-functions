@@ -6,18 +6,21 @@ import com.awslabs.aws.iot.greengrass.cdd.helpers.implementations.BasicJsonHelpe
 import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.TempDirNativeProcessHelper;
 import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.interfaces.NativeProcessHelper;
 import com.awslabs.aws.iot.greengrass.cdd.providers.BasicEnvironmentProvider;
-import com.awslabs.aws.iot.greengrass.cdd.providers.DefaultCredentialsProviderProvider;
 import com.awslabs.aws.iot.greengrass.cdd.providers.GreengrassSdkErrorHandler;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
+import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.SafeProvider;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.SdkErrorHandler;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matchers;
+import com.google.inject.spi.DefaultBindingScopingVisitor;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+
+import java.util.concurrent.Callable;
 
 public class BaselineAppModule extends AbstractModule {
     @Override
@@ -43,7 +46,7 @@ public class BaselineAppModule extends AbstractModule {
         bind(SdkErrorHandler.class).to(GreengrassSdkErrorHandler.class);
 
         // Use a default credentials provider
-        bind(DefaultCredentialsProvider.class).toProvider(DefaultCredentialsProviderProvider.class);
+        bind(DefaultCredentialsProvider.class).toProvider(new SafeProvider<>(DefaultCredentialsProvider::create));
 
         // JSON helper that auto-wires Immutables type adapters
         bind(JsonHelper.class).to(BasicJsonHelper.class);

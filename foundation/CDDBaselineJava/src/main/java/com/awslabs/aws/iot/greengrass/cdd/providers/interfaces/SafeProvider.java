@@ -1,19 +1,25 @@
 package com.awslabs.aws.iot.greengrass.cdd.providers.interfaces;
 
+import com.awslabs.aws.iot.greengrass.cdd.providers.GreengrassSdkErrorHandler;
+import io.vavr.control.Try;
 import software.amazon.awssdk.core.exception.SdkClientException;
 
 import javax.inject.Provider;
+import java.util.concurrent.Callable;
 
-public interface SafeProvider<T> extends Provider<T> {
-    default T safeGet(SdkErrorHandler sdkErrorHandler) {
-        try {
-            return unsafeGet();
-        } catch (SdkClientException e) {
-            sdkErrorHandler.handleSdkError(e);
-        }
+public class SafeProvider<T> implements Provider<T> {
+    private final Callable<T> callable;
 
-        throw new UnsupportedOperationException("You should never reach here, this is a bug");
+    public SafeProvider(Callable<T> callable) {
+        this.callable = callable;
     }
 
-    T unsafeGet();
+    @Override
+    public T get() {
+        SdkErrorHandler sdkErrorHandler = new GreengrassSdkErrorHandler();
+
+        return Try.of(callable::call)
+                .recover(SdkClientException.class, throwable -> (T) sdkErrorHandler.handleSdkError(throwable))
+                .get();
+    }
 }

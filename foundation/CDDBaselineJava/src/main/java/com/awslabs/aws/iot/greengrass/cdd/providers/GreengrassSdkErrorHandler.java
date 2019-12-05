@@ -3,7 +3,6 @@ package com.awslabs.aws.iot.greengrass.cdd.providers;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.SdkErrorHandler;
 import software.amazon.awssdk.core.exception.SdkClientException;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +22,8 @@ public class GreengrassSdkErrorHandler implements SdkErrorHandler {
 
     String BAD_PERMISSIONS_SOLUTION = "Add the necessary permissions and try again.";
 
-    @Inject
-    public GreengrassSdkErrorHandler() {
-    }
-
     @Override
-    public void handleSdkError(SdkClientException e) {
+    public Void handleSdkError(SdkClientException e) {
         String message = e.getMessage();
         List<String> errors = new ArrayList<>();
 
@@ -54,5 +49,7 @@ public class GreengrassSdkErrorHandler implements SdkErrorHandler {
         } else {
             throw e;
         }
+
+        return null;
     }
 }
