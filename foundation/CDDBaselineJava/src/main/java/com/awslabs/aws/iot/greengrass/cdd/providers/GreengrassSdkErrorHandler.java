@@ -49,8 +49,7 @@ public class GreengrassSdkErrorHandler implements SdkErrorHandler {
         }
 
         if (errors.size() != 0) {
-            errors.stream()
-                    .forEach(s -> System.err.println(s));
+            errors.forEach(System.err::println);
             System.exit(1);
         } else {
             throw e;
