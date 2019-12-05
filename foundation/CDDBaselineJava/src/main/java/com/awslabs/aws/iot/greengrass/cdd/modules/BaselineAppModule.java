@@ -8,7 +8,7 @@ import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.interfaces.NativeProce
 import com.awslabs.aws.iot.greengrass.cdd.providers.BasicEnvironmentProvider;
 import com.awslabs.aws.iot.greengrass.cdd.providers.GreengrassSdkErrorHandler;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
-import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.SafeProvider;
+import com.awslabs.aws.iot.greengrass.cdd.providers.SafeProvider;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.SdkErrorHandler;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;

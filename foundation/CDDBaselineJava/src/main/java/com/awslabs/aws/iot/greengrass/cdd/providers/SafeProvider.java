@@ -1,6 +1,7 @@
-package com.awslabs.aws.iot.greengrass.cdd.providers.interfaces;
+package com.awslabs.aws.iot.greengrass.cdd.providers;
 
 import com.awslabs.aws.iot.greengrass.cdd.providers.GreengrassSdkErrorHandler;
+import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.SdkErrorHandler;
 import io.vavr.control.Try;
 import software.amazon.awssdk.core.exception.SdkClientException;
 
