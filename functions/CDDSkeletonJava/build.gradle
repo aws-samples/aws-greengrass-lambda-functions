@@ -32,6 +32,7 @@ def gradleDependencyVersion = '6.0'
 
 wrapper {
     gradleVersion = gradleDependencyVersion
+    distributionType = Wrapper.DistributionType.ALL
 }
 
 repositories {

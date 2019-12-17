@@ -23,6 +23,7 @@ def gradleDependencyVersion = '6.0'
 
 wrapper {
     gradleVersion = gradleDependencyVersion
+    distributionType = Wrapper.DistributionType.ALL
 }
 
 sourceCompatibility = 1.8
