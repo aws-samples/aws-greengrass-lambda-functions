@@ -1,2 +1,2 @@
 greengrasssdk==1.5.0
-lifx-sdk==0.7
+paho-mqtt==1.5.0
