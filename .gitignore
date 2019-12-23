@@ -10,3 +10,4 @@ credentials
 /dtoutput
 package-lock.json
 /functions/X86_64SampleC/x86_64samplec.zip
+venv
