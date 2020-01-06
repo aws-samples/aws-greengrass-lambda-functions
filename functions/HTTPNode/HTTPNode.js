@@ -1,6 +1,6 @@
 // HTTPNode.js
 
-const ggSdk = require('aws-greengrass-core-sdk')
+const ggSdk = require('greengrass-core-sdk')
 
 const iotClient = new ggSdk.IotData()
 const os = require('os')
