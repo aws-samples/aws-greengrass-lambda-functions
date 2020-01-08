@@ -44,6 +44,8 @@ Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/
 
 - Greengrass Provisioner functionality examples
   - [Reusing functions from other groups (benchmark example)](deployments/benchmark-reuse.conf) - shows how to reuse existing functions in the Greengrass Provisioner by using the tilde `~` wildcard
+  - [Launching an nginx proxy on ARM Greengrass cores with the Greengrass Docker connector](deployments/arm-nginx.conf) - **ARM only!** shows how to use the Greengrass Docker connector in a deployment to launch nginx
+  - [Launching Wordress on X86 Greengrass cores with the Greengrass Docker connector](deployments/x86-wordpress.conf) - **X86 only!** shows how to use the Greengrass Docker connector in a deployment to launch Wordpress
 
 ## License Summary
 

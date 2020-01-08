@@ -1,0 +1,8 @@
+haproxy:
+  image: hypriot/rpi-haproxy
+  ports:
+   - "80:80"
+   - "70:70"
+  expose:
+   - "80"
+   - "70"
