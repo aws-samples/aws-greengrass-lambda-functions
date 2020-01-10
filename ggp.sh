@@ -5,6 +5,10 @@ TAG=$(cd ../aws-greengrass-provisioner 2>/dev/null && git symbolic-ref --short H
 if [ $? -ne 0 ]; then
   TAG=master
 else
+  if [ -z "$TAG" ]; then
+    TAG=$(cd ../aws-greengrass-provisioner 2>/dev/null && git rev-parse HEAD)
+  fi
+
   echo Using aws-greengrass-provisioner repo branch $TAG
 fi
 
