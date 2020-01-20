@@ -48,7 +48,7 @@ def guiceVersion = '4.2.2'
 def slf4jVersion = '1.7.30'
 def awsSdkVersion = '1.11.704'
 def jacksonVersion = '2.10.2'
-def httpClientVersion = '4.5.10'
+def httpClientVersion = '4.5.11'
 def awsLambdaJavaCoreVersion = '1.2.0'
 
 dependencies {
