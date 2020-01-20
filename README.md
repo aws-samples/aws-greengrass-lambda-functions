@@ -46,6 +46,7 @@ Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/
   - [Reusing functions from other groups (benchmark example)](deployments/benchmark-reuse.conf) - shows how to reuse existing functions in the Greengrass Provisioner by using the tilde `~` wildcard
   - [Launching an nginx proxy on ARM Greengrass cores with the Greengrass Docker connector](deployments/arm-nginx.conf) - **ARM only!** shows how to use the Greengrass Docker connector in a deployment to launch nginx
   - [Launching Wordress on X86 Greengrass cores with the Greengrass Docker connector](deployments/x86-wordpress.conf) - **X86 only!** shows how to use the Greengrass Docker connector in a deployment to launch Wordpress
+  - [Sharing files between two functions in Python 3](deployments/python3-shared-file.conf) - shows how to share a file between two functions through the host. Each function randomly writes a value to a file that the other function can read, then the other function picks up the value, publishes it to the core, and deletes the shared file so it can be created again.
 
 ## License Summary
 
