@@ -53,8 +53,8 @@ public class StartupHandler implements GreengrassStartEventHandler {
                                     "! video/x-raw,format=I420,width=640,height=480,framerate=15/1 " +
                                     "! omxh264enc periodicty-idr=45 inline-header=FALSE ! h264parse " +
                                     "! video/x-h264,stream-format=avc,alignment=au " +
-                                    "! kvssink stream-name=MyExample access-key=\"AKIA2SFZUBGVOHU7AHFZ\" " +
-                                    "secret-key=\"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\" aws-region=\"eu-west-1\"",
+                                    "! kvssink stream-name=Stream access-key=\"KEY\" " +
+                                    "secret-key=\"KEY\" aws-region=\"eu-west-1\"",
                             true);
                     Pipeline pipe = new Pipeline();
                     pipe.addMany(bin);//, vc.getElement());
