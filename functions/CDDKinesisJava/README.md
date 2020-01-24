@@ -1,4 +1,4 @@
-# CDD Skeleton Java
+# CDD Kinesis Java
 
 ## What is CDD?
 
