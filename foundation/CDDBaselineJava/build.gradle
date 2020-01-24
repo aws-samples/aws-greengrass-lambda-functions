@@ -15,11 +15,10 @@ plugins {
 mainClassName = 'not-necessary'
 
 group = 'com.awslabs.aws.iot.greengrass.cdd'
-version = '0.6.4'
 
 description = """"""
 
-def gradleDependencyVersion = '6.0'
+def gradleDependencyVersion = '6.1'
 
 wrapper {
     gradleVersion = gradleDependencyVersion
