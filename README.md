@@ -3,6 +3,10 @@
 Example local Lambda functions that can be used with AWS Greengrass and the AWS Greengrass Provisioner.  This repo contains
 the functions and the deployment configurations to launch those functions in different configurations.
 
+## News
+
+2020-01-27 - Minor changes to the role naming scheme may cause issues with existing deployments. If you are experiencing issues with permissions you can either switch to the new naming scheme (e.g. `Greengrass_CoreRole`, `Greengrass_ServiceRole`, and `Greengrass_LambdaRole`) or you can update the deployments.defaults.conf file to use the older names.
+
 ## How do I launch these functions with the provisioner?
 
 Step 1: Clone this repo
