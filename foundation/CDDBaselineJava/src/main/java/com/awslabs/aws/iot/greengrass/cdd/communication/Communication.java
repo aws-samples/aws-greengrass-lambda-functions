@@ -2,10 +2,8 @@ package com.awslabs.aws.iot.greengrass.cdd.communication;
 
 import com.amazonaws.greengrass.javasdk.model.GGIotDataException;
 import com.amazonaws.greengrass.javasdk.model.GGLambdaException;
-import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
-import com.awslabs.aws.iot.greengrass.cdd.events.PublishBinaryEvent;
-import com.awslabs.aws.iot.greengrass.cdd.events.PublishMessageEvent;
-import com.awslabs.aws.iot.greengrass.cdd.events.PublishObjectEvent;
+import com.awslabs.aws.iot.greengrass.cdd.events.*;
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.HashMap;
@@ -48,6 +46,20 @@ public interface Communication {
         } catch (Exception e) {
             // Do not throw exceptions in event bus subscriber methods
         }
+    }
+
+    EventBus getEventBus();
+
+    default void publishObjectEvent(String topic, Object object) {
+        getEventBus().post(ImmutablePublishObjectEvent.builder().topic(topic).object(object).build());
+    }
+
+    default void publishMessageEvent(String topic, String message) {
+        getEventBus().post(ImmutablePublishMessageEvent.builder().topic(topic).message(message).build());
+    }
+
+    default void publishBinaryEvent(String topic, byte[] bytes) {
+        getEventBus().post(ImmutablePublishBinaryEvent.builder().topic(topic).bytes(bytes).build());
     }
 
     void publish(String topic, Object message) throws GGIotDataException, GGLambdaException;
