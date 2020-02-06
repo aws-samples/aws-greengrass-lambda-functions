@@ -2,16 +2,15 @@ package com.amazonaws.greengrass.cddskeleton.handlers;
 
 import com.amazonaws.greengrass.cddskeleton.data.Topics;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
 import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
-import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
-import com.google.common.eventbus.EventBus;
 
 import javax.inject.Inject;
 
 public class InputHandler implements GreengrassLambdaEventHandler {
     @Inject
-    EventBus eventBus;
+    Communication communication;
     @Inject
     Topics topics;
 
@@ -46,7 +45,7 @@ public class InputHandler implements GreengrassLambdaEventHandler {
 
         logger.log(message);
 
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getOutputTopic()).message(message).build());
+        communication.publishMessageEvent(topics.getOutputTopic(), message);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class InputHandler implements GreengrassLambdaEventHandler {
 
         logger.log(message);
 
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getOutputTopic()).message(message).build());
+        communication.publishMessageEvent(topics.getOutputTopic(), message);
     }
 
     private String getInputDescription(GreengrassLambdaEvent greengrassLambdaEvent) {

@@ -41,7 +41,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-def cddVersion = '0.6.6'
+def cddVersion = '0.7.1'
 def gsonVersion = '2.8.6'
 def guiceVersion = '4.2.2'
 def slf4jVersion = '1.7.30'
