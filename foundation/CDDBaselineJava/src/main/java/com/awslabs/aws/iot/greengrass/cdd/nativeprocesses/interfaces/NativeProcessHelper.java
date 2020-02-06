@@ -1,6 +1,7 @@
 package com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.interfaces;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,7 +16,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 public interface NativeProcessHelper {
     String BIN_UNAME = "/bin/uname";
@@ -24,10 +24,10 @@ public interface NativeProcessHelper {
 
     void runProgramAndBlock(String program, Optional<List<String>> arguments, Optional<Map<String, String>> environmentVariables, Optional<Consumer<String>> stdoutLines, Optional<Consumer<String>> stderrLines);
 
-    default void walkFileSystem(Logger log,
-                                Optional<Stream.Builder<Path>> fileStreamBuilder,
-                                Optional<Stream.Builder<Path>> directoryStreamBuilder,
-                                Optional<Stream.Builder<Path>> failedStreamBuilder) {
+    default List<Path> listAllFiles() {
+        Logger log = LoggerFactory.getLogger(NativeProcessHelper.class);
+        List<Path> output = new ArrayList<>();
+
         try {
             Instant startInstant = Instant.now();
 
@@ -36,21 +36,22 @@ public interface NativeProcessHelper {
                     Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
                         @Override
                         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                            fileStreamBuilder.ifPresent(builder -> builder.add(file));
+                            // File, add to the list
+                            output.add(file);
 
                             return FileVisitResult.CONTINUE;
                         }
 
                         @Override
                         public FileVisitResult visitFileFailed(Path file, IOException e) throws IOException {
-                            failedStreamBuilder.ifPresent(builder -> builder.add(file));
-
+                            // Failed path, ignore it and the subtree (if it is a directory)
                             return FileVisitResult.SKIP_SUBTREE;
                         }
 
                         @Override
                         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                            directoryStreamBuilder.ifPresent(builder -> builder.add(dir));
+                            // Directory, add to the list
+                            output.add(dir);
 
                             return FileVisitResult.CONTINUE;
                         }
@@ -64,6 +65,8 @@ public interface NativeProcessHelper {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+
+        return output;
     }
 
     default String determineArchitecture() {

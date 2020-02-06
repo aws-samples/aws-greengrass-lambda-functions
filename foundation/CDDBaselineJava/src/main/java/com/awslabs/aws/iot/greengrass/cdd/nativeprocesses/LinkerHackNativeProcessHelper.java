@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 public class LinkerHackNativeProcessHelper implements NativeProcessHelper {
     private final Logger log = LoggerFactory.getLogger(LinkerHackNativeProcessHelper.class);
@@ -50,11 +49,13 @@ public class LinkerHackNativeProcessHelper implements NativeProcessHelper {
     }
 
     private Optional<Path> findLinker() {
-        Optional<Stream.Builder<Path>> fileStreamBuilder = Optional.of(Stream.builder());
+        List<Path> files = listAllFiles();
 
-        walkFileSystem(log, fileStreamBuilder, Optional.empty(), Optional.empty());
+        if (files.isEmpty()) {
+            return Optional.empty();
+        }
 
-        return findLinker(Optional.of(fileStreamBuilder.get().build()));
+        return findLinker(files);
     }
 
     private String getLinker() {
@@ -65,12 +66,8 @@ public class LinkerHackNativeProcessHelper implements NativeProcessHelper {
         return linker.get();
     }
 
-    private Optional<Path> findLinker(Optional<Stream<Path>> files) {
-        if (!files.isPresent()) {
-            return Optional.empty();
-        }
-
-        return files.get()
+    private Optional<Path> findLinker(List<Path> files) {
+        return files.stream()
                 .map(Path::toAbsolutePath)
                 .distinct()
                 .filter(path -> path.toFile().getAbsolutePath().contains("ld-linux"))
