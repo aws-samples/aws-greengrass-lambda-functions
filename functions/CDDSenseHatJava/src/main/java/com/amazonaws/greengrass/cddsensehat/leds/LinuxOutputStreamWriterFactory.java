@@ -1,8 +1,7 @@
 package com.amazonaws.greengrass.cddsensehat.leds;
 
 import com.amazonaws.greengrass.cddsensehat.data.Topics;
-import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
-import com.google.common.eventbus.EventBus;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -14,14 +13,13 @@ import java.nio.charset.Charset;
 public class LinuxOutputStreamWriterFactory implements OutputStreamWriterFactory {
     private final long minimumTimeBetweenErrors = 5000;
     @Inject
-    EventBus eventBus;
-    @Inject
     Topics topics;
+    @Inject
+    Communication communication;
     private long lastErrorSentTimestamp = 0;
 
     @Inject
     public LinuxOutputStreamWriterFactory() {
-
     }
 
     @Override
@@ -32,7 +30,7 @@ public class LinuxOutputStreamWriterFactory implements OutputStreamWriterFactory
             long now = System.currentTimeMillis();
 
             if ((now - lastErrorSentTimestamp) > minimumTimeBetweenErrors) {
-                eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getDebugOutputTopic()).message("File not found error reported for [" + file.getAbsolutePath() + "], has the local resource been associated with this function? Is the function running inside the Greengrass container?").build());
+                communication.publishMessageEvent(topics.getDebugOutputTopic(), "File not found error reported for [" + file.getAbsolutePath() + "], has the local resource been associated with this function? Is the function running inside the Greengrass container?");
                 lastErrorSentTimestamp = now;
             }
 

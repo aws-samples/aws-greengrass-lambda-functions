@@ -2,8 +2,8 @@ package com.amazonaws.greengrass.cddsensehat.handlers;
 
 import com.amazonaws.greengrass.cddsensehat.data.Topics;
 import com.amazonaws.greengrass.cddsensehat.events.TimerFiredEvent;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
 import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassStartEvent;
-import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
 import com.google.common.eventbus.EventBus;
 
@@ -18,6 +18,8 @@ public class StartupHandler implements GreengrassStartEventHandler {
     EventBus eventBus;
     @Inject
     Topics topics;
+    @Inject
+    Communication communication;
 
     @Inject
     public StartupHandler() {
@@ -33,9 +35,9 @@ public class StartupHandler implements GreengrassStartEventHandler {
             }
         }, DELAY_MS, PERIOD_MS);
 
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getDebugOutputTopic()).message("SenseHat started [" + System.currentTimeMillis() + "]").build());
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getDebugOutputTopic()).message("List topic: " + topics.getListTopic()).build());
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getDebugOutputTopic()).message("Start topic: " + topics.getStartTopic()).build());
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getDebugOutputTopic()).message("Stop topic: " + topics.getStopTopic()).build());
+        communication.publishMessageEvent(topics.getDebugOutputTopic(), "SenseHat started [" + System.currentTimeMillis() + "]");
+        communication.publishMessageEvent(topics.getDebugOutputTopic(), "List topic: " + topics.getListTopic());
+        communication.publishMessageEvent(topics.getDebugOutputTopic(), "Start topic: " + topics.getStartTopic());
+        communication.publishMessageEvent(topics.getDebugOutputTopic(), "Stop topic: " + topics.getStopTopic());
     }
 }

@@ -2,10 +2,9 @@ package com.amazonaws.greengrass.cddsensehat.handlers;
 
 import com.amazonaws.greengrass.cddsensehat.data.Topics;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.interfaces.Animation;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
 import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
-import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishObjectEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
-import com.google.common.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,11 +18,11 @@ import java.util.stream.Collectors;
 public class CddSenseHatListEventHandler implements GreengrassLambdaEventHandler {
     private final Logger log = LoggerFactory.getLogger(CddSenseHatListEventHandler.class);
     @Inject
-    EventBus eventBus;
-    @Inject
     Set<Animation> animationSet;
     @Inject
     Topics topics;
+    @Inject
+    Communication communication;
 
     @Inject
     public CddSenseHatListEventHandler() {
@@ -45,6 +44,6 @@ public class CddSenseHatListEventHandler implements GreengrassLambdaEventHandler
                         .map(animation -> animation.getClass().getSimpleName())
                         .collect(Collectors.toList()));
 
-        eventBus.post(ImmutablePublishObjectEvent.builder().topic(topics.getListOutputTopic()).object(animationList).build());
+        communication.publishObjectEvent(topics.getListOutputTopic(), animationList);
     }
 }

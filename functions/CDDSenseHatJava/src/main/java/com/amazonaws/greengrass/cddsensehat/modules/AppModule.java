@@ -1,6 +1,5 @@
 package com.amazonaws.greengrass.cddsensehat.modules;
 
-import com.amazonaws.greengrass.cddsensehat.App;
 import com.amazonaws.greengrass.cddsensehat.data.Topics;
 import com.amazonaws.greengrass.cddsensehat.handlers.CddSenseHatListEventHandler;
 import com.amazonaws.greengrass.cddsensehat.handlers.CddSenseHatStartEventHandler;
@@ -16,7 +15,6 @@ import com.amazonaws.greengrass.cddsensehat.leds.arrays.LinuxSenseHatLEDArray;
 import com.amazonaws.greengrass.cddsensehat.leds.arrays.SenseHatLEDArray;
 import com.amazonaws.greengrass.cddsensehat.leds.characters.BasicCharacters;
 import com.amazonaws.greengrass.cddsensehat.leds.characters.Characters;
-import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 
