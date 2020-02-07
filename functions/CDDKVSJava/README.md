@@ -7,7 +7,7 @@ code for Greengrass Cores.  See the `CDDBaseline` README for more information.
 
 ## What is this function?
 
-This is a small function that uses gstreamer java and kinesis to stream a videostream from a Raspberry Pi camera
+This is a function that uses GStreamer, Java and Kinesis Video Streams (KVS) to stream a video stream from a Raspberry Pi camera
 to KVS. This makes it possible to, for example, use Rekognition to do facial recognition/analysis.
 
 ## Requirements
