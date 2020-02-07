@@ -1,4 +1,4 @@
-# CDD Kinesis Java
+# CDD KVS Java
 
 ## What is CDD?
 
@@ -8,11 +8,11 @@ code for Greengrass Cores.  See the `CDDBaseline` README for more information.
 ## What is this function?
 
 This is a small function that uses gstreamer java and kinesis to stream a videostream from a Raspberry Pi camera
-to Kinesis. This makes it possible to, for example, use Rekognition to do facial recognition/analysis.
+to KVS. This makes it possible to, for example, use Rekognition to do facial recognition/analysis.
 
 ## Requirements
 
-A working Raspberry Pi with Kinesis producer, for setup these instructions can be used: 
+A working Raspberry Pi with KVS producer, for setup these instructions can be used: 
   https://docs.aws.amazon.com/kinesisvideostreams/latest/dg/producersdk-cpp-rpi.html
   
 Note: do not use "./install-script", but "./min-install-script". 
@@ -22,9 +22,9 @@ Next run "./gstreamer-plugin-install-script" to build the gstreamer plugin.
 Note: In this script I had to disable the line that runs "make gstkvsplugintest" to get it working.
 
 ## Testing
-To test if Kinesis and GStreamer work, setup the plugin path for gstreamer and try to start a stream.
+To test if KVS and GStreamer work, setup the plugin path for gstreamer and try to start a stream.
 
-> export GST_PLUGIN_PATH=<YourKinesisSdkFolderPath>/kinesis-video-native-build/downloads/local/lib:$GST_PLUGIN_PATH
+> export GST_PLUGIN_PATH=<YourKVSSdkFolderPath>/kinesis-video-native-build/downloads/local/lib:$GST_PLUGIN_PATH
 
 > gst-launch-1.0 -v v4l2src do-timestamp=TRUE device=/dev/video0 ! videoconvert 
 >! video/x-raw,format=I420,width=640,height=480,framerate=30/1 ! omxh264enc periodicty-idr=45 inline-header=FALSE 

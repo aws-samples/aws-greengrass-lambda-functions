@@ -52,7 +52,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
      */
     @Override
     public void execute(GreengrassStartEvent greengrassStartEvent) {
-        communication.publishMessageEvent(topics.getOutputTopic(), "Kinesis streamer started [" + System.currentTimeMillis() + "] [" + uuid + "]");
+        communication.publishMessageEvent(topics.getOutputTopic(), "KVS streamer started [" + System.currentTimeMillis() + "] [" + uuid + "]");
 
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -60,7 +60,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
 
             @Override
             public void run() {
-                communication.publishMessageEvent(topics.getOutputTopic(), "Kinesis streamer still running [" + System.currentTimeMillis() + "] [" + uuid + "]");
+                communication.publishMessageEvent(topics.getOutputTopic(), "KVS streamer still running [" + System.currentTimeMillis() + "] [" + uuid + "]");
 
                 if (pipe == null) {
                     communication.publishMessageEvent(topics.getOutputTopic(), "No pipe yet [" + System.currentTimeMillis() + "] [" + uuid + "]");
@@ -87,7 +87,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
         Optional<String> optionalRegion = environmentProvider.getRegion();
 
         if (!optionalRegion.isPresent()) {
-            log.error("Region is not available, can not start the Kinesis function");
+            log.error("Region is not available, can not start the KVS function");
             return;
         }
 
@@ -96,7 +96,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
         Optional<String> optionalStreamName = environmentProvider.get("STREAM_NAME");
 
         if (!optionalStreamName.isPresent()) {
-            log.error("Stream name is not available, can not start the Kinesis function");
+            log.error("Stream name is not available, can not start the KVS function");
             return;
         }
 
@@ -113,7 +113,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
                     .findFirst();
 
             if (!optionalKvsSinkLocation.isPresent()) {
-                log.error("Plugin path not specified and the KVS sink plugin could not be found, can not start the Kinesis function");
+                log.error("Plugin path not specified and the KVS sink plugin could not be found, can not start the KVS function");
                 return;
             }
 
@@ -146,7 +146,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
 
         String commandString = commandStringBuilder.toString();
 
-        Gst.init("CDDKinesisJava");
+        Gst.init("CDDKVSJava");
         Bin bin = Gst.parseBinFromDescription(commandString, true);
 
         pipe = new Pipeline();
