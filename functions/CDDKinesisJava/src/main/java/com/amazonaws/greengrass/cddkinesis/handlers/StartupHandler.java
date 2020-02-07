@@ -1,12 +1,11 @@
 package com.amazonaws.greengrass.cddkinesis.handlers;
 
 import com.amazonaws.greengrass.cddkinesis.data.Topics;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
 import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassStartEvent;
-import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
 import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.interfaces.NativeProcessHelper;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
-import com.google.common.eventbus.EventBus;
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Gst;
 import org.freedesktop.gstreamer.Pipeline;
@@ -19,12 +18,8 @@ import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
 import javax.inject.Inject;
 import java.nio.file.Path;
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 public class StartupHandler implements GreengrassStartEventHandler {
     private static final int START_DELAY_MS = 5000;
@@ -35,8 +30,6 @@ public class StartupHandler implements GreengrassStartEventHandler {
     private String uuid = UUID.randomUUID().toString();
     private Pipeline pipe = null;
     @Inject
-    EventBus eventBus;
-    @Inject
     Topics topics;
     @Inject
     DefaultCredentialsProvider defaultCredentialsProvider;
@@ -44,6 +37,8 @@ public class StartupHandler implements GreengrassStartEventHandler {
     EnvironmentProvider environmentProvider;
     @Inject
     NativeProcessHelper nativeProcessHelper;
+    @Inject
+    Communication communication;
 
     @Inject
     public StartupHandler() {
@@ -57,7 +52,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
      */
     @Override
     public void execute(GreengrassStartEvent greengrassStartEvent) {
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getOutputTopic()).message("Kinesis streamer started [" + System.currentTimeMillis() + "] [" + uuid + "]").build());
+        communication.publishMessageEvent(topics.getOutputTopic(), "Kinesis streamer started [" + System.currentTimeMillis() + "] [" + uuid + "]");
 
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -65,21 +60,22 @@ public class StartupHandler implements GreengrassStartEventHandler {
 
             @Override
             public void run() {
-                eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getOutputTopic()).message("Kinesis streamer still running [" + System.currentTimeMillis() + "] [" + uuid + "]").build());
+                communication.publishMessageEvent(topics.getOutputTopic(), "Kinesis streamer still running [" + System.currentTimeMillis() + "] [" + uuid + "]");
+
                 if (pipe == null) {
-                    eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getOutputTopic()).message("No pipe yet [" + System.currentTimeMillis() + "] [" + uuid + "]").build());
+                    communication.publishMessageEvent(topics.getOutputTopic(), "No pipe yet [" + System.currentTimeMillis() + "] [" + uuid + "]");
                     return;
                 }
-               
+
                 long seconds = pipe.queryPosition(TimeUnit.SECONDS);
 
                 if (seconds == previousSeconds) {
-                    eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getOutputTopic()).message("Pipe is stalled, restarting [" + seconds + "] [" + System.currentTimeMillis() + "] [" + uuid + "]").build());
+                    communication.publishMessageEvent(topics.getOutputTopic(), "Pipe is stalled, restarting [" + seconds + "] [" + System.currentTimeMillis() + "] [" + uuid + "]");
                     System.exit(1);
                 }
 
                 previousSeconds = seconds;
-                eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getOutputTopic()).message("Pipe state [" + pipe.getState().name() + "] [" + seconds + "] [" + System.currentTimeMillis() + "] [" + uuid + "]").build());
+                communication.publishMessageEvent(topics.getOutputTopic(), "Pipe state [" + pipe.getState().name() + "] [" + seconds + "] [" + System.currentTimeMillis() + "] [" + uuid + "]");
             }
         }, START_DELAY_MS, PERIOD_MS);
 
@@ -110,11 +106,9 @@ public class StartupHandler implements GreengrassStartEventHandler {
 
         if (!optionalGstPluginPath.isPresent()) {
             // Find the plugin for them
-            Stream.Builder<Path> availablePaths = Stream.builder();
+            List<Path> availablePaths = nativeProcessHelper.listAllFiles();
 
-            nativeProcessHelper.walkFileSystem(log, Optional.of(availablePaths), Optional.empty(), Optional.empty());
-
-            Optional<Path> optionalKvsSinkLocation = availablePaths.build()
+            Optional<Path> optionalKvsSinkLocation = availablePaths.stream()
                     .filter(path -> path.endsWith(LIBGSTKVSSINK_SO_NAME))
                     .findFirst();
 
