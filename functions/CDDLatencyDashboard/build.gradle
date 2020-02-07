@@ -42,7 +42,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-def cddVersion = '0.6.6'
+def cddVersion = '0.7.1'
 def commonsIoVersion = '2.6'
 def gsonVersion = '2.8.6'
 def guiceVersion = '4.2.2'
