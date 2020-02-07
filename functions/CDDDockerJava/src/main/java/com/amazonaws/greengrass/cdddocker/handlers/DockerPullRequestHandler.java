@@ -3,8 +3,7 @@ package com.amazonaws.greengrass.cdddocker.handlers;
 import com.amazonaws.greengrass.cdddocker.data.DockerPullRequest;
 import com.amazonaws.greengrass.cdddocker.data.Topics;
 import com.amazonaws.greengrass.cdddocker.docker.DockerHelper;
-import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
-import com.google.common.eventbus.EventBus;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
 import com.google.common.eventbus.Subscribe;
 import io.vavr.control.Try;
 
@@ -13,13 +12,13 @@ import java.util.Optional;
 
 public class DockerPullRequestHandler {
     @Inject
-    EventBus eventBus;
-    @Inject
     Topics topics;
     @Inject
     LoggingHelper loggingHelper;
     @Inject
     DockerHelper dockerHelper;
+    @Inject
+    Communication communication;
 
     @Inject
     public DockerPullRequestHandler() {
@@ -40,7 +39,7 @@ public class DockerPullRequestHandler {
     }
 
     private Void publishExceptionMessage(Exception e) {
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getResponseTopic()).message(e.getMessage()).build());
+        communication.publishMessageEvent(topics.getResponseTopic(), e.getMessage());
 
         return null;
     }
@@ -48,7 +47,7 @@ public class DockerPullRequestHandler {
     private Void pullImage(DockerPullRequest dockerPullRequest) throws InterruptedException {
         dockerHelper.pullImage(dockerPullRequest.getName());
 
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getResponseTopic()).message("Image pulled [" + dockerPullRequest.getName() + "]").build());
+        communication.publishMessageEvent(topics.getResponseTopic(), "Image pulled [" + dockerPullRequest.getName() + "]");
 
         return null;
     }

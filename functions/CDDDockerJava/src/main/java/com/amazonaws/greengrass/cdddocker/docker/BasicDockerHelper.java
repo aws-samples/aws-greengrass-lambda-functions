@@ -2,14 +2,12 @@ package com.amazonaws.greengrass.cdddocker.docker;
 
 import com.amazonaws.greengrass.cdddocker.data.Topics;
 import com.amazonaws.greengrass.cdddocker.handlers.LoggingHelper;
-import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
-import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishObjectEvent;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.command.PullImageResultCallback;
-import com.google.common.eventbus.EventBus;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -17,13 +15,13 @@ import java.util.stream.Collectors;
 
 public class BasicDockerHelper implements DockerHelper {
     @Inject
-    EventBus eventBus;
-    @Inject
     Topics topics;
     @Inject
     LoggingHelper loggingHelper;
     @Inject
     CombinedDockerClientProvider combinedDockerClientProvider;
+    @Inject
+    Communication communication;
 
     @Inject
     public BasicDockerHelper() {
@@ -40,11 +38,11 @@ public class BasicDockerHelper implements DockerHelper {
                 .findFirst();
 
         if (optionalImage.isPresent()) {
-            eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getResponseTopic()).message("Found tag [" + tag + "] with ID [" + optionalImage.get().getId() + "]").build());
+            communication.publishMessageEvent(topics.getResponseTopic(), "Found tag [" + tag + "] with ID [" + optionalImage.get().getId() + "]");
             return optionalImage;
         }
 
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getResponseTopic()).message("Tag [" + tag + "] not found").build());
+        communication.publishMessageEvent(topics.getResponseTopic(), "Tag [" + tag + "] not found");
         return Optional.empty();
     }
 
@@ -81,11 +79,11 @@ public class BasicDockerHelper implements DockerHelper {
                 .findFirst();
 
         if (optionalContainer.isPresent()) {
-            eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getResponseTopic()).message("Found container [" + optionalContainer.get().getId() + "] with image ID [" + imageId + "]").build());
+            communication.publishMessageEvent(topics.getResponseTopic(), "Found container [" + optionalContainer.get().getId() + "] with image ID [" + imageId + "]");
             return optionalContainer;
         }
 
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getResponseTopic()).message("No container running image [" + imageId + "] found").build());
+        communication.publishMessageEvent(topics.getResponseTopic(), "No container running image [" + imageId + "] found");
         return Optional.empty();
     }
 
@@ -104,7 +102,7 @@ public class BasicDockerHelper implements DockerHelper {
         Map<String, List> output = new HashMap<>();
         output.put("images", imageList);
 
-        eventBus.post(ImmutablePublishObjectEvent.builder().topic(topics.getResponseTopic()).object(output).build());
+        communication.publishObjectEvent(topics.getResponseTopic(), output);
     }
 
     private List<Image> listImages() {
@@ -134,7 +132,7 @@ public class BasicDockerHelper implements DockerHelper {
         Map<String, List> output = new HashMap<>();
         output.put("containers", containerList);
 
-        eventBus.post(ImmutablePublishObjectEvent.builder().topic(topics.getResponseTopic()).object(output).build());
+        communication.publishObjectEvent(topics.getResponseTopic(), output);
     }
 
     private Map<String, Optional<Object>> convertContainerToAttributeMap(Container container, List<Image> images) {
@@ -208,7 +206,7 @@ public class BasicDockerHelper implements DockerHelper {
                 Map output = objectMapper.convertValue(item, Map.class);
                 // The progress field is an ASCII progress bar that isn't really useful so we always remove it if it is there
                 output.remove("progress");
-                eventBus.post(ImmutablePublishObjectEvent.builder().topic(topics.getResponseTopic()).object(output).build());
+                communication.publishObjectEvent(topics.getResponseTopic(), output);
                 super.onNext(item);
             }
 
