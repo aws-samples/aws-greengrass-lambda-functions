@@ -8,6 +8,11 @@ import java.util.Optional;
 public class CddTopics {
     @Inject
     EnvironmentProvider environmentProvider;
+
+    @Inject
+    public CddTopics() {
+    }
+
     private Optional<String> cddBaselineTopic = Optional.empty();
 
     @Inject
