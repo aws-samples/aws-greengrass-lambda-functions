@@ -20,13 +20,13 @@ public class GreengrassCommunication implements Communication {
     private static final String EMPTY_CUSTOM_CONTEXT = "{}";
     private static final String ENCODED_EMPTY_CUSTOM_CONTEXT = Base64.getEncoder().encodeToString(EMPTY_CUSTOM_CONTEXT.getBytes());
     @Inject
-    private IotDataClient iotDataClient;
+    IotDataClient iotDataClient;
     @Inject
-    private LambdaClient lambdaClient;
+    LambdaClient lambdaClient;
     @Inject
-    private EnvironmentProvider environmentProvider;
+    EnvironmentProvider environmentProvider;
     @Inject
-    private EventBus eventBus;
+    EventBus eventBus;
 
     @Inject
     public GreengrassCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient, IotDataClient iotDataClient, EventBus eventBus) {

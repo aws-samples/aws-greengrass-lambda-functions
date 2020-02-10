@@ -6,14 +6,8 @@ import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassStartEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
-import com.awslabs.aws.iot.greengrass.cdd.modules.BaselineAppModule;
-import com.awslabs.aws.iot.greengrass.cdd.modules.DummyCommunicationModule;
-import com.awslabs.aws.iot.greengrass.cdd.modules.GreengrassCommunicationModule;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
 import com.google.common.eventbus.EventBus;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -21,38 +15,17 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public interface BaselineAppInterface {
-    EventBus eventBus = new EventBus();
+    BaselineAppInjector baselineAppInjector = DaggerBaselineAppInjector.create();
+    EnvironmentProvider environmentProvider = baselineAppInjector.environmentProvider();
+    EventBus eventBus = baselineAppInjector.eventBus();
 
-    static Injector getInjector(List<AbstractModule> abstractModuleList) {
-        try {
-            ArrayList<AbstractModule> baselineModuleList = getBaselineModuleList(abstractModuleList);
-            baselineModuleList.add(new GreengrassCommunicationModule());
-            return Guice.createInjector(baselineModuleList);
-        } catch (NoClassDefFoundError e) {
-            // EnvVars will not be found when we call the connector task in a non-Greengrass environment
-            ArrayList<AbstractModule> baselineModuleList = getBaselineModuleList(abstractModuleList);
-            baselineModuleList.add(new DummyCommunicationModule());
-            return Guice.createInjector(baselineModuleList);
-        }
-    }
-
-    static ArrayList<AbstractModule> getBaselineModuleList(List<AbstractModule> abstractModuleList) {
-        ArrayList<AbstractModule> tempModuleList = new ArrayList<>(abstractModuleList);
-        tempModuleList.add(new BaselineAppModule());
-        return tempModuleList;
-    }
-
-    static void initialize(List<AbstractModule> abstractModuleList) {
+    static void initialize() {
         Instant initializeStart = Instant.now();
-
-        Injector injector = getInjector(abstractModuleList);
-
-        Instant injectorEnd = Instant.now();
-
-        EnvironmentProvider environmentProvider = injector.getInstance(EnvironmentProvider.class);
         Optional<String> region = environmentProvider.getRegion();
 
         if (!region.isPresent()) {
@@ -65,7 +38,6 @@ public interface BaselineAppInterface {
 
         Instant initializeEnd = Instant.now();
         String debugTopic = String.join("/", environmentProvider.getAwsIotThingName().get(), "debug");
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(debugTopic).message("Injector instantiation took: " + Duration.between(initializeStart, injectorEnd).toString()).build());
         eventBus.post(ImmutablePublishMessageEvent.builder().topic(debugTopic).message("Initialization took: " + Duration.between(initializeStart, initializeEnd).toString()).build());
     }
 

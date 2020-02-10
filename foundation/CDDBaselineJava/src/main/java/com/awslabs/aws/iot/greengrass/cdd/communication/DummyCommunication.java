@@ -13,7 +13,7 @@ public class DummyCommunication implements Communication {
     private final Logger log = LoggerFactory.getLogger(DummyCommunication.class);
 
     @Inject
-    private EventBus eventBus;
+    EventBus eventBus;
 
     public DummyCommunication(EventBus eventBus) {
         this.eventBus = eventBus;
