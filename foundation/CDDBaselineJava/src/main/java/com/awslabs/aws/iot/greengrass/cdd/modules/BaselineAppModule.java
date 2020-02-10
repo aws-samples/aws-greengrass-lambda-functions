@@ -74,6 +74,7 @@ public class BaselineAppModule {
     }
 
     @Provides
+    @Singleton
     public Communication providesCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient, EventBus eventBus) {
         if (runningInGreegrass()) {
             return new GreengrassCommunication(environmentProvider, lambdaClient, new IotDataClient(), eventBus);
@@ -84,6 +85,7 @@ public class BaselineAppModule {
 
     // Special environment information (thing name, thing ARN, group name)
     @Provides
+    @Singleton
     public EnvironmentProvider providesEnvironmentProvider(BasicEnvironmentProvider basicEnvironmentProvider, DummyEnvironmentProvider dummyEnvironmentProvider) {
         if (runningInGreegrass()) {
             return basicEnvironmentProvider;
