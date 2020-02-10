@@ -44,7 +44,7 @@ repositories {
 def cddVersion = '0.7.1'
 def gsonVersion = '2.8.6'
 def guiceVersion = '4.2.2'
-def slf4jVersion = '1.7.29'
+def slf4jVersion = '1.7.30'
 def jacksonVersion = '2.9.10'
 def httpClientVersion = '4.5.10'
 def awsLambdaJavaCoreVersion = '1.2.0'
