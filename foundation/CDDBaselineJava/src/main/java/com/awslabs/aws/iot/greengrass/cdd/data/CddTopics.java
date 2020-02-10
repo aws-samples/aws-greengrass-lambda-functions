@@ -15,11 +15,6 @@ public class CddTopics {
 
     private Optional<String> cddBaselineTopic = Optional.empty();
 
-    @Inject
-    public CddTopics(EnvironmentProvider environmentProvider) {
-        this.environmentProvider = environmentProvider;
-    }
-
     private String buildCddBaselineTopic() {
         if (!cddBaselineTopic.isPresent()) {
             cddBaselineTopic = Optional.of(String.join("/",
