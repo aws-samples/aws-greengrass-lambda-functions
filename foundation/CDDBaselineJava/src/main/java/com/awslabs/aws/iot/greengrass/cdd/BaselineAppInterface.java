@@ -22,12 +22,13 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface BaselineAppInterface {
-    final Logger log = LoggerFactory.getLogger(BaselineAppInterface.class);
+    Logger log = LoggerFactory.getLogger(BaselineAppInterface.class);
     BaselineAppInjector baselineAppInjector = DaggerBaselineAppInjector.create();
     EnvironmentProvider environmentProvider = baselineAppInjector.environmentProvider();
     EventBus eventBus = baselineAppInjector.eventBus();
 
     static void initialize() {
+        log.info("Event bus instance: " + eventBus.toString());
         Instant initializeStart = Instant.now();
         Optional<String> region = environmentProvider.getRegion();
 
