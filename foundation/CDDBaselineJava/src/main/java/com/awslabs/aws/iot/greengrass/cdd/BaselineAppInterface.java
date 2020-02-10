@@ -9,6 +9,8 @@ import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
 import com.google.common.eventbus.EventBus;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface BaselineAppInterface {
+    final Logger log = LoggerFactory.getLogger(BaselineAppInterface.class);
     BaselineAppInjector baselineAppInjector = DaggerBaselineAppInjector.create();
     EnvironmentProvider environmentProvider = baselineAppInjector.environmentProvider();
     EventBus eventBus = baselineAppInjector.eventBus();
@@ -34,10 +37,12 @@ public interface BaselineAppInterface {
 
         region.ifPresent(theRegion -> System.setProperty("aws.region", theRegion));
 
+        log.info("Sending start event");
         eventBus.post(ImmutableGreengrassStartEvent.builder().build());
 
         Instant initializeEnd = Instant.now();
         String debugTopic = String.join("/", environmentProvider.getAwsIotThingName().get(), "debug");
+        log.info("Sending initializing timing event");
         eventBus.post(ImmutablePublishMessageEvent.builder().topic(debugTopic).message("Initialization took: " + Duration.between(initializeStart, initializeEnd).toString()).build());
     }
 

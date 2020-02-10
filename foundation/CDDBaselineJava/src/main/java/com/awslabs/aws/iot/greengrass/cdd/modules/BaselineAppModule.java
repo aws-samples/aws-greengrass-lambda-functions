@@ -21,9 +21,12 @@ import dagger.Provides;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
+import javax.inject.Singleton;
+
 @Module
 public class BaselineAppModule {
     @Provides
+    @Singleton
     public EventBus provideEventBus() {
         return new EventBus();
     }
