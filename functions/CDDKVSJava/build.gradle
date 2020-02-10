@@ -65,7 +65,7 @@ dependencies {
 
     compile 'com.fazecast:jSerialComm:[2.0.0,3.0.0)'
 
-    compile 'net.java.dev.jna:jna:5.2.0'
+    compile 'net.java.dev.jna:jna:5.5.0'
     compile 'org.freedesktop.gstreamer:gst1-java-core:1.1.0'
 
     testCompile "junit:junit:$junitVersion"
