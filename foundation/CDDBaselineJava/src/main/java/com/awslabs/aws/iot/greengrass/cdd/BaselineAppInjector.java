@@ -12,6 +12,5 @@ import javax.inject.Singleton;
 public interface BaselineAppInjector {
     EnvironmentProvider environmentProvider();
 
-    @Singleton
     Dispatcher dispatcher();
 }

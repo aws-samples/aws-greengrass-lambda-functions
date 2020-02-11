@@ -2,9 +2,7 @@ package com.awslabs.aws.iot.greengrass.cdd.modules;
 
 import com.amazonaws.greengrass.javasdk.IotDataClient;
 import com.amazonaws.greengrass.javasdk.LambdaClient;
-import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
-import com.awslabs.aws.iot.greengrass.cdd.communication.DummyCommunication;
-import com.awslabs.aws.iot.greengrass.cdd.communication.GreengrassCommunication;
+import com.awslabs.aws.iot.greengrass.cdd.communication.*;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.implementations.BasicJsonHelper;
 import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.TempDirNativeProcessHelper;
@@ -17,6 +15,8 @@ import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvid
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.SdkErrorHandler;
 import dagger.Module;
 import dagger.Provides;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
@@ -25,7 +25,15 @@ import java.util.Optional;
 
 @Module
 public class BaselineAppModule {
+    private final Logger log = LoggerFactory.getLogger(BaselineAppModule.class);
     private static Optional<Boolean> optionalRunningInGreengrass = Optional.empty();
+
+    @Provides
+    @Singleton
+    public Dispatcher providesDispatcher(BasicDispatcher basicDispatcher) {
+        log.info("Basic dispatcher: " + basicDispatcher.hashCode());
+        return basicDispatcher;
+    }
 
     // Methods to help users launch native processes
     @Provides
@@ -83,6 +91,7 @@ public class BaselineAppModule {
             communication = new DummyCommunication();
         }
 
+        log.info("Communication: " + communication.hashCode());
         return communication;
     }
 
