@@ -51,6 +51,7 @@ public class Dispatcher {
 
     private <T> void tryConsume(Consumer<T> consumer, T message) {
         try {
+            log.info("Calling consumer [" + consumer + "] on [" + message + "]");
             consumer.accept(message);
         } catch (Exception e) {
             e.printStackTrace();
