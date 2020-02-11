@@ -19,7 +19,6 @@ public class BasicDispatcher implements Dispatcher {
 
     @Inject
     public BasicDispatcher() {
-        log.info("Basic dispatcher constructor");
     }
 
     @Inject

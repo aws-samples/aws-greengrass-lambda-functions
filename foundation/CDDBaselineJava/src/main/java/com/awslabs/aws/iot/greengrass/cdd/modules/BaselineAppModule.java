@@ -31,7 +31,6 @@ public class BaselineAppModule {
     @Provides
     @Singleton
     public Dispatcher providesDispatcher(BasicDispatcher basicDispatcher) {
-        log.info("Basic dispatcher: " + basicDispatcher.hashCode());
         return basicDispatcher;
     }
 
