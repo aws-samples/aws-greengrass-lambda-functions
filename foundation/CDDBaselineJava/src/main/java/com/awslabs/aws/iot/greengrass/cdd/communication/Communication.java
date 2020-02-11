@@ -15,6 +15,10 @@ import java.util.regex.Pattern;
 public interface Communication {
     Pattern builderPattern = Pattern.compile("([^.$]+)\\$\\1Builder$");
 
+    default void register(Object object) {
+        getEventBus().register(object);
+    }
+
     @Subscribe
     default void catchall(Object object) {
         failOnBuilder(object);
