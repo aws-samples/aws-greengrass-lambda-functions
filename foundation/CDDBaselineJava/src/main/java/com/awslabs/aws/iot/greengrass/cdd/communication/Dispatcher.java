@@ -44,9 +44,11 @@ public class Dispatcher {
             return;
         }
 
+        log.warn("Found consumers for [" + clazz + "]");
         Set<Consumer> consumerSet = optionalConsumerSet.get();
 
         log.info("Starting try consume loop...");
+        log.info("Number of consumers: " + consumerSet.size());
         consumerSet.forEach(consumer -> tryConsume(consumer, message));
     }
 
