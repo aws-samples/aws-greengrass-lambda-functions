@@ -31,6 +31,7 @@ public class Dispatcher {
 
     public <T> void add(Class<T> clazz, Consumer<T> consumer) {
         synchronized (Dispatcher.class) {
+            log.info("Dispatch table: " + dispatchTable.hashCode());
             log.info("Adding consumer [" + consumer + "] for class [" + clazz + "]");
             dispatchTable.computeIfAbsent(clazz, key -> new HashSet<>()).add(consumer);
 
