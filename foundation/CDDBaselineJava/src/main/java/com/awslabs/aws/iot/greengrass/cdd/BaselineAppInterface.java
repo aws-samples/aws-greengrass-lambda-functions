@@ -7,8 +7,8 @@ import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassStartEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
-import com.google.common.eventbus.EventBus;
 import org.apache.commons.io.IOUtils;
+import org.greenrobot.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

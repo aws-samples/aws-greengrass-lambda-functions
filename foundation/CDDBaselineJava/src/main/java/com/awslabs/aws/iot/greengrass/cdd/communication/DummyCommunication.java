@@ -2,8 +2,8 @@ package com.awslabs.aws.iot.greengrass.cdd.communication;
 
 import com.amazonaws.greengrass.javasdk.model.GGIotDataException;
 import com.amazonaws.greengrass.javasdk.model.GGLambdaException;
-import com.google.common.eventbus.EventBus;
 import com.google.gson.Gson;
+import org.greenrobot.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -3,9 +3,8 @@ package com.awslabs.aws.iot.greengrass.cdd.communication;
 import com.amazonaws.greengrass.javasdk.model.GGIotDataException;
 import com.amazonaws.greengrass.javasdk.model.GGLambdaException;
 import com.awslabs.aws.iot.greengrass.cdd.events.*;
-import com.google.common.eventbus.DeadEvent;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
@@ -58,12 +57,6 @@ public interface Communication {
         } catch (Exception e) {
             // Do not throw exceptions in event bus subscriber methods
         }
-    }
-
-    @Subscribe
-    default void deadEvent2(DeadEvent deadEvent) {
-        LoggerFactory.getLogger(Communication.class).info("Dead event #2");
-        LoggerFactory.getLogger(Communication.class).info("Dead event #2 data [" + deadEvent.getEvent() + ", " + deadEvent.getSource() + "]");
     }
 
     EventBus getEventBus();
