@@ -21,15 +21,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class BaselineApp {
-    private final Logger log = LoggerFactory.getLogger(BaselineApp.class);
-    private Dispatcher dispatcher;
+public interface BaselineApp {
+    Logger log = LoggerFactory.getLogger(BaselineApp.class);
 
-    public void initialize(Dispatcher dispatcher, EnvironmentProvider environmentProvider) {
+    Dispatcher getDispatcher();
+
+    EnvironmentProvider getEnvironmentProvider();
+
+    default void initialize() {
         Instant initializeStart = Instant.now();
-        this.dispatcher = dispatcher;
 
-        Optional<String> region = environmentProvider.getRegion();
+        Optional<String> region = getEnvironmentProvider().getRegion();
 
         if (!region.isPresent()) {
             System.err.println("Could not determine the region for this core.  aws.region system property not set.  TES may not work.");
@@ -38,15 +40,15 @@ public class BaselineApp {
         region.ifPresent(theRegion -> System.setProperty("aws.region", theRegion));
 
         log.info("Sending start event");
-        dispatcher.dispatch(ImmutableGreengrassStartEvent.builder().build());
+        getDispatcher().dispatch(ImmutableGreengrassStartEvent.builder().build());
 
         Instant initializeEnd = Instant.now();
-        String debugTopic = String.join("/", environmentProvider.getAwsIotThingName().get(), "debug");
+        String debugTopic = String.join("/", getEnvironmentProvider().getAwsIotThingName().get(), "debug");
         log.info("Sending initializing timing event");
-        dispatcher.dispatch(ImmutablePublishMessageEvent.builder().topic(debugTopic).message("Initialization took: " + Duration.between(initializeStart, initializeEnd).toString()).build());
+        getDispatcher().dispatch(ImmutablePublishMessageEvent.builder().topic(debugTopic).message("Initialization took: " + Duration.between(initializeStart, initializeEnd).toString()).build());
     }
 
-    public void handleBinaryRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
+    default void handleBinaryRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
         byte[] input = IOUtils.toByteArray(inputStream);
         String topic = getTopic(context);
 
@@ -58,12 +60,12 @@ public class BaselineApp {
                 .outputStream(Optional.ofNullable(outputStream))
                 .build();
 
-        dispatcher.dispatch(greengrassLambdaEvent);
+        getDispatcher().dispatch(greengrassLambdaEvent);
 
         return;
     }
 
-    public String getTopic(Context context) {
+    default String getTopic(Context context) {
         return context.getClientContext().getCustom().get("subject");
     }
 
@@ -74,11 +76,11 @@ public class BaselineApp {
      * @param context
      * @return
      */
-    public String handleRequest(Object input, Context context) {
+    default String handleRequest(Object input, Context context) {
         return handleJsonRequest(input, context);
     }
 
-    public String handleJsonRequest(Object input, Context context) {
+    default String handleJsonRequest(Object input, Context context) {
         LambdaLogger logger = context.getLogger();
         String topic = getTopic(context);
 
@@ -100,7 +102,7 @@ public class BaselineApp {
                 .logger(context.getLogger())
                 .build();
 
-        dispatcher.dispatch(greengrassLambdaEvent);
+        getDispatcher().dispatch(greengrassLambdaEvent);
 
         return "";
     }
