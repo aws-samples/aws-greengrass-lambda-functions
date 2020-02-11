@@ -16,6 +16,7 @@ public interface Communication {
     Pattern builderPattern = Pattern.compile("([^.$]+)\\$\\1Builder$");
 
     default void register(Object object) {
+        LoggerFactory.getLogger(Communication.class).info("ZZ Registering to event bus: " + getEventBus().toString() + ", " + getEventBus().hashCode() + ", " + object.toString());
         getEventBus().register(object);
     }
 
