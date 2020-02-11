@@ -4,7 +4,9 @@ import com.amazonaws.greengrass.javasdk.IotDataClient;
 import com.amazonaws.greengrass.javasdk.LambdaClient;
 import com.amazonaws.greengrass.javasdk.model.*;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
+import com.google.common.eventbus.DeadEvent;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +55,12 @@ public class GreengrassCommunication implements Communication {
         PublishRequest publishRequest = new PublishRequest().withTopic(topic).withPayload(ByteBuffer.wrap(bytes));
 
         iotDataClient.publish(publishRequest);
+    }
+
+    @Subscribe
+    public void deadEvent(DeadEvent deadEvent) {
+        log.info("Dead event #1");
+        log.info("Dead event #1 data [" + deadEvent.getEvent() + ", " + deadEvent.getSource() + "]");
     }
 
     @Override
