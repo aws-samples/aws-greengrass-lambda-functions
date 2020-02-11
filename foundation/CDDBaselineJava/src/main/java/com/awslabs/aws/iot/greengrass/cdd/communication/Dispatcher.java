@@ -46,6 +46,7 @@ public class Dispatcher {
 
         Set<Consumer> consumerSet = optionalConsumerSet.get();
 
+        log.info("Starting try consume loop...");
         consumerSet.forEach(consumer -> tryConsume(consumer, message));
     }
 
