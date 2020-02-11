@@ -25,6 +25,10 @@ public class CddTopics {
         return cddBaselineTopic.get();
     }
 
+    public String debugTopic() {
+        return String.join("/", buildCddBaselineTopic(), "debug");
+    }
+
     public String getCddDriverTopic(Object object) {
         return String.join("/",
                 buildCddBaselineTopic(),
