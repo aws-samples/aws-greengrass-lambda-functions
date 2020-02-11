@@ -5,6 +5,7 @@ import com.amazonaws.greengrass.javasdk.model.GGLambdaException;
 import com.awslabs.aws.iot.greengrass.cdd.events.*;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +56,9 @@ public interface Communication {
     }
 
     default void publishMessageEvent(String topic, String message) {
+        LoggerFactory.getLogger(Communication.class).info("Publish message event #1");
         getEventBus().post(ImmutablePublishMessageEvent.builder().topic(topic).message(message).build());
+        LoggerFactory.getLogger(Communication.class).info("Publish message event #2");
     }
 
     default void publishBinaryEvent(String topic, byte[] bytes) {

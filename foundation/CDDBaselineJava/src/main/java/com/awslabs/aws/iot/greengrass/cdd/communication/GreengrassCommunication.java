@@ -36,6 +36,11 @@ public class GreengrassCommunication implements Communication {
         this.eventBus = eventBus;
     }
 
+    @Inject
+    public void afterInject() {
+        eventBus.register(this);
+    }
+
     @Override
     public void publish(String topic, Object object) throws GGIotDataException, GGLambdaException {
         PublishRequest publishRequest = new PublishRequest().withTopic(topic).withPayload(ByteBuffer.wrap(new Gson().toJson(object).getBytes()));

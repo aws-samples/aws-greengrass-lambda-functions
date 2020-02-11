@@ -15,8 +15,14 @@ public class DummyCommunication implements Communication {
     @Inject
     EventBus eventBus;
 
+    @Inject
     public DummyCommunication(EventBus eventBus) {
         this.eventBus = eventBus;
+    }
+
+    @Inject
+    public void afterInject() {
+        eventBus.register(this);
     }
 
     @Override
