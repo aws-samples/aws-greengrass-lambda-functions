@@ -6,13 +6,13 @@ import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 import java.util.Optional;
 
 public interface GreengrassLambdaEventHandler {
-    default void receiveMessage(GreengrassLambdaEvent greengrassLambdaEvent) {
+    default void receiveMessage(ImmutableGreengrassLambdaEvent immutableGreengrassLambdaEvent) {
         try {
-            Optional<String> topic = greengrassLambdaEvent.getTopic();
+            Optional<String> topic = immutableGreengrassLambdaEvent.getTopic();
 
             if (!topic.isPresent()) {
                 // No topic?  This must be a direct invoke.
-                executeInvoke(greengrassLambdaEvent);
+                executeInvoke(immutableGreengrassLambdaEvent);
                 return;
             }
 
@@ -22,7 +22,7 @@ public interface GreengrassLambdaEventHandler {
             }
 
             // Topic expected, normal message processing
-            execute(greengrassLambdaEvent);
+            execute(immutableGreengrassLambdaEvent);
         } catch (Exception e) {
             // Do not throw exceptions in event bus subscriber methods
         }
