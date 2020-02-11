@@ -39,12 +39,12 @@ public interface BaselineApp {
 
         region.ifPresent(theRegion -> System.setProperty("aws.region", theRegion));
 
-        log.info("Sending start event");
+        log.debug("Sending start event");
         getDispatcher().dispatch(ImmutableGreengrassStartEvent.builder().build());
 
         Instant initializeEnd = Instant.now();
         String debugTopic = String.join("/", getEnvironmentProvider().getAwsIotThingName().get(), "debug");
-        log.info("Sending initializing timing event");
+        log.debug("Sending initialization complete event");
         getDispatcher().dispatch(ImmutablePublishMessageEvent.builder().topic(debugTopic).message("Initialization took: " + Duration.between(initializeStart, initializeEnd).toString()).build());
     }
 
