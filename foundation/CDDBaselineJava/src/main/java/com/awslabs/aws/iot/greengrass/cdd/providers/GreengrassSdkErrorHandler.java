@@ -23,7 +23,7 @@ public class GreengrassSdkErrorHandler implements SdkErrorHandler {
     String BAD_PERMISSIONS_SOLUTION = "Add the necessary permissions and try again.";
 
     @Override
-    public Void handleSdkError(SdkClientException e) {
+    public void handleSdkError(SdkClientException e) {
         String message = e.getMessage();
         List<String> errors = new ArrayList<>();
 
@@ -49,7 +49,5 @@ public class GreengrassSdkErrorHandler implements SdkErrorHandler {
         } else {
             throw e;
         }
-
-        return null;
     }
 }
