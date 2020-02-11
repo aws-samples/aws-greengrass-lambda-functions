@@ -28,7 +28,7 @@ public interface BaselineAppInterface {
     EventBus eventBus = baselineAppInjector.eventBus();
 
     static void initialize() {
-        log.info("Event bus instance: " + eventBus.toString());
+        log.info("Event bus instance: " + eventBus.toString() + ", " + eventBus.hashCode());
         Instant initializeStart = Instant.now();
         Optional<String> region = environmentProvider.getRegion();
 
