@@ -2,7 +2,7 @@ package com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces;
 
 import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
-import org.greenrobot.eventbus.Subscribe;
+import com.google.common.eventbus.Subscribe;
 
 import java.util.Optional;
 

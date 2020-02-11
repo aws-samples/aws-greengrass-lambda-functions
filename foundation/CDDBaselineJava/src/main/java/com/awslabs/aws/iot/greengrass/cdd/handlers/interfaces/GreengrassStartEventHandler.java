@@ -1,7 +1,11 @@
 package com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces;
 
 import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassStartEvent;
-import org.greenrobot.eventbus.Subscribe;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
 
 public interface GreengrassStartEventHandler {
     @Subscribe

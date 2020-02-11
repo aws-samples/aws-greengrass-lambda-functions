@@ -2,8 +2,8 @@ package com.awslabs.aws.iot.greengrass.cdd;
 
 import com.awslabs.aws.iot.greengrass.cdd.modules.BaselineAppModule;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
+import com.google.common.eventbus.EventBus;
 import dagger.Component;
-import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Singleton;
 

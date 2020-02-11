@@ -15,9 +15,9 @@ import com.awslabs.aws.iot.greengrass.cdd.providers.GreengrassSdkErrorHandler;
 import com.awslabs.aws.iot.greengrass.cdd.providers.SafeProvider;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.SdkErrorHandler;
+import com.google.common.eventbus.EventBus;
 import dagger.Module;
 import dagger.Provides;
-import org.greenrobot.eventbus.EventBus;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
@@ -28,7 +28,7 @@ public class BaselineAppModule {
     @Provides
     @Singleton
     public EventBus provideEventBus() {
-        return EventBus.getDefault();
+        return new EventBus();
     }
 
     // Methods to help users launch native processes
