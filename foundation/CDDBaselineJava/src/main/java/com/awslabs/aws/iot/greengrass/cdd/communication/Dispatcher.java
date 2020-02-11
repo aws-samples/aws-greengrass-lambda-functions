@@ -1,7 +1,6 @@
 package com.awslabs.aws.iot.greengrass.cdd.communication;
 
 import com.awslabs.aws.iot.greengrass.cdd.events.*;
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +8,7 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Dispatcher {
     private static final Logger log = LoggerFactory.getLogger(Dispatcher.class);
@@ -33,7 +33,11 @@ public class Dispatcher {
         synchronized (Dispatcher.class) {
             log.info("Adding consumer [" + consumer + "] for class [" + clazz + "]");
             dispatchTable.computeIfAbsent(clazz, key -> new HashSet<>()).add(consumer);
-            log.info("Table after [" + new Gson().toJson(dispatchTable) + "]");
+
+            log.info("-------------------------------------------------------------");
+            log.info("Table after...");
+            dispatchTable.forEach((key, value) -> log.info("Key [" + key + "] [" + value.stream().map(Consumer::toString).collect(Collectors.joining(" "))));
+            log.info("-------------------------------------------------------------");
         }
     }
 
