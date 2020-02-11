@@ -3,7 +3,6 @@ package com.awslabs.aws.iot.greengrass.cdd.modules;
 import com.amazonaws.greengrass.javasdk.IotDataClient;
 import com.amazonaws.greengrass.javasdk.LambdaClient;
 import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
-import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 import com.awslabs.aws.iot.greengrass.cdd.communication.DummyCommunication;
 import com.awslabs.aws.iot.greengrass.cdd.communication.GreengrassCommunication;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
