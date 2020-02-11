@@ -1,6 +1,5 @@
 package com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces;
 
-import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 
 import java.util.Optional;
@@ -30,15 +29,15 @@ public interface GreengrassLambdaEventHandler {
 
     boolean isTopicExpected(String topic);
 
-    void execute(GreengrassLambdaEvent greengrassLambdaEvent);
+    void execute(ImmutableGreengrassLambdaEvent immutableGreengrassLambdaEvent);
 
-    default void executeInvoke(GreengrassLambdaEvent greengrassLambdaEvent) {
+    default void executeInvoke(ImmutableGreengrassLambdaEvent immutableGreengrassLambdaEvent) {
         // Default executeInvoke handler for legacy functions.  Make sure that the topic is never empty.
-        ImmutableGreengrassLambdaEvent immutableGreengrassLambdaEvent = ImmutableGreengrassLambdaEvent
-                .copyOf(greengrassLambdaEvent)
-                .withTopic(Optional.of(greengrassLambdaEvent.getTopic().orElse("NULL")));
+        immutableGreengrassLambdaEvent = ImmutableGreengrassLambdaEvent
+                .copyOf(immutableGreengrassLambdaEvent)
+                .withTopic(Optional.of(immutableGreengrassLambdaEvent.getTopic().orElse("NULL")));
 
         // Execute the normal message processing
-        execute(greengrassLambdaEvent);
+        execute(immutableGreengrassLambdaEvent);
     }
 }
