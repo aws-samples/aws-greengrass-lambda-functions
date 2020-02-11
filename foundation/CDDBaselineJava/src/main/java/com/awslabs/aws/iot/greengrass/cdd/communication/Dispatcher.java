@@ -24,9 +24,9 @@ public class Dispatcher {
 
     @Inject
     public void afterInject() {
-        add(ImmutablePublishBinaryEvent.class, this::publishBinaryEvent);
+//        add(ImmutablePublishBinaryEvent.class, this::publishBinaryEvent);
         add(ImmutablePublishMessageEvent.class, this::publishMessageEvent);
-        add(ImmutablePublishObjectEvent.class, this::publishObjectEvent);
+//        add(ImmutablePublishObjectEvent.class, this::publishObjectEvent);
     }
 
     public <T> void add(Class<T> clazz, Consumer<T> consumer) {
