@@ -21,14 +21,13 @@ import dagger.Provides;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
-import javax.inject.Singleton;
-
 @Module
 public class BaselineAppModule {
+    private static final EventBus eventBus = new EventBus();
+
     @Provides
-    @Singleton
     public EventBus provideEventBus() {
-        return new EventBus();
+        return eventBus;
     }
 
     // Methods to help users launch native processes
@@ -74,7 +73,6 @@ public class BaselineAppModule {
     }
 
     @Provides
-    @Singleton
     public Communication providesCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient, EventBus eventBus) {
         if (runningInGreegrass()) {
             return new GreengrassCommunication(environmentProvider, lambdaClient, new IotDataClient(), eventBus);
@@ -85,7 +83,6 @@ public class BaselineAppModule {
 
     // Special environment information (thing name, thing ARN, group name)
     @Provides
-    @Singleton
     public EnvironmentProvider providesEnvironmentProvider(BasicEnvironmentProvider basicEnvironmentProvider, DummyEnvironmentProvider dummyEnvironmentProvider) {
         if (runningInGreegrass()) {
             return basicEnvironmentProvider;
