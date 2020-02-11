@@ -63,22 +63,35 @@ public class Dispatcher {
     }
 
     private void publishObjectEvent(PublishObjectEvent publishObjectEvent) {
-        communication.publish(publishObjectEvent.getTopic(), publishObjectEvent.getObject());
+        try {
+            communication.publish(publishObjectEvent.getTopic(), publishObjectEvent.getObject());
+        } catch (Exception e) {
+            // Do not throw exceptions in event bus subscriber methods, but publish the exception so debugging is easier
+            publishMessageEvent(ImmutablePublishMessageEvent.builder().topic(publishObjectEvent.getTopic()).message("Publish or serialization of object failed [" + e.getMessage() + "]").build());
+        }
     }
 
     private void publishMessageEvent(PublishMessageEvent publishMessageEvent) {
         LoggerFactory.getLogger(Dispatcher.class).info("Publish message event #3");
-
-        Map map = new HashMap<>();
-        LoggerFactory.getLogger(Dispatcher.class).info("Publish message event #4");
-        map.put("message", publishMessageEvent.getMessage());
-        LoggerFactory.getLogger(Dispatcher.class).info("Publish message event #5");
-        communication.publish(publishMessageEvent.getTopic(), map);
-        LoggerFactory.getLogger(Dispatcher.class).info("Publish message event #6");
+        try {
+            Map map = new HashMap<>();
+            LoggerFactory.getLogger(Dispatcher.class).info("Publish message event #4");
+            map.put("message", publishMessageEvent.getMessage());
+            LoggerFactory.getLogger(Dispatcher.class).info("Publish message event #5");
+            communication.publish(publishMessageEvent.getTopic(), map);
+            LoggerFactory.getLogger(Dispatcher.class).info("Publish message event #6");
+        } catch (Exception e) {
+            // Do not throw exceptions in event bus subscriber methods
+            LoggerFactory.getLogger(Dispatcher.class).info("Publish message event #7 [" + e.getMessage() + "]");
+        }
     }
 
     private void publishBinaryEvent(PublishBinaryEvent publishBinaryEvent) {
-        communication.publish(publishBinaryEvent.getTopic(), publishBinaryEvent.getBytes());
+        try {
+            communication.publish(publishBinaryEvent.getTopic(), publishBinaryEvent.getBytes());
+        } catch (Exception e) {
+            // Do not throw exceptions in event bus subscriber methods
+        }
     }
 
     public void publishObjectEvent(String topic, Object object) {
