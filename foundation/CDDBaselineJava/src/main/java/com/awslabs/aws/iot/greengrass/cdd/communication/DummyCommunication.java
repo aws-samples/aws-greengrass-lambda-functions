@@ -18,10 +18,6 @@ public class DummyCommunication implements Communication {
     @Inject
     public DummyCommunication(EventBus eventBus) {
         this.eventBus = eventBus;
-    }
-
-    @Inject
-    public void afterInject() {
         eventBus.register(this);
     }
 

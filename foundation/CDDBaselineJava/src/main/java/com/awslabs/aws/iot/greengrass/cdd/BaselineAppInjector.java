@@ -5,6 +5,9 @@ import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvid
 import com.google.common.eventbus.EventBus;
 import dagger.Component;
 
+import javax.inject.Singleton;
+
+@Singleton
 @Component(modules = BaselineAppModule.class)
 public interface BaselineAppInjector {
     EnvironmentProvider environmentProvider();
