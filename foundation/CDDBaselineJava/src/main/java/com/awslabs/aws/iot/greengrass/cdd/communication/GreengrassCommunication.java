@@ -36,8 +36,8 @@ public class GreengrassCommunication implements Communication {
         this.lambdaClient = lambdaClient;
         this.iotDataClient = iotDataClient;
         this.eventBus = eventBus;
-        eventBus.register(this);
     }
+
 
     @Override
     public void publish(String topic, Object object) throws GGIotDataException, GGLambdaException {

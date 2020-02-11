@@ -76,11 +76,18 @@ public class BaselineAppModule {
     @Provides
     @Singleton
     public Communication providesCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient, EventBus eventBus) {
+        Communication communication;
+
         if (runningInGreegrass()) {
-            return new GreengrassCommunication(environmentProvider, lambdaClient, new IotDataClient(), eventBus);
+            communication = new GreengrassCommunication(environmentProvider, lambdaClient, new IotDataClient(), eventBus);
+        } else {
+            communication = new DummyCommunication(eventBus);
         }
 
-        return new DummyCommunication(eventBus);
+        // Make sure the communication system is registered with the event bus (if this happens more than once messages will be duplicated!)
+        eventBus.register(communication);
+
+        return communication;
     }
 
     // Special environment information (thing name, thing ARN, group name)
