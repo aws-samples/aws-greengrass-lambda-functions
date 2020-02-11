@@ -1,8 +1,8 @@
 package com.awslabs.aws.iot.greengrass.cdd;
 
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 import com.awslabs.aws.iot.greengrass.cdd.modules.BaselineAppModule;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
-import com.google.common.eventbus.EventBus;
 import dagger.Component;
 
 import javax.inject.Singleton;
@@ -12,5 +12,5 @@ import javax.inject.Singleton;
 public interface BaselineAppInjector {
     EnvironmentProvider environmentProvider();
 
-    EventBus eventBus();
+    Dispatcher dispatcher();
 }

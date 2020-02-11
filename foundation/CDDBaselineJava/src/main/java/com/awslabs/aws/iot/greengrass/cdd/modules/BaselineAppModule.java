@@ -3,6 +3,7 @@ package com.awslabs.aws.iot.greengrass.cdd.modules;
 import com.amazonaws.greengrass.javasdk.IotDataClient;
 import com.amazonaws.greengrass.javasdk.LambdaClient;
 import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 import com.awslabs.aws.iot.greengrass.cdd.communication.DummyCommunication;
 import com.awslabs.aws.iot.greengrass.cdd.communication.GreengrassCommunication;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
@@ -15,21 +16,17 @@ import com.awslabs.aws.iot.greengrass.cdd.providers.GreengrassSdkErrorHandler;
 import com.awslabs.aws.iot.greengrass.cdd.providers.SafeProvider;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.SdkErrorHandler;
-import com.google.common.eventbus.EventBus;
 import dagger.Module;
 import dagger.Provides;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
 import javax.inject.Singleton;
+import java.util.Optional;
 
 @Module
 public class BaselineAppModule {
-    @Provides
-    @Singleton
-    public EventBus provideEventBus() {
-        return new EventBus();
-    }
+    private static Optional<Boolean> optionalRunningInGreengrass = Optional.empty();
 
     // Methods to help users launch native processes
     @Provides
@@ -56,16 +53,19 @@ public class BaselineAppModule {
     }
 
     private boolean runningInGreegrass() {
-        try {
-            new IotDataClient();
-        } catch (NoClassDefFoundError e) {
-            if (e.getMessage().contains("EnvVars")) {
-                // Not running in Greengrass
-                return false;
+        if (!optionalRunningInGreengrass.isPresent()) {
+            try {
+                new IotDataClient();
+                optionalRunningInGreengrass = Optional.of(true);
+            } catch (NoClassDefFoundError e) {
+                if (e.getMessage().contains("EnvVars")) {
+                    // Not running in Greengrass
+                    optionalRunningInGreengrass = Optional.of(false);
+                }
             }
         }
 
-        return true;
+        return optionalRunningInGreengrass.get();
     }
 
     @Provides
@@ -75,17 +75,14 @@ public class BaselineAppModule {
 
     @Provides
     @Singleton
-    public Communication providesCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient, EventBus eventBus) {
+    public Communication providesCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient) {
         Communication communication;
 
         if (runningInGreegrass()) {
-            communication = new GreengrassCommunication(environmentProvider, lambdaClient, new IotDataClient(), eventBus);
+            communication = new GreengrassCommunication(environmentProvider, lambdaClient, new IotDataClient());
         } else {
-            communication = new DummyCommunication(eventBus);
+            communication = new DummyCommunication();
         }
-
-        // Make sure the communication system is registered with the event bus (if this happens more than once messages will be duplicated!)
-        eventBus.register(communication);
 
         return communication;
     }

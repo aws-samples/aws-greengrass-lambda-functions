@@ -2,12 +2,12 @@ package com.awslabs.aws.iot.greengrass.cdd;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassStartEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
-import com.google.common.eventbus.EventBus;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +25,9 @@ public interface BaselineAppInterface {
     Logger log = LoggerFactory.getLogger(BaselineAppInterface.class);
     BaselineAppInjector baselineAppInjector = DaggerBaselineAppInjector.create();
     EnvironmentProvider environmentProvider = baselineAppInjector.environmentProvider();
-    EventBus eventBus = baselineAppInjector.eventBus();
+    Dispatcher dispatcher = baselineAppInjector.dispatcher();
 
     static void initialize() {
-        log.info("Event bus instance: " + eventBus.toString() + ", " + eventBus.hashCode());
         Instant initializeStart = Instant.now();
         Optional<String> region = environmentProvider.getRegion();
 
@@ -39,12 +38,12 @@ public interface BaselineAppInterface {
         region.ifPresent(theRegion -> System.setProperty("aws.region", theRegion));
 
         log.info("Sending start event");
-        eventBus.post(ImmutableGreengrassStartEvent.builder().build());
+        dispatcher.dispatch(ImmutableGreengrassStartEvent.builder().build());
 
         Instant initializeEnd = Instant.now();
         String debugTopic = String.join("/", environmentProvider.getAwsIotThingName().get(), "debug");
         log.info("Sending initializing timing event");
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(debugTopic).message("Initialization took: " + Duration.between(initializeStart, initializeEnd).toString()).build());
+        dispatcher.dispatch(ImmutablePublishMessageEvent.builder().topic(debugTopic).message("Initialization took: " + Duration.between(initializeStart, initializeEnd).toString()).build());
     }
 
     default void handleBinaryRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
@@ -59,7 +58,7 @@ public interface BaselineAppInterface {
                 .outputStream(Optional.ofNullable(outputStream))
                 .build();
 
-        eventBus.post(greengrassLambdaEvent);
+        dispatcher.dispatch(greengrassLambdaEvent);
 
         return;
     }
@@ -101,7 +100,7 @@ public interface BaselineAppInterface {
                 .logger(context.getLogger())
                 .build();
 
-        eventBus.post(greengrassLambdaEvent);
+        dispatcher.dispatch(greengrassLambdaEvent);
 
         return "";
     }

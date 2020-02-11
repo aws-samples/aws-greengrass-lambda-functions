@@ -4,9 +4,6 @@ import com.amazonaws.greengrass.javasdk.IotDataClient;
 import com.amazonaws.greengrass.javasdk.LambdaClient;
 import com.amazonaws.greengrass.javasdk.model.*;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
-import com.google.common.eventbus.DeadEvent;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,17 +24,13 @@ public class GreengrassCommunication implements Communication {
     LambdaClient lambdaClient;
     @Inject
     EnvironmentProvider environmentProvider;
-    @Inject
-    EventBus eventBus;
 
     @Inject
-    public GreengrassCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient, IotDataClient iotDataClient, EventBus eventBus) {
+    public GreengrassCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient, IotDataClient iotDataClient) {
         this.environmentProvider = environmentProvider;
         this.lambdaClient = lambdaClient;
         this.iotDataClient = iotDataClient;
-        this.eventBus = eventBus;
     }
-
 
     @Override
     public void publish(String topic, Object object) throws GGIotDataException, GGLambdaException {
@@ -53,17 +46,7 @@ public class GreengrassCommunication implements Communication {
         iotDataClient.publish(publishRequest);
     }
 
-    @Subscribe
-    public void deadEvent(DeadEvent deadEvent) {
-        log.info("Dead event #1");
-        log.info("Dead event #1 data [" + deadEvent.getEvent() + ", " + deadEvent.getSource() + "]");
-    }
-
     @Override
-    public EventBus getEventBus() {
-        return eventBus;
-    }
-
     public Optional<byte[]> invokeByName(String functionName, Optional<Map> customContext, byte[] binaryData) {
         Optional<String> functionArn = environmentProvider.getLocalLambdaArn(functionName);
 
