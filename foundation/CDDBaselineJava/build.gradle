@@ -64,9 +64,6 @@ def awsGreengrassCoreSdkJava = '1.4.0'
 def vavrVersion = '0.10.2'
 
 dependencies {
-    // Dagger code generation
-    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-
     // Immutables (requires annotation processing for code generation)
     annotationProcessor "org.immutables:value:$immutablesValueVersion"
     annotationProcessor "org.immutables:gson:$immutablesValueVersion"

@@ -21,14 +21,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public interface BaselineAppInterface {
-    Logger log = LoggerFactory.getLogger(BaselineAppInterface.class);
-    BaselineAppInjector baselineAppInjector = DaggerBaselineAppInjector.create();
-    EnvironmentProvider environmentProvider = baselineAppInjector.environmentProvider();
-    Dispatcher dispatcher = baselineAppInjector.dispatcher();
+public class BaselineApp {
+    private final Logger log = LoggerFactory.getLogger(BaselineApp.class);
+    private Dispatcher dispatcher;
 
-    static void initialize() {
+    public void initialize(Dispatcher dispatcher, EnvironmentProvider environmentProvider) {
         Instant initializeStart = Instant.now();
+        this.dispatcher = dispatcher;
+
         Optional<String> region = environmentProvider.getRegion();
 
         if (!region.isPresent()) {
@@ -46,7 +46,7 @@ public interface BaselineAppInterface {
         dispatcher.dispatch(ImmutablePublishMessageEvent.builder().topic(debugTopic).message("Initialization took: " + Duration.between(initializeStart, initializeEnd).toString()).build());
     }
 
-    default void handleBinaryRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
+    public void handleBinaryRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
         byte[] input = IOUtils.toByteArray(inputStream);
         String topic = getTopic(context);
 
@@ -63,7 +63,7 @@ public interface BaselineAppInterface {
         return;
     }
 
-    default String getTopic(Context context) {
+    public String getTopic(Context context) {
         return context.getClientContext().getCustom().get("subject");
     }
 
@@ -74,11 +74,11 @@ public interface BaselineAppInterface {
      * @param context
      * @return
      */
-    default String handleRequest(Object input, Context context) {
+    public String handleRequest(Object input, Context context) {
         return handleJsonRequest(input, context);
     }
 
-    default String handleJsonRequest(Object input, Context context) {
+    public String handleJsonRequest(Object input, Context context) {
         LambdaLogger logger = context.getLogger();
         String topic = getTopic(context);
 
