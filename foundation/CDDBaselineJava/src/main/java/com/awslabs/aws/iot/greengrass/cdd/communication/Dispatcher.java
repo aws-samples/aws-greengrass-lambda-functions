@@ -1,6 +1,7 @@
 package com.awslabs.aws.iot.greengrass.cdd.communication;
 
 import com.awslabs.aws.iot.greengrass.cdd.events.*;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,7 @@ public class Dispatcher {
         synchronized (Dispatcher.class) {
             log.info("Adding consumer [" + consumer + "] for class [" + clazz + "]");
             dispatchTable.computeIfAbsent(clazz, key -> new HashSet<>()).add(consumer);
+            log.info("Table after [" + new Gson().toJson(dispatchTable) + "]");
         }
     }
 
