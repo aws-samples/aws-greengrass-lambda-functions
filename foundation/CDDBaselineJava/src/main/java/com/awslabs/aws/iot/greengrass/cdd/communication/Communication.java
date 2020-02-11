@@ -31,12 +31,17 @@ public interface Communication {
 
     @Subscribe
     default void publishMessageEvent(PublishMessageEvent publishMessageEvent) {
+        LoggerFactory.getLogger(Communication.class).info("Publish message event #3");
         try {
             Map map = new HashMap<>();
+            LoggerFactory.getLogger(Communication.class).info("Publish message event #4");
             map.put("message", publishMessageEvent.getMessage());
+            LoggerFactory.getLogger(Communication.class).info("Publish message event #5");
             publish(publishMessageEvent.getTopic(), map);
+            LoggerFactory.getLogger(Communication.class).info("Publish message event #6");
         } catch (Exception e) {
             // Do not throw exceptions in event bus subscriber methods
+            LoggerFactory.getLogger(Communication.class).info("Publish message event #7 [" + e.getMessage() + "]");
         }
     }
 
