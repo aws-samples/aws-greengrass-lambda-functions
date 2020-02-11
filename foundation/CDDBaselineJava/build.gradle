@@ -72,11 +72,10 @@ dependencies {
     // Immutables (requires annotation processing for code generation)
     annotationProcessor "org.immutables:value:$immutablesValueVersion"
     annotationProcessor "org.immutables:gson:$immutablesValueVersion"
-    compile "org.immutables:value:$immutablesValueVersion"
-    compile "org.immutables:gson:$immutablesValueVersion"
+    implementation "org.immutables:value:$immutablesValueVersion"
 
     // Dependency injection with Dagger
-    compile "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.google.dagger:dagger:$daggerVersion"
 
     compile githubJar('aws', 'aws-greengrass-core-sdk-java', awsGreengrassCoreSdkJava, 'GreengrassJavaSDK')
     compile "com.google.code.gson:gson:$gsonVersion"

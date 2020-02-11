@@ -10,12 +10,6 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 public interface GreengrassLambdaEventHandler {
-    @Inject
-    default void autowire(EventBus eventBus) {
-        LoggerFactory.getLogger(GreengrassLambdaEventHandler.class).info("Autowired event bus: " + eventBus.toString());
-        eventBus.register(this);
-    }
-
     @Subscribe
     default void receiveMessage(GreengrassLambdaEvent greengrassLambdaEvent) {
         try {
