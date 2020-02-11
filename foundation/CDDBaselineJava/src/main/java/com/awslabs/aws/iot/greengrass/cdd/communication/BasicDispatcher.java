@@ -105,14 +105,17 @@ public class BasicDispatcher implements Dispatcher {
         }
     }
 
+    @Override
     public void publishObjectEvent(String topic, Object object) {
         dispatch(ImmutablePublishObjectEvent.builder().topic(topic).object(object).build());
     }
 
+    @Override
     public void publishMessageEvent(String topic, String message) {
         dispatch(ImmutablePublishMessageEvent.builder().topic(topic).message(message).build());
     }
 
+    @Override
     public void publishBinaryEvent(String topic, byte[] bytes) {
         dispatch(ImmutablePublishBinaryEvent.builder().topic(topic).bytes(bytes).build());
     }
