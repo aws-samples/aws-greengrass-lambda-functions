@@ -36,10 +36,6 @@ public class GreengrassCommunication implements Communication {
         this.lambdaClient = lambdaClient;
         this.iotDataClient = iotDataClient;
         this.eventBus = eventBus;
-    }
-
-    @Inject
-    public void afterInject() {
         eventBus.register(this);
     }
 
