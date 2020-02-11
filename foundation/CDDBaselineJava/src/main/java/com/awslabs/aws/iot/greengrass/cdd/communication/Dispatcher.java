@@ -73,6 +73,7 @@ public class Dispatcher {
     }
 
     private void publishObjectEvent(PublishObjectEvent publishObjectEvent) {
+        log.info("In publishObjectEvent [" + publishObjectEvent + "]");
         try {
             communication.publish(publishObjectEvent.getTopic(), publishObjectEvent.getObject());
         } catch (Exception e) {
@@ -82,6 +83,7 @@ public class Dispatcher {
     }
 
     private void publishMessageEvent(PublishMessageEvent publishMessageEvent) {
+        log.info("In publishMessageEvent [" + publishMessageEvent + "]");
         try {
             Map map = new HashMap<>();
             map.put("message", publishMessageEvent.getMessage());
@@ -92,6 +94,7 @@ public class Dispatcher {
     }
 
     private void publishBinaryEvent(PublishBinaryEvent publishBinaryEvent) {
+        log.info("In publishBinaryEvent [" + publishBinaryEvent + "]");
         try {
             communication.publish(publishBinaryEvent.getTopic(), publishBinaryEvent.getBytes());
         } catch (Exception e) {
