@@ -1,10 +1,9 @@
 package com.amazonaws.greengrass.cddembeddedvaadinskeleton.vaadin;
 
 import com.amazonaws.greengrass.cddembeddedvaadinskeleton.App;
+import com.amazonaws.greengrass.cddembeddedvaadinskeleton.events.ImmutableMessageFromCloudEvent;
 import com.amazonaws.greengrass.cddembeddedvaadinskeleton.events.MessageFromCloudEvent;
 import com.amazonaws.greengrass.cddembeddedvaadinskeleton.events.TimerFiredEvent;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.gson.Gson;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
@@ -42,15 +41,14 @@ public class SkeletonUI extends UI {
     private final Label gcCountLabel = new Label();
     private final Label gcTimeLabel = new Label();
 
-    private final EventBus eventBus = App.eventBus;
-
     private final List<String> leftList = new ArrayList<>();
     private final List<String> rightList = new ArrayList<>();
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        // Make sure we get events from the event bus
-        eventBus.register(this);
+        // Make sure we get events from the dispatcher
+        App.dispatcher.add(ImmutableMessageFromCloudEvent.class, this::messageFromCloud);
+        App.dispatcher.add(TimerFiredEvent.class, this::timerFiredEvent);
 
         leftGrid.setWidth("100%");
         leftGrid.setCaption("Left grid");
@@ -66,7 +64,6 @@ public class SkeletonUI extends UI {
         setContent(verticalLayout);
     }
 
-    @Subscribe
     public void messageFromCloud(MessageFromCloudEvent messageFromCloudEvent) {
         try {
             access(() -> {
@@ -85,7 +82,6 @@ public class SkeletonUI extends UI {
         }
     }
 
-    @Subscribe
     public void timerFiredEvent(TimerFiredEvent timerFiredEvent) {
         try {
             access(() -> {

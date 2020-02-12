@@ -16,6 +16,10 @@ public class EmbeddedVaadin {
     @Inject
     EnvironmentProvider environmentProvider;
 
+    @Inject
+    public EmbeddedVaadin() {
+    }
+
     public void start() {
         Thread serverThread = new Thread(this::innerStart);
 
@@ -39,18 +43,6 @@ public class EmbeddedVaadin {
         ServletHolder sh = new ServletHolder(new VaadinServlet());
         contextHandler.addServlet(sh, SkeletonUI.PATTERN);
         contextHandler.setInitParameter("ui", SkeletonUI.class.getCanonicalName());
-
-        /*
-        // Register cdn.virit.in if present
-        try {
-            Class cls = Class.forName("in.virit.WidgetSet");
-            if (cls != null) {
-                contextHandler.getSessionHandler().addEventListener((EventListener) cls.newInstance());
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(EmbeddedVaadin.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        */
 
         server.setHandler(contextHandler);
 
