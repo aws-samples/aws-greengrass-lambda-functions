@@ -2,30 +2,29 @@ package com.amazonaws.greengrass.cddkinesis.handlers;
 
 import com.amazonaws.greengrass.cddkinesis.data.Topics;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
-import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
+import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
-import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
-import com.google.common.eventbus.EventBus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 public class InputHandler implements GreengrassLambdaEventHandler {
+    private final Logger log = LoggerFactory.getLogger(InputHandler.class);
     @Inject
-    EventBus eventBus;
+    Dispatcher dispatcher;
     @Inject
     Topics topics;
 
     @Inject
     public InputHandler() {
+    }
+
+    @Inject
+    public void afterInject() {
+        dispatcher.add(ImmutableGreengrassLambdaEvent.class, this::receiveMessage);
     }
 
     /**
@@ -42,33 +41,33 @@ public class InputHandler implements GreengrassLambdaEventHandler {
     /**
      * Send a message on the topics.getOutputTopic() topic showing that we received a message
      *
-     * @param greengrassLambdaEvent
+     * @param immutableGreengrassLambdaEvent
      */
     @Override
-    public void execute(GreengrassLambdaEvent greengrassLambdaEvent) {
-        String topic = greengrassLambdaEvent.getTopic().get();
-        LambdaLogger logger = greengrassLambdaEvent.getLogger();
+    public void execute(ImmutableGreengrassLambdaEvent immutableGreengrassLambdaEvent) {
+        String topic = immutableGreengrassLambdaEvent.getTopic().get();
+        LambdaLogger logger = immutableGreengrassLambdaEvent.getLogger();
 
         String message = "Inbound message on topic [" + topic + "]";
 
-        message += getInputDescription(greengrassLambdaEvent);
+        message += getInputDescription(immutableGreengrassLambdaEvent);
 
         logger.log(message);
 
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getOutputTopic()).message(message).build());
+        dispatcher.publishMessageEvent(topics.getOutputTopic(), message);
     }
 
     @Override
-    public void executeInvoke(GreengrassLambdaEvent greengrassLambdaEvent) {
-        LambdaLogger logger = greengrassLambdaEvent.getLogger();
+    public void executeInvoke(ImmutableGreengrassLambdaEvent immutableGreengrassLambdaEvent) {
+        LambdaLogger logger = immutableGreengrassLambdaEvent.getLogger();
 
         String message = "Function invoked directly as a Lambda";
 
-        message += getInputDescription(greengrassLambdaEvent);
+        message += getInputDescription(immutableGreengrassLambdaEvent);
 
         logger.log(message);
 
-        eventBus.post(ImmutablePublishMessageEvent.builder().topic(topics.getOutputTopic()).message(message).build());
+        dispatcher.publishMessageEvent(topics.getOutputTopic(), message);
     }
 
     private String getInputDescription(GreengrassLambdaEvent greengrassLambdaEvent) {
@@ -82,6 +81,4 @@ public class InputHandler implements GreengrassLambdaEventHandler {
 
         return ", WITHOUT input";
     }
-
-
 }

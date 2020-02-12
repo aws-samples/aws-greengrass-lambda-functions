@@ -1,17 +1,34 @@
 package com.amazonaws.greengrass.cddkinesis;
 
-import com.amazonaws.greengrass.cddkinesis.modules.AppModule;
-import com.awslabs.aws.iot.greengrass.cdd.BaselineAppInterface;
+import com.amazonaws.greengrass.cddkinesis.handlers.InputHandler;
+import com.amazonaws.greengrass.cddkinesis.handlers.StartupHandler;
+import com.awslabs.aws.iot.greengrass.cdd.BaselineApp;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
+import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
 
-import java.util.Arrays;
+public class App implements BaselineApp {
+    private static AppInjector appInjector = DaggerAppInjector.create();
+    private static StartupHandler startupHandler = appInjector.startupHandler();
+    private static InputHandler inputHandler = appInjector.inputHandler();
+    private static Dispatcher dispatcher = appInjector.dispatcher();
+    private static EnvironmentProvider environmentProvider = appInjector.environmentProvider();
+    private static App app = new App();
 
-public class App implements BaselineAppInterface {
     static {
-        // Specify any modules you need here
-        BaselineAppInterface.initialize(Arrays.asList(new AppModule()));
+        app.initialize();
     }
 
     // Greengrass requires a no-args constructor, do not remove!
     public App() {
+    }
+
+    @Override
+    public Dispatcher getDispatcher() {
+        return dispatcher;
+    }
+
+    @Override
+    public EnvironmentProvider getEnvironmentProvider() {
+        return environmentProvider;
     }
 }

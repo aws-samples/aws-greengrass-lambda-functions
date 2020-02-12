@@ -1,8 +1,8 @@
 package com.amazonaws.greengrass.cddkinesis.handlers;
 
 import com.amazonaws.greengrass.cddkinesis.data.Topics;
-import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
-import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassStartEvent;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
+import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassStartEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
 import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.interfaces.NativeProcessHelper;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
@@ -38,21 +38,26 @@ public class StartupHandler implements GreengrassStartEventHandler {
     @Inject
     NativeProcessHelper nativeProcessHelper;
     @Inject
-    Communication communication;
+    Dispatcher dispatcher;
 
     @Inject
     public StartupHandler() {
+    }
+
+    @Inject
+    public void afterInject() {
+        dispatcher.add(ImmutableGreengrassStartEvent.class, this::execute);
     }
 
     /**
      * Receives the Greengrass start event from the event bus, publishes a message indicating it has started, and creates
      * a timer that publishes a message every 5 seconds after a 5 second delay
      *
-     * @param greengrassStartEvent
+     * @param immutableGreengrassStartEvent
      */
     @Override
-    public void execute(GreengrassStartEvent greengrassStartEvent) {
-        communication.publishMessageEvent(topics.getOutputTopic(), "KVS streamer started [" + System.currentTimeMillis() + "] [" + uuid + "]");
+    public void execute(ImmutableGreengrassStartEvent immutableGreengrassStartEvent) {
+        dispatcher.publishMessageEvent(topics.getOutputTopic(), "KVS streamer started [" + System.currentTimeMillis() + "] [" + uuid + "]");
 
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -60,22 +65,22 @@ public class StartupHandler implements GreengrassStartEventHandler {
 
             @Override
             public void run() {
-                communication.publishMessageEvent(topics.getOutputTopic(), "KVS streamer still running [" + System.currentTimeMillis() + "] [" + uuid + "]");
+                dispatcher.publishMessageEvent(topics.getOutputTopic(), "KVS streamer still running [" + System.currentTimeMillis() + "] [" + uuid + "]");
 
                 if (pipe == null) {
-                    communication.publishMessageEvent(topics.getOutputTopic(), "No pipe yet [" + System.currentTimeMillis() + "] [" + uuid + "]");
+                    dispatcher.publishMessageEvent(topics.getOutputTopic(), "No pipe yet [" + System.currentTimeMillis() + "] [" + uuid + "]");
                     return;
                 }
 
                 long seconds = pipe.queryPosition(TimeUnit.SECONDS);
 
                 if (seconds == previousSeconds) {
-                    communication.publishMessageEvent(topics.getOutputTopic(), "Pipe is stalled, restarting [" + seconds + "] [" + System.currentTimeMillis() + "] [" + uuid + "]");
+                    dispatcher.publishMessageEvent(topics.getOutputTopic(), "Pipe is stalled, restarting [" + seconds + "] [" + System.currentTimeMillis() + "] [" + uuid + "]");
                     System.exit(1);
                 }
 
                 previousSeconds = seconds;
-                communication.publishMessageEvent(topics.getOutputTopic(), "Pipe state [" + pipe.getState().name() + "] [" + seconds + "] [" + System.currentTimeMillis() + "] [" + uuid + "]");
+                dispatcher.publishMessageEvent(topics.getOutputTopic(), "Pipe state [" + pipe.getState().name() + "] [" + seconds + "] [" + System.currentTimeMillis() + "] [" + uuid + "]");
             }
         }, START_DELAY_MS, PERIOD_MS);
 
