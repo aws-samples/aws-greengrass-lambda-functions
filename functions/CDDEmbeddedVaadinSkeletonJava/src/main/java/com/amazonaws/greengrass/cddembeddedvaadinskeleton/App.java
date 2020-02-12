@@ -11,10 +11,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class App implements BaselineApp {
-    private static final AppInjector appInjector = DaggerAppInjector.create();
-
-    // Vaadin needs this to be accessible publicly later
-    public static final Dispatcher dispatcher = appInjector.dispatcher();
+    // Vaadin needs these to be accessible publicly later
+    public static final AppInjector appInjector = DaggerAppInjector.create();
 
     static {
         new App().initialize();

@@ -1,7 +1,6 @@
 package com.amazonaws.greengrass.cddembeddedvaadinskeleton.vaadin;
 
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
-import com.vaadin.server.VaadinServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -13,6 +12,7 @@ import java.util.Optional;
 
 public class EmbeddedVaadin {
     private final Logger log = LoggerFactory.getLogger(EmbeddedVaadin.class);
+
     @Inject
     EnvironmentProvider environmentProvider;
 
@@ -36,13 +36,11 @@ public class EmbeddedVaadin {
 
         Server server = new Server(Integer.parseInt(port.get()));
 
-        ServletContextHandler contextHandler
-                = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         contextHandler.setContextPath("/");
 
-        ServletHolder sh = new ServletHolder(new VaadinServlet());
-        contextHandler.addServlet(sh, SkeletonUI.PATTERN);
-        contextHandler.setInitParameter("ui", SkeletonUI.class.getCanonicalName());
+        ServletHolder servletHolder = new ServletHolder(SkeletonUI.SkeletonUIServlet.class);
+        contextHandler.addServlet(servletHolder, SkeletonUI.PATTERN);
 
         server.setHandler(contextHandler);
 
