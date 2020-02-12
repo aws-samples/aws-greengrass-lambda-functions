@@ -1,4 +1,4 @@
-package com.amazonaws.greengrass.cddkinesis.data;
+package com.amazonaws.greengrass.cddkvs.data;
 
 import com.awslabs.aws.iot.greengrass.cdd.data.CddTopics;
 

@@ -1,6 +1,6 @@
-package com.amazonaws.greengrass.cddkinesis.handlers;
+package com.amazonaws.greengrass.cddkvs.handlers;
 
-import com.amazonaws.greengrass.cddkinesis.data.Topics;
+import com.amazonaws.greengrass.cddkvs.data.Topics;
 import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassStartEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
@@ -42,11 +42,6 @@ public class StartupHandler implements GreengrassStartEventHandler {
 
     @Inject
     public StartupHandler() {
-    }
-
-    @Inject
-    public void afterInject() {
-        dispatcher.add(ImmutableGreengrassStartEvent.class, this::execute);
     }
 
     /**

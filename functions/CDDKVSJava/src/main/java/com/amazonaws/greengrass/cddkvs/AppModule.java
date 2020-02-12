@@ -1,4 +1,4 @@
-package com.amazonaws.greengrass.cddkinesis;
+package com.amazonaws.greengrass.cddkvs;
 
 import dagger.Module;
 import dagger.Provides;

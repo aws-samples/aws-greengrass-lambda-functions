@@ -1,6 +1,6 @@
-package com.amazonaws.greengrass.cddkinesis.handlers;
+package com.amazonaws.greengrass.cddkvs.handlers;
 
-import com.amazonaws.greengrass.cddkinesis.data.Topics;
+import com.amazonaws.greengrass.cddkvs.data.Topics;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
@@ -20,11 +20,6 @@ public class InputHandler implements GreengrassLambdaEventHandler {
 
     @Inject
     public InputHandler() {
-    }
-
-    @Inject
-    public void afterInject() {
-        dispatcher.add(ImmutableGreengrassLambdaEvent.class, this::receiveMessage);
     }
 
     /**
