@@ -41,10 +41,10 @@ public interface BaselineApp {
         Dispatcher dispatcher = baselineInjector.dispatcher();
         EnvironmentProvider environmentProvider = baselineInjector.environmentProvider();
 
-        log.info("Auto-wiring handlers");
+        log.debug("Auto-wiring handlers");
         getStartupHandlers().forEach(startupHandler -> dispatcher.add(ImmutableGreengrassStartEvent.class, startupHandler::execute));
         getLambdaHandlers().forEach(startupHandler -> dispatcher.add(ImmutableGreengrassLambdaEvent.class, startupHandler::receiveMessage));
-        log.info("Auto-wired handlers");
+        log.debug("Auto-wired handlers");
 
         Optional<String> region = environmentProvider.getRegion();
 
