@@ -7,6 +7,8 @@ import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassStartEvent;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutablePublishMessageEvent;
+import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
+import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -17,21 +19,34 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public interface BaselineApp {
     Logger log = LoggerFactory.getLogger(BaselineApp.class);
 
-    Dispatcher getDispatcher();
+    BaselineInjector getBaselineInjector();
 
-    EnvironmentProvider getEnvironmentProvider();
+    default Set<GreengrassStartEventHandler> getStartupHandlers() {
+        return Collections.emptySet();
+    }
+
+    default Set<GreengrassLambdaEventHandler> getLambdaHandlers() {
+        return Collections.emptySet();
+    }
 
     default void initialize() {
         Instant initializeStart = Instant.now();
 
-        Optional<String> region = getEnvironmentProvider().getRegion();
+        BaselineInjector baselineInjector = getBaselineInjector();
+        Dispatcher dispatcher = baselineInjector.dispatcher();
+        EnvironmentProvider environmentProvider = baselineInjector.environmentProvider();
+
+        log.info("Auto-wiring handlers");
+        getStartupHandlers().forEach(startupHandler -> dispatcher.add(ImmutableGreengrassStartEvent.class, startupHandler::execute));
+        getLambdaHandlers().forEach(startupHandler -> dispatcher.add(ImmutableGreengrassLambdaEvent.class, startupHandler::receiveMessage));
+        log.info("Auto-wired handlers");
+
+        Optional<String> region = environmentProvider.getRegion();
 
         if (!region.isPresent()) {
             System.err.println("Could not determine the region for this core.  aws.region system property not set.  TES may not work.");
@@ -40,12 +55,12 @@ public interface BaselineApp {
         region.ifPresent(theRegion -> System.setProperty("aws.region", theRegion));
 
         log.debug("Sending start event");
-        getDispatcher().dispatch(ImmutableGreengrassStartEvent.builder().build());
+        baselineInjector.dispatcher().dispatch(ImmutableGreengrassStartEvent.builder().build());
 
         Instant initializeEnd = Instant.now();
-        String debugTopic = String.join("/", getEnvironmentProvider().getAwsIotThingName().get(), "debug");
+        String debugTopic = String.join("/", environmentProvider.getAwsIotThingName().get(), "debug");
         log.debug("Sending initialization complete event");
-        getDispatcher().dispatch(ImmutablePublishMessageEvent.builder().topic(debugTopic).message("Initialization took: " + Duration.between(initializeStart, initializeEnd).toString()).build());
+        baselineInjector.dispatcher().dispatch(ImmutablePublishMessageEvent.builder().topic(debugTopic).message("Initialization took: " + Duration.between(initializeStart, initializeEnd).toString()).build());
     }
 
     default void handleBinaryRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
@@ -60,7 +75,7 @@ public interface BaselineApp {
                 .outputStream(Optional.ofNullable(outputStream))
                 .build();
 
-        getDispatcher().dispatch(greengrassLambdaEvent);
+        getBaselineInjector().dispatcher().dispatch(greengrassLambdaEvent);
 
         return;
     }
@@ -102,7 +117,7 @@ public interface BaselineApp {
                 .logger(context.getLogger())
                 .build();
 
-        getDispatcher().dispatch(greengrassLambdaEvent);
+        getBaselineInjector().dispatcher().dispatch(greengrassLambdaEvent);
 
         return "";
     }
