@@ -1,6 +1,5 @@
 package com.amazonaws.greengrass.cddkvs;
 
-import com.amazonaws.greengrass.cddkvs.handlers.InputHandler;
 import com.amazonaws.greengrass.cddkvs.handlers.StartupHandler;
 import com.awslabs.aws.iot.greengrass.cdd.BaselineInjector;
 import com.awslabs.aws.iot.greengrass.cdd.modules.BaselineAppModule;
@@ -12,6 +11,4 @@ import javax.inject.Singleton;
 @Component(modules = {BaselineAppModule.class, AppModule.class})
 public interface AppInjector extends BaselineInjector {
     StartupHandler startupHandler();
-
-    InputHandler inputHandler();
 }

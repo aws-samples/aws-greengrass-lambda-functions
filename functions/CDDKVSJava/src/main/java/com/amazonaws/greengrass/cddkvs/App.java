@@ -2,7 +2,6 @@ package com.amazonaws.greengrass.cddkvs;
 
 import com.awslabs.aws.iot.greengrass.cdd.BaselineApp;
 import com.awslabs.aws.iot.greengrass.cdd.BaselineInjector;
-import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
 
 import java.util.Arrays;
@@ -28,10 +27,5 @@ public class App implements BaselineApp {
     @Override
     public Set<GreengrassStartEventHandler> getStartupHandlers() {
         return new HashSet<>(Arrays.asList(appInjector.startupHandler()));
-    }
-
-    @Override
-    public Set<GreengrassLambdaEventHandler> getLambdaHandlers() {
-        return new HashSet<>(Arrays.asList(appInjector.inputHandler()));
     }
 }
