@@ -22,11 +22,6 @@ public class InputHandler implements GreengrassLambdaEventHandler {
     public InputHandler() {
     }
 
-    @Inject
-    public void afterInject() {
-        dispatcher.add(ImmutableGreengrassLambdaEvent.class, this::receiveMessage);
-    }
-
     /**
      * Only care about messages on the topics.getInputTopic() topic
      *

@@ -24,11 +24,6 @@ public class StartupHandler implements GreengrassStartEventHandler {
     public StartupHandler() {
     }
 
-    @Inject
-    public void afterInject() {
-        dispatcher.add(ImmutableGreengrassStartEvent.class, this::execute);
-    }
-
     /**
      * Receives the Greengrass start event from the event bus, publishes a message indicating it has started, and creates
      * a timer that publishes a message every 5 seconds after a 5 second delay

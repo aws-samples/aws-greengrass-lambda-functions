@@ -1,21 +1,19 @@
 package com.amazonaws.greengrass.cddskeleton;
 
-import com.amazonaws.greengrass.cddskeleton.handlers.InputHandler;
-import com.amazonaws.greengrass.cddskeleton.handlers.StartupHandler;
 import com.awslabs.aws.iot.greengrass.cdd.BaselineApp;
-import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
-import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
+import com.awslabs.aws.iot.greengrass.cdd.BaselineInjector;
+import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
+import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class App implements BaselineApp {
-    private static AppInjector appInjector = DaggerAppInjector.create();
-    private static StartupHandler startupHandler = appInjector.startupHandler();
-    private static InputHandler inputHandler = appInjector.inputHandler();
-    private static Dispatcher dispatcher = appInjector.dispatcher();
-    private static EnvironmentProvider environmentProvider = appInjector.environmentProvider();
-    private static App app = new App();
+    private static final AppInjector appInjector = DaggerAppInjector.create();
 
     static {
-        app.initialize();
+        new App().initialize();
     }
 
     // Greengrass requires a no-args constructor, do not remove!
@@ -23,12 +21,17 @@ public class App implements BaselineApp {
     }
 
     @Override
-    public Dispatcher getDispatcher() {
-        return dispatcher;
+    public BaselineInjector getBaselineInjector() {
+        return appInjector;
     }
 
     @Override
-    public EnvironmentProvider getEnvironmentProvider() {
-        return environmentProvider;
+    public Set<GreengrassStartEventHandler> getStartupHandlers() {
+        return new HashSet<>(Arrays.asList(appInjector.startupHandler()));
+    }
+
+    @Override
+    public Set<GreengrassLambdaEventHandler> getLambdaHandlers() {
+        return new HashSet<>(Arrays.asList(appInjector.inputHandler()));
     }
 }
