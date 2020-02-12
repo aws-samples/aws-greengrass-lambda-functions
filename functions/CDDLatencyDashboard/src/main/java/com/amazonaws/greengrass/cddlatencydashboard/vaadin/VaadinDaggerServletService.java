@@ -1,6 +1,6 @@
-package com.amazonaws.greengrass.cddembeddedvaadinskeleton.vaadin;
+package com.amazonaws.greengrass.cddlatencydashboard.vaadin;
 
-import com.amazonaws.greengrass.cddembeddedvaadinskeleton.App;
+import com.amazonaws.greengrass.cddlatencydashboard.App;
 import com.vaadin.server.*;
 
 public class VaadinDaggerServletService extends VaadinServletService {

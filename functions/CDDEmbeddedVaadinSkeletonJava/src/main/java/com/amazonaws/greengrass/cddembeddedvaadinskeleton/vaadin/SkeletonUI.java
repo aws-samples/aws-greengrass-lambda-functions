@@ -43,10 +43,6 @@ public class SkeletonUI extends DaggerUI {
     private final List<String> leftList = new ArrayList<>();
     private final List<String> rightList = new ArrayList<>();
 
-    @Inject
-    public SkeletonUI() {
-    }
-
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         // Make sure we get events from the dispatcher

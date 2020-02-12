@@ -1,9 +1,9 @@
-package com.amazonaws.greengrass.cddembeddedvaadinskeleton;
+package com.amazonaws.greengrass.cddlatencydashboard;
 
-import com.amazonaws.greengrass.cddembeddedvaadinskeleton.handlers.InputHandler;
-import com.amazonaws.greengrass.cddembeddedvaadinskeleton.handlers.StartupHandler;
-import com.amazonaws.greengrass.cddembeddedvaadinskeleton.vaadin.DaggerUI;
-import com.amazonaws.greengrass.cddembeddedvaadinskeleton.vaadin.VaadinDaggerModule;
+import com.amazonaws.greengrass.cddlatencydashboard.handlers.InputHandler;
+import com.amazonaws.greengrass.cddlatencydashboard.handlers.StartupHandler;
+import com.amazonaws.greengrass.cddlatencydashboard.vaadin.DaggerUI;
+import com.amazonaws.greengrass.cddlatencydashboard.vaadin.VaadinDaggerModule;
 import com.awslabs.aws.iot.greengrass.cdd.BaselineInjector;
 import com.awslabs.aws.iot.greengrass.cdd.modules.BaselineAppModule;
 import com.vaadin.server.UIProvider;
