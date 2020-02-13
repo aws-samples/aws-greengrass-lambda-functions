@@ -11,7 +11,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.ui.*;
 
-import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
@@ -29,7 +28,6 @@ import java.util.List;
 @Push(transport = Transport.LONG_POLLING)
 @Theme("valo")
 public class SkeletonUI extends DaggerUI {
-    private static final String NAME = "SkeletonUIServlet";
     public static final String PATTERN = "/*";
     private final Grid<String> leftGrid = new Grid<>();
     private final Grid<String> rightGrid = new Grid<>();
@@ -127,7 +125,7 @@ public class SkeletonUI extends DaggerUI {
         }
     }
 
-    @WebServlet(urlPatterns = SkeletonUI.PATTERN, name = SkeletonUI.NAME, asyncSupported = true)
+    @WebServlet(asyncSupported = true)
     @VaadinServletConfiguration(ui = SkeletonUI.class, productionMode = false)
     public static class SkeletonUIServlet extends VaadinDaggerServlet {
     }
