@@ -1,10 +1,10 @@
 package com.amazonaws.greengrass.cdddocker.handlers;
 
 import com.amazonaws.greengrass.cdddocker.data.DockerPullRequest;
+import com.amazonaws.greengrass.cdddocker.data.ImmutableDockerPullRequest;
 import com.amazonaws.greengrass.cdddocker.data.Topics;
 import com.amazonaws.greengrass.cdddocker.docker.DockerHelper;
-import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
-import com.google.common.eventbus.Subscribe;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 import io.vavr.control.Try;
 
 import javax.inject.Inject;
@@ -18,13 +18,17 @@ public class DockerPullRequestHandler {
     @Inject
     DockerHelper dockerHelper;
     @Inject
-    Communication communication;
+    Dispatcher dispatcher;
 
     @Inject
     public DockerPullRequestHandler() {
     }
 
-    @Subscribe
+    @Inject
+    public void afterInject() {
+        dispatcher.add(ImmutableDockerPullRequest.class, this::dockerPullRequest);
+    }
+
     public void dockerPullRequest(DockerPullRequest dockerPullRequest) {
         loggingHelper.logAndPublish(Optional.empty(), topics.getResponseTopic(), "Got PULL request for [" + dockerPullRequest.getName() + "]");
 
@@ -33,22 +37,20 @@ public class DockerPullRequestHandler {
     }
 
     private Runnable processDockerPullRequestInThread(DockerPullRequest dockerPullRequest) {
-        return () -> Try.of(() -> pullImage(dockerPullRequest))
+        return () -> Try.run(() -> pullImage(dockerPullRequest))
                 .recover(Exception.class, this::publishExceptionMessage)
                 .get();
     }
 
     private Void publishExceptionMessage(Exception e) {
-        communication.publishMessageEvent(topics.getResponseTopic(), e.getMessage());
+        dispatcher.publishMessageEvent(topics.getResponseTopic(), e.getMessage());
 
         return null;
     }
 
-    private Void pullImage(DockerPullRequest dockerPullRequest) throws InterruptedException {
+    private void pullImage(DockerPullRequest dockerPullRequest) throws InterruptedException {
         dockerHelper.pullImage(dockerPullRequest.getName());
 
-        communication.publishMessageEvent(topics.getResponseTopic(), "Image pulled [" + dockerPullRequest.getName() + "]");
-
-        return null;
+        dispatcher.publishMessageEvent(topics.getResponseTopic(), "Image pulled [" + dockerPullRequest.getName() + "]");
     }
 }

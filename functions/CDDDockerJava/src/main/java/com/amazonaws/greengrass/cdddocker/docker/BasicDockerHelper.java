@@ -2,7 +2,7 @@ package com.amazonaws.greengrass.cdddocker.docker;
 
 import com.amazonaws.greengrass.cdddocker.data.Topics;
 import com.amazonaws.greengrass.cdddocker.handlers.LoggingHelper;
-import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
@@ -21,7 +21,7 @@ public class BasicDockerHelper implements DockerHelper {
     @Inject
     CombinedDockerClientProvider combinedDockerClientProvider;
     @Inject
-    Communication communication;
+    Dispatcher dispatcher;
 
     @Inject
     public BasicDockerHelper() {
@@ -38,11 +38,11 @@ public class BasicDockerHelper implements DockerHelper {
                 .findFirst();
 
         if (optionalImage.isPresent()) {
-            communication.publishMessageEvent(topics.getResponseTopic(), "Found tag [" + tag + "] with ID [" + optionalImage.get().getId() + "]");
+            dispatcher.publishMessageEvent(topics.getResponseTopic(), "Found tag [" + tag + "] with ID [" + optionalImage.get().getId() + "]");
             return optionalImage;
         }
 
-        communication.publishMessageEvent(topics.getResponseTopic(), "Tag [" + tag + "] not found");
+        dispatcher.publishMessageEvent(topics.getResponseTopic(), "Tag [" + tag + "] not found");
         return Optional.empty();
     }
 
@@ -79,11 +79,11 @@ public class BasicDockerHelper implements DockerHelper {
                 .findFirst();
 
         if (optionalContainer.isPresent()) {
-            communication.publishMessageEvent(topics.getResponseTopic(), "Found container [" + optionalContainer.get().getId() + "] with image ID [" + imageId + "]");
+            dispatcher.publishMessageEvent(topics.getResponseTopic(), "Found container [" + optionalContainer.get().getId() + "] with image ID [" + imageId + "]");
             return optionalContainer;
         }
 
-        communication.publishMessageEvent(topics.getResponseTopic(), "No container running image [" + imageId + "] found");
+        dispatcher.publishMessageEvent(topics.getResponseTopic(), "No container running image [" + imageId + "] found");
         return Optional.empty();
     }
 
@@ -102,7 +102,7 @@ public class BasicDockerHelper implements DockerHelper {
         Map<String, List> output = new HashMap<>();
         output.put("images", imageList);
 
-        communication.publishObjectEvent(topics.getResponseTopic(), output);
+        dispatcher.publishObjectEvent(topics.getResponseTopic(), output);
     }
 
     private List<Image> listImages() {
@@ -132,7 +132,7 @@ public class BasicDockerHelper implements DockerHelper {
         Map<String, List> output = new HashMap<>();
         output.put("containers", containerList);
 
-        communication.publishObjectEvent(topics.getResponseTopic(), output);
+        dispatcher.publishObjectEvent(topics.getResponseTopic(), output);
     }
 
     private Map<String, Optional<Object>> convertContainerToAttributeMap(Container container, List<Image> images) {
@@ -206,7 +206,7 @@ public class BasicDockerHelper implements DockerHelper {
                 Map output = objectMapper.convertValue(item, Map.class);
                 // The progress field is an ASCII progress bar that isn't really useful so we always remove it if it is there
                 output.remove("progress");
-                communication.publishObjectEvent(topics.getResponseTopic(), output);
+                dispatcher.publishObjectEvent(topics.getResponseTopic(), output);
                 super.onNext(item);
             }
 

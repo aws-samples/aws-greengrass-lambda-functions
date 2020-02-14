@@ -10,6 +10,10 @@ public class CombinedDockerClientProvider {
     @Inject
     NoAuthDockerClientProvider noAuthDockerClientProvider;
 
+    @Inject
+    public CombinedDockerClientProvider() {
+    }
+
     public DockerClient getEcrDockerClient() {
         return ecrDockerClientProvider.get();
     }
