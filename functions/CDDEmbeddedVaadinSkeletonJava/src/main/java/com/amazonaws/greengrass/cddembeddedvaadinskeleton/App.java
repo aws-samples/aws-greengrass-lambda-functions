@@ -2,7 +2,6 @@ package com.amazonaws.greengrass.cddembeddedvaadinskeleton;
 
 import com.awslabs.aws.iot.greengrass.cdd.BaselineApp;
 import com.awslabs.aws.iot.greengrass.cdd.BaselineInjector;
-import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
 
