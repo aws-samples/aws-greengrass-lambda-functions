@@ -2,7 +2,7 @@ package com.amazonaws.greengrass.cddsensehat.handlers;
 
 import com.amazonaws.greengrass.cddsensehat.data.Topics;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.runner.interfaces.AnimationRunner;
-import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
+import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class CddSenseHatStopEventHandler implements GreengrassLambdaEventHandler
     }
 
     @Override
-    public void execute(GreengrassLambdaEvent greengrassLambdaEvent) {
+    public void execute(ImmutableGreengrassLambdaEvent immutableGreengrassLambdaEvent) {
         log.info("Routing to stop...");
         animationRunner.stopAnimation();
     }
