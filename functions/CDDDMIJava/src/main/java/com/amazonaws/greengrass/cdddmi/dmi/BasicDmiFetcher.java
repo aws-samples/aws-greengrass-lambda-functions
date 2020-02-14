@@ -4,6 +4,7 @@ import com.amazonaws.greengrass.cdddmi.dmi.interfaces.DmiFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -20,6 +21,10 @@ public class BasicDmiFetcher implements DmiFetcher {
     private static final Path DMI_BASE_PATH = new File(DMI_BASE_PATH_NAME).toPath();
     private final Logger log = LoggerFactory.getLogger(BasicDmiFetcher.class);
 
+    @Inject
+    public BasicDmiFetcher() {
+    }
+   
     @Override
     public Optional<Map<String, Object>> fetch() {
         Map<String, Object> output = new HashMap<>();

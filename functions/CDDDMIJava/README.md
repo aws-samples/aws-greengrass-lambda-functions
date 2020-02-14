@@ -81,3 +81,15 @@ And this is a sample from an EC2 instance running Ubuntu:
   "chassis_version": "\n"
 }
 ```
+
+## Is there a quick way to see if it is working?
+
+Yes. Use the `request.sh` convenience script.
+
+## request.sh usage example
+
+```
+./request.sh ${AWS_IOT_THING_NAME}
+```
+
+The response on the response topic will contain JSON objects described above

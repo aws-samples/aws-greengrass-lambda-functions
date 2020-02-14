@@ -2,22 +2,22 @@ package com.amazonaws.greengrass.cdddmi.handlers;
 
 import com.amazonaws.greengrass.cdddmi.data.Topics;
 import com.amazonaws.greengrass.cdddmi.dmi.interfaces.DmiFetcher;
-import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
-import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
+import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
 
 import javax.inject.Inject;
 
-public class InputHandler implements GreengrassLambdaEventHandler {
+public class RequestHandler implements GreengrassLambdaEventHandler {
     @Inject
     DmiFetcher dmiFetcher;
     @Inject
     Topics topics;
     @Inject
-    Communication communication;
+    Dispatcher dispatcher;
 
     @Inject
-    public InputHandler() {
+    public RequestHandler() {
     }
 
     @Override
@@ -26,7 +26,7 @@ public class InputHandler implements GreengrassLambdaEventHandler {
     }
 
     @Override
-    public void execute(GreengrassLambdaEvent greengrassLambdaEvent) {
-        dmiFetcher.fetch().ifPresent(data -> communication.publishObjectEvent(topics.getOutputTopic(), data));
+    public void execute(ImmutableGreengrassLambdaEvent immutableGreengrassLambdaEvent) {
+        dmiFetcher.fetch().ifPresent(data -> dispatcher.publishObjectEvent(topics.getOutputTopic(), data));
     }
 }
