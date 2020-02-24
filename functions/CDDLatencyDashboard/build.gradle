@@ -51,7 +51,7 @@ def awsLambdaJavaCoreVersion = '1.2.0'
 def immutablesValueVersion = '2.8.3'
 
 def jettyVersion = '9.4.26.v20200117'
-def vaadinVersion = '8.10.0'
+def vaadinVersion = '8.10.1'
 def daggerVersion = '2.26'
 
 dependencies {
