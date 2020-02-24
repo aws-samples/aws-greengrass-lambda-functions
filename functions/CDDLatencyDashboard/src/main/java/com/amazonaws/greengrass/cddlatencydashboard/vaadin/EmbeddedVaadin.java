@@ -1,7 +1,6 @@
 package com.amazonaws.greengrass.cddlatencydashboard.vaadin;
 
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
-import com.vaadin.server.VaadinServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -16,6 +15,10 @@ public class EmbeddedVaadin {
 
     @Inject
     EnvironmentProvider environmentProvider;
+
+    @Inject
+    public EmbeddedVaadin() {
+    }
 
     public void start() {
         Thread serverThread = new Thread(this::innerStart);
@@ -33,25 +36,11 @@ public class EmbeddedVaadin {
 
         Server server = new Server(Integer.parseInt(port.get()));
 
-        ServletContextHandler contextHandler
-                = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         contextHandler.setContextPath("/");
 
-        ServletHolder sh = new ServletHolder(new VaadinServlet());
-        contextHandler.addServlet(sh, LatencyDashboardUI.PATTERN);
-        contextHandler.setInitParameter("ui", LatencyDashboardUI.class.getCanonicalName());
-
-        /*
-        // Register cdn.virit.in if present
-        try {
-            Class cls = Class.forName("in.virit.WidgetSet");
-            if (cls != null) {
-                contextHandler.getSessionHandler().addEventListener((EventListener) cls.newInstance());
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(EmbeddedVaadin.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        */
+        ServletHolder servletHolder = new ServletHolder(LatencyDashboardUI.SkeletonUIServlet.class);
+        contextHandler.addServlet(servletHolder, LatencyDashboardUI.PATTERN);
 
         server.setHandler(contextHandler);
 

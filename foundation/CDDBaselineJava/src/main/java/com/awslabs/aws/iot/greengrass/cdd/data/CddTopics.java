@@ -7,13 +7,13 @@ import java.util.Optional;
 
 public class CddTopics {
     @Inject
-    private EnvironmentProvider environmentProvider;
-    private Optional<String> cddBaselineTopic = Optional.empty();
+    EnvironmentProvider environmentProvider;
 
     @Inject
-    public CddTopics(EnvironmentProvider environmentProvider) {
-        this.environmentProvider = environmentProvider;
+    public CddTopics() {
     }
+
+    private Optional<String> cddBaselineTopic = Optional.empty();
 
     private String buildCddBaselineTopic() {
         if (!cddBaselineTopic.isPresent()) {
@@ -23,6 +23,10 @@ public class CddTopics {
         }
 
         return cddBaselineTopic.get();
+    }
+
+    public String debugTopic() {
+        return String.join("/", buildCddBaselineTopic(), "debug");
     }
 
     public String getCddDriverTopic(Object object) {

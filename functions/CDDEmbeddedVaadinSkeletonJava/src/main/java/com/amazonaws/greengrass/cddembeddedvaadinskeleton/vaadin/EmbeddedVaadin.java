@@ -1,7 +1,6 @@
 package com.amazonaws.greengrass.cddembeddedvaadinskeleton.vaadin;
 
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
-import com.vaadin.server.VaadinServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -13,8 +12,13 @@ import java.util.Optional;
 
 public class EmbeddedVaadin {
     private final Logger log = LoggerFactory.getLogger(EmbeddedVaadin.class);
+
     @Inject
     EnvironmentProvider environmentProvider;
+
+    @Inject
+    public EmbeddedVaadin() {
+    }
 
     public void start() {
         Thread serverThread = new Thread(this::innerStart);
@@ -32,25 +36,11 @@ public class EmbeddedVaadin {
 
         Server server = new Server(Integer.parseInt(port.get()));
 
-        ServletContextHandler contextHandler
-                = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         contextHandler.setContextPath("/");
 
-        ServletHolder sh = new ServletHolder(new VaadinServlet());
-        contextHandler.addServlet(sh, SkeletonUI.PATTERN);
-        contextHandler.setInitParameter("ui", SkeletonUI.class.getCanonicalName());
-
-        /*
-        // Register cdn.virit.in if present
-        try {
-            Class cls = Class.forName("in.virit.WidgetSet");
-            if (cls != null) {
-                contextHandler.getSessionHandler().addEventListener((EventListener) cls.newInstance());
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(EmbeddedVaadin.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        */
+        ServletHolder servletHolder = new ServletHolder(SkeletonUI.SkeletonUIServlet.class);
+        contextHandler.addServlet(servletHolder, SkeletonUI.PATTERN);
 
         server.setHandler(contextHandler);
 

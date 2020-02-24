@@ -8,6 +8,10 @@ public class Topics {
     @Inject
     CddTopics cddTopics;
 
+    @Inject
+    public Topics() {
+    }
+
     private String getBaselineTopic() {
         return cddTopics.getCddDriverTopic(this);
     }

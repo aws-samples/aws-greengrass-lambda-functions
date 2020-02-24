@@ -1,7 +1,7 @@
 package com.amazonaws.greengrass.cdddocker.handlers;
 
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
-import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +11,7 @@ import java.util.Optional;
 public class BasicLoggingHelper implements LoggingHelper {
     private final Logger log = LoggerFactory.getLogger(BasicLoggingHelper.class);
     @Inject
-    Communication communication;
+    Dispatcher dispatcher;
 
     @Inject
     public BasicLoggingHelper() {
@@ -25,6 +25,6 @@ public class BasicLoggingHelper implements LoggingHelper {
             log.info(message);
         }
 
-        communication.publishMessageEvent(topic, message);
+        dispatcher.publishMessageEvent(topic, message);
     }
 }

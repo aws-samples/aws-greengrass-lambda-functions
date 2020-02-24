@@ -1,51 +1,105 @@
 package com.awslabs.aws.iot.greengrass.cdd.modules;
 
-import com.awslabs.aws.iot.greengrass.cdd.BaselineAppInterface;
+import com.amazonaws.greengrass.javasdk.IotDataClient;
+import com.amazonaws.greengrass.javasdk.LambdaClient;
+import com.awslabs.aws.iot.greengrass.cdd.communication.*;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.implementations.BasicJsonHelper;
 import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.TempDirNativeProcessHelper;
 import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.interfaces.NativeProcessHelper;
 import com.awslabs.aws.iot.greengrass.cdd.providers.BasicEnvironmentProvider;
+import com.awslabs.aws.iot.greengrass.cdd.providers.DummyEnvironmentProvider;
 import com.awslabs.aws.iot.greengrass.cdd.providers.GreengrassSdkErrorHandler;
-import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
 import com.awslabs.aws.iot.greengrass.cdd.providers.SafeProvider;
+import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.SdkErrorHandler;
-import com.google.common.eventbus.EventBus;
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-import com.google.inject.matcher.Matchers;
-import com.google.inject.spi.InjectionListener;
-import com.google.inject.spi.TypeEncounter;
-import com.google.inject.spi.TypeListener;
+import dagger.Module;
+import dagger.Provides;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
-public class BaselineAppModule extends AbstractModule {
-    @Override
-    protected void configure() {
-        // Use a Guava event bus
-        bind(EventBus.class).toInstance(BaselineAppInterface.eventBus);
+import javax.inject.Singleton;
+import java.util.Optional;
 
-        // Find all @Subscribe annotations and bind them to the event bus
-        bindListener(Matchers.any(), new TypeListener() {
-            public <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
-                // Method reference version
-                typeEncounter.register((InjectionListener<I>) BaselineAppInterface.eventBus::register);
+@Module
+public class BaselineAppModule {
+    private final Logger log = LoggerFactory.getLogger(BaselineAppModule.class);
+    private static Optional<Boolean> optionalRunningInGreengrass = Optional.empty();
+
+    @Provides
+    @Singleton
+    public Dispatcher providesDispatcher(BasicDispatcher basicDispatcher) {
+        return basicDispatcher;
+    }
+
+    // Methods to help users launch native processes
+    @Provides
+    public NativeProcessHelper providesNativeProcessHelper(TempDirNativeProcessHelper tempDirNativeProcessHelper) {
+        return tempDirNativeProcessHelper;
+    }
+
+    // Error handler to help debugging TES and SDK issues
+    @Provides
+    public SdkErrorHandler providesSdkErrorHandler(GreengrassSdkErrorHandler greengrassSdkErrorHandler) {
+        return greengrassSdkErrorHandler;
+    }
+
+    // Use a default credentials provider
+    @Provides
+    public AwsCredentialsProvider provideAwsCredentialsProvider() {
+        return new SafeProvider<AwsCredentialsProvider>(DefaultCredentialsProvider::create).get();
+    }
+
+    // JSON helper that auto-wires Immutables type adapters
+    @Provides
+    public JsonHelper providesJsonHelper(BasicJsonHelper basicJsonHelper) {
+        return basicJsonHelper;
+    }
+
+    private boolean runningInGreegrass() {
+        if (!optionalRunningInGreengrass.isPresent()) {
+            try {
+                new IotDataClient();
+                optionalRunningInGreengrass = Optional.of(true);
+            } catch (NoClassDefFoundError e) {
+                if (e.getMessage().contains("EnvVars")) {
+                    // Not running in Greengrass
+                    optionalRunningInGreengrass = Optional.of(false);
+                }
             }
-        });
+        }
 
-        // Methods to help users launch native processes
-        bind(NativeProcessHelper.class).to(TempDirNativeProcessHelper.class);
+        return optionalRunningInGreengrass.get();
+    }
 
-        // Special environment information (thing name, thing ARN, group name);
-        bind(EnvironmentProvider.class).to(BasicEnvironmentProvider.class);
+    @Provides
+    public LambdaClient providesLambdaClient() {
+        return new LambdaClient();
+    }
 
-        // Error handler to help debugging TES and SDK issues
-        bind(SdkErrorHandler.class).to(GreengrassSdkErrorHandler.class);
+    @Provides
+    @Singleton
+    public Communication providesCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient) {
+        Communication communication;
 
-        // Use a default credentials provider
-        bind(DefaultCredentialsProvider.class).toProvider(new SafeProvider<>(DefaultCredentialsProvider::create));
+        if (runningInGreegrass()) {
+            communication = new GreengrassCommunication(environmentProvider, lambdaClient, new IotDataClient());
+        } else {
+            communication = new DummyCommunication();
+        }
 
-        // JSON helper that auto-wires Immutables type adapters
-        bind(JsonHelper.class).to(BasicJsonHelper.class);
+        return communication;
+    }
+
+    // Special environment information (thing name, thing ARN, group name)
+    @Provides
+    public EnvironmentProvider providesEnvironmentProvider(BasicEnvironmentProvider basicEnvironmentProvider, DummyEnvironmentProvider dummyEnvironmentProvider) {
+        if (runningInGreegrass()) {
+            return basicEnvironmentProvider;
+        }
+
+        return dummyEnvironmentProvider;
     }
 }

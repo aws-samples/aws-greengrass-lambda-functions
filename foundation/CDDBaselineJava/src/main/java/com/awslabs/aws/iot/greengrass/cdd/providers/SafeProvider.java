@@ -1,8 +1,6 @@
 package com.awslabs.aws.iot.greengrass.cdd.providers;
 
-import com.awslabs.aws.iot.greengrass.cdd.providers.GreengrassSdkErrorHandler;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.SdkErrorHandler;
-import io.vavr.control.Try;
 import software.amazon.awssdk.core.exception.SdkClientException;
 
 import javax.inject.Provider;
@@ -19,8 +17,14 @@ public class SafeProvider<T> implements Provider<T> {
     public T get() {
         SdkErrorHandler sdkErrorHandler = new GreengrassSdkErrorHandler();
 
-        return Try.of(callable::call)
-                .recover(SdkClientException.class, throwable -> (T) sdkErrorHandler.handleSdkError(throwable))
-                .get();
+        try {
+            return callable.call();
+        } catch (SdkClientException sdkClientException) {
+            sdkErrorHandler.handleSdkError(sdkClientException);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        throw new RuntimeException("Should never get here");
     }
 }

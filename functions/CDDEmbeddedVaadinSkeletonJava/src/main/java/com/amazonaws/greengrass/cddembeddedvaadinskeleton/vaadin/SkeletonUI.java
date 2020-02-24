@@ -1,16 +1,13 @@
 package com.amazonaws.greengrass.cddembeddedvaadinskeleton.vaadin;
 
-import com.amazonaws.greengrass.cddembeddedvaadinskeleton.App;
+import com.amazonaws.greengrass.cddembeddedvaadinskeleton.events.ImmutableMessageFromCloudEvent;
 import com.amazonaws.greengrass.cddembeddedvaadinskeleton.events.MessageFromCloudEvent;
 import com.amazonaws.greengrass.cddembeddedvaadinskeleton.events.TimerFiredEvent;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.gson.Gson;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.ui.*;
 
@@ -30,9 +27,8 @@ import java.util.List;
  */
 @Push(transport = Transport.LONG_POLLING)
 @Theme("valo")
-public class SkeletonUI extends UI {
+public class SkeletonUI extends DaggerUI {
     public static final String PATTERN = "/*";
-    private static final String NAME = "SkeletonUIServlet";
     private final Grid<String> leftGrid = new Grid<>();
     private final Grid<String> rightGrid = new Grid<>();
     private final HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -42,15 +38,14 @@ public class SkeletonUI extends UI {
     private final Label gcCountLabel = new Label();
     private final Label gcTimeLabel = new Label();
 
-    private final EventBus eventBus = App.eventBus;
-
     private final List<String> leftList = new ArrayList<>();
     private final List<String> rightList = new ArrayList<>();
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        // Make sure we get events from the event bus
-        eventBus.register(this);
+        // Make sure we get events from the dispatcher
+        dispatcher.add(ImmutableMessageFromCloudEvent.class, this::messageFromCloud);
+        dispatcher.add(TimerFiredEvent.class, this::timerFiredEvent);
 
         leftGrid.setWidth("100%");
         leftGrid.setCaption("Left grid");
@@ -66,7 +61,6 @@ public class SkeletonUI extends UI {
         setContent(verticalLayout);
     }
 
-    @Subscribe
     public void messageFromCloud(MessageFromCloudEvent messageFromCloudEvent) {
         try {
             access(() -> {
@@ -85,7 +79,6 @@ public class SkeletonUI extends UI {
         }
     }
 
-    @Subscribe
     public void timerFiredEvent(TimerFiredEvent timerFiredEvent) {
         try {
             access(() -> {
@@ -132,8 +125,8 @@ public class SkeletonUI extends UI {
         }
     }
 
-    @WebServlet(urlPatterns = SkeletonUI.PATTERN, name = SkeletonUI.NAME, asyncSupported = true)
+    @WebServlet(asyncSupported = true)
     @VaadinServletConfiguration(ui = SkeletonUI.class, productionMode = false)
-    public static class SkeletonUIServlet extends VaadinServlet {
+    public static class SkeletonUIServlet extends VaadinDaggerServlet {
     }
 }
