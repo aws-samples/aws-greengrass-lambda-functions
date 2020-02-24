@@ -33,7 +33,7 @@ def githubJar = { organization, module, revision, name ->
     File file = new File("$buildDir/libs/${name}.jar")
     file.parentFile.mkdirs()
     if (!file.exists()) {
-        def url = "https://github.com/$organization/$module/raw/v$revision/sdk/GreengrassJavaSDK-1.0.jar"
+        def url = "https://github.com/$organization/$module/raw/v$revision/sdk/GreengrassJavaSDK.jar"
         new URL(url).withInputStream { downloadStream ->
             file.withOutputStream { fileOut ->
                 fileOut << downloadStream
