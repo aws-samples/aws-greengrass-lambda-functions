@@ -2,9 +2,9 @@ package com.amazonaws.greengrass.cdddocker.handlers;
 
 import com.amazonaws.greengrass.cdddocker.data.*;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
-import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
+import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
-import com.google.common.eventbus.EventBus;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -14,7 +14,7 @@ public class RequestHandler implements GreengrassLambdaEventHandler {
     private static final String TYPE_KEY = "type";
     private static final String NAME_KEY = "name";
     @Inject
-    EventBus eventBus;
+    Dispatcher dispatcher;
     @Inject
     Topics topics;
     @Inject
@@ -38,13 +38,13 @@ public class RequestHandler implements GreengrassLambdaEventHandler {
     /**
      * Send a message on the topics.getResponseTopic() topic showing that we received a message
      *
-     * @param greengrassLambdaEvent
+     * @param immutableGreengrassLambdaEvent
      */
     @Override
-    public void execute(GreengrassLambdaEvent greengrassLambdaEvent) {
-        LambdaLogger logger = greengrassLambdaEvent.getLogger();
+    public void execute(ImmutableGreengrassLambdaEvent immutableGreengrassLambdaEvent) {
+        LambdaLogger logger = immutableGreengrassLambdaEvent.getLogger();
 
-        Optional<Map> optionalInput = greengrassLambdaEvent.getJsonInput();
+        Optional<Map> optionalInput = immutableGreengrassLambdaEvent.getJsonInput();
 
         if (!optionalInput.isPresent()) {
             loggingHelper.logAndPublish(Optional.ofNullable(logger), topics.getResponseTopic(), "Empty message received on request topic");
@@ -76,44 +76,44 @@ public class RequestHandler implements GreengrassLambdaEventHandler {
             return;
         }
 
-        if (DockerRequestType.LIST == dockerRequestType) {
+        if (DockerRequestType.LIST.equals(dockerRequestType)) {
             // Just send the list request to the bus and let someone else handle it
-            eventBus.post(ImmutableDockerListRequest.builder().build());
+            dispatcher.dispatch(ImmutableDockerListRequest.builder().build());
             return;
         }
 
         Optional<String> optionalName = Optional.ofNullable((String) input.get(NAME_KEY));
 
-        if ((DockerRequestType.PULL == dockerRequestType) || (DockerRequestType.RUN == dockerRequestType) ||
-                (DockerRequestType.STOP == dockerRequestType)) {
+        if ((DockerRequestType.PULL.equals(dockerRequestType)) || (DockerRequestType.RUN.equals(dockerRequestType)) ||
+                (DockerRequestType.STOP.equals(dockerRequestType))) {
             if (!nameFieldPresent(logger, dockerRequestType, optionalName)) return;
 
             // Send the request to the bus with the name and let someone else handle it
 
-            if (DockerRequestType.PULL == dockerRequestType) {
+            if (DockerRequestType.PULL.equals(dockerRequestType)) {
                 DockerPullRequest dockerPullRequest = ImmutableDockerPullRequest.builder()
                         .name(optionalName.get())
                         .build();
 
-                eventBus.post(dockerPullRequest);
+                dispatcher.dispatch(dockerPullRequest);
                 return;
             }
 
-            if (DockerRequestType.RUN == dockerRequestType) {
+            if (DockerRequestType.RUN.equals(dockerRequestType)) {
                 DockerRunRequest dockerRunRequest = ImmutableDockerRunRequest.builder()
                         .name(optionalName.get())
                         .build();
 
-                eventBus.post(dockerRunRequest);
+                dispatcher.dispatch(dockerRunRequest);
                 return;
             }
 
-            if (DockerRequestType.STOP == dockerRequestType) {
+            if (DockerRequestType.STOP.equals(dockerRequestType)) {
                 DockerStopRequest dockerStopRequest = ImmutableDockerStopRequest.builder()
                         .name(optionalName.get())
                         .build();
 
-                eventBus.post(dockerStopRequest);
+                dispatcher.dispatch(dockerStopRequest);
                 return;
             }
         }

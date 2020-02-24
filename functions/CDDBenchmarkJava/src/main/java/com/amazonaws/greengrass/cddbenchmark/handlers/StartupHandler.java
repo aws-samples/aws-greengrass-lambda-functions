@@ -1,16 +1,14 @@
 package com.amazonaws.greengrass.cddbenchmark.handlers;
 
 import com.amazonaws.greengrass.cddbenchmark.data.Topics;
-import com.amazonaws.greengrass.javasdk.IotDataClient;
-import com.amazonaws.greengrass.javasdk.model.PublishRequest;
-import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassStartEvent;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
+import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassStartEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -29,16 +27,16 @@ public class StartupHandler implements GreengrassStartEventHandler {
     private static final long startTime = System.currentTimeMillis();
     private final Logger log = LoggerFactory.getLogger(StartupHandler.class);
     @Inject
-    IotDataClient iotDataClient;
-    @Inject
     Topics topics;
+    @Inject
+    Dispatcher dispatcher;
 
     @Inject
     public StartupHandler() {
     }
 
     @Override
-    public void execute(GreengrassStartEvent greengrassStartEvent) {
+    public void execute(ImmutableGreengrassStartEvent immutableGreengrassStartEvent) {
         createAndStartBenchmarkThread();
 
         createAndStartReportingTimer();
@@ -64,8 +62,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
                     map.put("messagesPerSecond", messagesPerSecond);
                     map.put("seconds", seconds);
 
-                    PublishRequest publishRequest = new PublishRequest().withTopic(topics.getResultsTopic()).withPayload(ByteBuffer.wrap(new Gson().toJson(map).getBytes()));
-                    iotDataClient.publish(publishRequest);
+                    dispatcher.publishObjectEvent(topics.getResultsTopic(), map);
                 } catch (Exception e) {
                     log.error(e.getMessage());
                     e.printStackTrace();
@@ -75,10 +72,10 @@ public class StartupHandler implements GreengrassStartEventHandler {
     }
 
     private void createAndStartBenchmarkThread() {
-        // Build a publish request the we reuse to make sure we don't waste time creating this over and over
         Map<String, String> benchmarkMessage = new HashMap<>();
         benchmarkMessage.put("message", "BENCHMARK");
-        PublishRequest publishRequest = new PublishRequest().withTopic(topics.getOutputTopic()).withPayload(ByteBuffer.wrap(new Gson().toJson(benchmarkMessage).getBytes()));
+        // Get the message as a byte array so we don't use Gson to convert it to a map each time
+        byte[] benchmarkMessageBytes = new Gson().toJson(benchmarkMessage).getBytes();
 
         new Thread(() -> {
             Stream<Integer> infiniteStream = Stream
@@ -87,7 +84,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
             infiniteStream
                     .forEach(i -> {
                         try {
-                            iotDataClient.publish(publishRequest);
+                            dispatcher.publishBinaryEvent(topics.getOutputTopic(), benchmarkMessageBytes);
 
                             // Message was published successfully, increment the message counter
                             messagesPublished.incrementAndGet();

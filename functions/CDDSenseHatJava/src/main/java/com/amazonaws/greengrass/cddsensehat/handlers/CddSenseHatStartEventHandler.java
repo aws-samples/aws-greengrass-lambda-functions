@@ -4,6 +4,7 @@ import com.amazonaws.greengrass.cddsensehat.data.Topics;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.interfaces.Animation;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.runner.interfaces.AnimationRunner;
 import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
+import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +31,8 @@ public class CddSenseHatStartEventHandler implements GreengrassLambdaEventHandle
     }
 
     @Override
-    public void execute(GreengrassLambdaEvent greengrassLambdaEvent) {
-        String topic = greengrassLambdaEvent.getTopic().get();
+    public void execute(ImmutableGreengrassLambdaEvent immutableGreengrassLambdaEvent) {
+        String topic = immutableGreengrassLambdaEvent.getTopic().get();
 
         for (Animation animation : animationSet) {
             String animationName = animation.getClass().getSimpleName();

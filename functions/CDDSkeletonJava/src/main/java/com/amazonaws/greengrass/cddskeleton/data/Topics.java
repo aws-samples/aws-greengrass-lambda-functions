@@ -12,6 +12,7 @@ public class Topics {
     private Optional<String> outputTopic = Optional.empty();
     private Optional<String> baselineTopic = Optional.empty();
 
+    @Inject
     public Topics() {
     }
 

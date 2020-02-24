@@ -2,8 +2,8 @@ package com.amazonaws.greengrass.cddsensehat.handlers;
 
 import com.amazonaws.greengrass.cddsensehat.data.Topics;
 import com.amazonaws.greengrass.cddsensehat.leds.animation.interfaces.Animation;
-import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
-import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
+import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassLambdaEventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ public class CddSenseHatListEventHandler implements GreengrassLambdaEventHandler
     @Inject
     Topics topics;
     @Inject
-    Communication communication;
+    Dispatcher dispatcher;
 
     @Inject
     public CddSenseHatListEventHandler() {
@@ -34,7 +34,7 @@ public class CddSenseHatListEventHandler implements GreengrassLambdaEventHandler
     }
 
     @Override
-    public void execute(GreengrassLambdaEvent greengrassLambdaEvent) {
+    public void execute(ImmutableGreengrassLambdaEvent immutableGreengrassLambdaEvent) {
         log.info("Routing to list...");
 
         Map<String, List<String>> animationList = new HashMap<>();
@@ -44,6 +44,6 @@ public class CddSenseHatListEventHandler implements GreengrassLambdaEventHandler
                         .map(animation -> animation.getClass().getSimpleName())
                         .collect(Collectors.toList()));
 
-        communication.publishObjectEvent(topics.getListOutputTopic(), animationList);
+        dispatcher.publishObjectEvent(topics.getListOutputTopic(), animationList);
     }
 }

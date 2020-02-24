@@ -25,10 +25,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 tasks.withType(JavaCompile) {
-	options.encoding = 'UTF-8'
+    options.encoding = 'UTF-8'
 }
 
-def gradleDependencyVersion = '6.1'
+def gradleDependencyVersion = '6.2'
 
 wrapper {
     gradleVersion = gradleDependencyVersion
@@ -41,26 +41,27 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-def cddVersion = '0.6.6'
-def commonsIoVersion = '2.6'
+def cddVersion = '0.8.51'
 def gsonVersion = '2.8.6'
-def guiceVersion = '4.2.2'
 def slf4jVersion = '1.7.30'
 def awsSdkVersion = '1.11.718'
 def jacksonVersion = '2.10.2'
-def httpClientVersion = '4.5.11'
 def awsLambdaJavaCoreVersion = '1.2.0'
+def daggerVersion = '2.26'
 
 dependencies {
     compile "com.github.aws-samples:aws-greengrass-lambda-functions:$cddVersion"
 
-    compile "commons-io:commons-io:$commonsIoVersion"
+    // Dagger code generation
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    // Dependency injection with Dagger
+    compile "com.google.dagger:dagger:$daggerVersion"
+
     compile "com.google.code.gson:gson:$gsonVersion"
-    compile "com.google.inject:guice:$guiceVersion"
     compile "org.slf4j:slf4j-jdk14:$slf4jVersion"
     compile "com.amazonaws:aws-java-sdk-core:$awsSdkVersion"
     compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
     compile "com.amazonaws:aws-lambda-java-core:$awsLambdaJavaCoreVersion"
 }

@@ -1,10 +1,10 @@
 package com.amazonaws.greengrass.cdddocker.handlers;
 
 import com.amazonaws.greengrass.cdddocker.data.DockerRunRequest;
+import com.amazonaws.greengrass.cdddocker.data.ImmutableDockerRunRequest;
 import com.amazonaws.greengrass.cdddocker.data.Topics;
 import com.amazonaws.greengrass.cdddocker.docker.DockerHelper;
-import com.awslabs.aws.iot.greengrass.cdd.communication.Communication;
-import com.google.common.eventbus.Subscribe;
+import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -15,13 +15,17 @@ public class DockerRunRequestHandler {
     @Inject
     DockerHelper dockerHelper;
     @Inject
-    Communication communication;
+    Dispatcher dispatcher;
 
     @Inject
     public DockerRunRequestHandler() {
     }
 
-    @Subscribe
+    @Inject
+    public void afterInject() {
+        dispatcher.add(ImmutableDockerRunRequest.class, this::dockerRunRequest);
+    }
+
     public void dockerRunRequest(DockerRunRequest dockerRunRequest) {
         try {
             Optional<String> optionalContainerId = dockerHelper.createContainer(dockerRunRequest.getName());
@@ -30,9 +34,9 @@ public class DockerRunRequestHandler {
                 return;
             }
 
-            communication.publishMessageEvent(topics.getResponseTopic(), "Container running [" + dockerRunRequest.getName() + ", " + optionalContainerId.get() + "]");
+            dispatcher.publishMessageEvent(topics.getResponseTopic(), "Container running [" + dockerRunRequest.getName() + ", " + optionalContainerId.get() + "]");
         } catch (Exception e) {
-            communication.publishMessageEvent(topics.getResponseTopic(), e.getMessage());
+            dispatcher.publishMessageEvent(topics.getResponseTopic(), e.getMessage());
         }
     }
 }

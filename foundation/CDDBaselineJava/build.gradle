@@ -18,7 +18,7 @@ group = 'com.awslabs.aws.iot.greengrass.cdd'
 
 description = """"""
 
-def gradleDependencyVersion = '6.1'
+def gradleDependencyVersion = '6.2'
 
 wrapper {
     gradleVersion = gradleDependencyVersion
@@ -51,8 +51,8 @@ repositories {
     maven { url "https://plugins.gradle.org/m2/" }
 }
 
+def daggerVersion = '2.26'
 def gsonVersion = '2.8.6'
-def guiceVersion = '4.2.2'
 def slf4jVersion = '1.7.30'
 def jacksonVersion = '2.10.2'
 def httpClientVersion = '4.5.11'
@@ -61,17 +61,21 @@ def commonsIoVersion = '2.6'
 def awsSdk2Version = '2.10.60'
 def immutablesValueVersion = '2.8.3'
 def awsGreengrassCoreSdkJava = '1.4.0'
-def vavrVersion = '0.10.2'
 
 dependencies {
+    // Dagger code generation
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    // Immutables (requires annotation processing for code generation)
     annotationProcessor "org.immutables:value:$immutablesValueVersion"
     annotationProcessor "org.immutables:gson:$immutablesValueVersion"
-    compile "org.immutables:value:$immutablesValueVersion"
-    compile "org.immutables:gson:$immutablesValueVersion"
+    implementation "org.immutables:value:$immutablesValueVersion"
+
+    // Dependency injection with Dagger
+    implementation "com.google.dagger:dagger:$daggerVersion"
 
     compile githubJar('aws', 'aws-greengrass-core-sdk-java', awsGreengrassCoreSdkJava, 'GreengrassJavaSDK')
     compile "com.google.code.gson:gson:$gsonVersion"
-    compile "com.google.inject:guice:$guiceVersion"
     compile "org.slf4j:slf4j-jdk14:$slf4jVersion"
     compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
@@ -79,7 +83,6 @@ dependencies {
     compile "com.amazonaws:aws-lambda-java-core:$awsLambdaJavaCoreVersion"
     compile "software.amazon.awssdk:greengrass:$awsSdk2Version"
     compile "commons-io:commons-io:$commonsIoVersion"
-    compile "io.vavr:vavr:$vavrVersion"
 }
 
 shadowJar {

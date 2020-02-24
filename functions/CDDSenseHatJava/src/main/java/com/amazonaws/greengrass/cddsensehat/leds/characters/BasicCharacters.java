@@ -1,7 +1,14 @@
 package com.amazonaws.greengrass.cddsensehat.leds.characters;
 
+import javax.inject.Inject;
+
 public class BasicCharacters implements Characters {
     public static final int MAX_CHARACTERS = 256;
+
+    @Inject
+    public BasicCharacters() {
+    }
+
     private AbstractCharacter[] characters;
 
     @Override

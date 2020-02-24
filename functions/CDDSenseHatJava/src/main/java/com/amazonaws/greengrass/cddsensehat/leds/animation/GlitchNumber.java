@@ -15,6 +15,11 @@ public class GlitchNumber implements Animation {
     private final Random random = new Random();
     @Inject
     Characters characters;
+
+    @Inject
+    public GlitchNumber() {
+    }
+
     private int versionNumber = 0;
 
     public int getVersionNumber() {
