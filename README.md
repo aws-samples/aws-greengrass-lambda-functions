@@ -15,7 +15,7 @@ Step 2: [Read the provisioner command-line examples](https://github.com/awslabs/
 
 ## Using Java?
 
-Check out the [Cloud Device Driver framework](https://gitpitch.com/aws-samples/aws-greengrass-lambda-functions/presentations/cloud-device-driver-framework-for-java). It is a framework that simplifies writing Greengrass Lambda functions in Java. [You can look at the code as well](foundation/CDDBaselineJava).
+Check out the [Cloud Device Driver framework](https://gitpitch.com/aws-samples/aws-greengrass-lambda-functions/master?p=presentations/cloud-device-driver-framework-for-java). It is a framework that simplifies writing Greengrass Lambda functions in Java. [You can look at the code as well](foundation/CDDBaselineJava).
 
 ## Current function list
 
