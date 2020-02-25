@@ -61,7 +61,7 @@ public class BaselineAppModule {
         return basicJsonHelper;
     }
 
-    public static boolean runningInGreegrass() {
+    public static boolean runningInGreengrass() {
         if (!optionalRunningInGreengrass.isPresent()) {
             try {
                 new IotDataClient();
@@ -79,7 +79,7 @@ public class BaselineAppModule {
 
     @Provides
     public LambdaClientInterface providesLambdaClientInterface() {
-        if (runningInGreegrass()) {
+        if (runningInGreengrass()) {
             return new LambdaClientInterface() {
                 private LambdaClient lambdaClient = new LambdaClient();
 
@@ -98,7 +98,7 @@ public class BaselineAppModule {
     public Communication providesCommunication(EnvironmentProvider environmentProvider, LambdaClientInterface lambdaClientInterface) {
         Communication communication;
 
-        if (runningInGreegrass()) {
+        if (runningInGreengrass()) {
             communication = new GreengrassCommunication(environmentProvider, lambdaClientInterface, new IotDataClient());
         } else {
             communication = new DummyCommunication();
@@ -110,7 +110,7 @@ public class BaselineAppModule {
     // Special environment information (thing name, thing ARN, group name)
     @Provides
     public EnvironmentProvider providesEnvironmentProvider(BasicEnvironmentProvider basicEnvironmentProvider, DummyEnvironmentProvider dummyEnvironmentProvider) {
-        if (runningInGreegrass()) {
+        if (runningInGreengrass()) {
             return basicEnvironmentProvider;
         }
 
