@@ -2,6 +2,9 @@ package com.awslabs.aws.iot.greengrass.cdd.modules;
 
 import com.amazonaws.greengrass.javasdk.IotDataClient;
 import com.amazonaws.greengrass.javasdk.LambdaClient;
+import com.amazonaws.greengrass.javasdk.model.GGLambdaException;
+import com.amazonaws.greengrass.javasdk.model.InvokeRequest;
+import com.amazonaws.greengrass.javasdk.model.InvokeResponse;
 import com.awslabs.aws.iot.greengrass.cdd.communication.*;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.implementations.BasicJsonHelper;
@@ -75,8 +78,19 @@ public class BaselineAppModule {
     }
 
     @Provides
-    public LambdaClient providesLambdaClient() {
-        return new LambdaClient();
+    public LambdaClientInterface providesLambdaClientInterface() {
+        if (runningInGreegrass()) {
+            return new LambdaClientInterface() {
+                private LambdaClient lambdaClient = new LambdaClient();
+
+                @Override
+                public InvokeResponse invoke(InvokeRequest invokeRequest) throws GGLambdaException {
+                    return lambdaClient.invoke(invokeRequest);
+                }
+            };
+        } else {
+            return new DummyLambdaClient();
+        }
     }
 
     @Provides
