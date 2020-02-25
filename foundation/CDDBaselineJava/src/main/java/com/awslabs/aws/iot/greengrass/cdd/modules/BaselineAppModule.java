@@ -61,7 +61,7 @@ public class BaselineAppModule {
         return basicJsonHelper;
     }
 
-    private boolean runningInGreegrass() {
+    public static boolean runningInGreegrass() {
         if (!optionalRunningInGreengrass.isPresent()) {
             try {
                 new IotDataClient();
