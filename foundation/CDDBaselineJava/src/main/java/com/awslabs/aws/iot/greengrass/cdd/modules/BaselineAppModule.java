@@ -95,11 +95,11 @@ public class BaselineAppModule {
 
     @Provides
     @Singleton
-    public Communication providesCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient) {
+    public Communication providesCommunication(EnvironmentProvider environmentProvider, LambdaClientInterface lambdaClientInterface) {
         Communication communication;
 
         if (runningInGreegrass()) {
-            communication = new GreengrassCommunication(environmentProvider, lambdaClient, new IotDataClient());
+            communication = new GreengrassCommunication(environmentProvider, lambdaClientInterface, new IotDataClient());
         } else {
             communication = new DummyCommunication();
         }
