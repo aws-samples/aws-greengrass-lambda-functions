@@ -29,9 +29,18 @@ public class BasicDispatcher implements Dispatcher {
     }
 
     @Override
-    public <T> void add(Class<T> clazz, Consumer<T> consumer) {
+    public <T> Consumer<T> add(Class<T> clazz, Consumer<T> consumer) {
         synchronized (BasicDispatcher.class) {
             dispatchTable.computeIfAbsent(clazz, key -> new HashSet<>()).add(consumer);
+        }
+
+        return consumer;
+    }
+
+    @Override
+    public <T> void remove(Consumer<T> consumer) {
+        synchronized (BasicDispatcher.class) {
+            dispatchTable.forEach((key, value) -> value.remove(consumer));
         }
     }
 
