@@ -28,7 +28,7 @@ import java.util.Optional;
 
 @Module
 public class BaselineAppModule {
-    private final Logger log = LoggerFactory.getLogger(BaselineAppModule.class);
+    private static final Logger log = LoggerFactory.getLogger(BaselineAppModule.class);
     private static Optional<Boolean> optionalRunningInGreengrass = Optional.empty();
 
     @Provides
@@ -71,6 +71,13 @@ public class BaselineAppModule {
                     // Not running in Greengrass
                     optionalRunningInGreengrass = Optional.of(false);
                 }
+
+                log.error("Exception while determining if the environment is Greengrass");
+                log.error(e.getMessage());
+                e.printStackTrace();
+
+                // Assume not running in Greengrass if issues arise
+                optionalRunningInGreengrass = Optional.of(false);
             }
         }
 
