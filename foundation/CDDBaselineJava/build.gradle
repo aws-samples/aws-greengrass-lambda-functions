@@ -54,7 +54,7 @@ repositories {
 def daggerVersion = '2.26'
 def gsonVersion = '2.8.6'
 def slf4jVersion = '1.7.30'
-def jacksonVersion = '2.10.2'
+def jacksonVersion = '2.10.3'
 def httpClientVersion = '4.5.11'
 def awsLambdaJavaCoreVersion = '1.2.0'
 def commonsIoVersion = '2.6'
