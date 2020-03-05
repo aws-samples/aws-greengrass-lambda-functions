@@ -17,6 +17,7 @@ import com.vaadin.flow.shared.ui.Transport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.time.Instant;
@@ -46,12 +47,18 @@ public class MainView extends Composite<VerticalLayout> {
     private final List<String> leftList = new ArrayList<>();
     private final List<String> rightList = new ArrayList<>();
     private final List<Consumer> consumersToRemove = new ArrayList<>();
-    private final Dispatcher dispatcher = App.appInjector.dispatcher();
+
+    @Inject
+    Dispatcher dispatcher;
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
-        log.warn("Attached! " + attachEvent.getUI().getUIId());
         super.onAttach(attachEvent);
+
+        // Android-style post constructor injection
+        App.appInjector.inject(this);
+
+        log.warn("Attached! " + attachEvent.getUI().getUIId());
         this.optionalUi = Optional.ofNullable(attachEvent.getUI());
         consumersToRemove.add(dispatcher.add(ImmutableMessageFromCloudEvent.class, this::messageFromCloud));
         consumersToRemove.add(dispatcher.add(TimerFiredEvent.class, this::timerFiredEvent));
