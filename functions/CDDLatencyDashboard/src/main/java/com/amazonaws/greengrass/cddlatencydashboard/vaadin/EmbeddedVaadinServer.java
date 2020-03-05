@@ -16,14 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Properties;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class EmbeddedVaadinServer implements GreengrassStartEventHandler {
     private static final Logger log = LoggerFactory.getLogger(EmbeddedVaadinServer.class);
@@ -115,25 +111,6 @@ public class EmbeddedVaadinServer implements GreengrassStartEventHandler {
         } else {
             log.warn("NOT production mode");
         }
-    }
-
-    private void tryToMkdir() {
-        log.warn("Trying to mkdir");
-        boolean a = new File("/lambda/lib").mkdirs();
-        log.warn("Made dir? " + a);
-    }
-
-    private void tryToFixClasspath() {
-        Properties properties = System.getProperties();
-        properties.forEach((key, value) -> log.info("PROPERTY: " + key + " - " + value));
-        String classpath = properties.getProperty("java.class.path");
-        log.warn("Classpath before: " + classpath);
-        classpath = Arrays.stream(properties.getProperty("java.class.path").split(":"))
-                .filter(path -> !path.equals("/lambda/lib/*"))
-                .collect(Collectors.joining(":"));
-        System.setProperty("java.class.path", classpath);
-        classpath = properties.getProperty("java.class.path");
-        log.warn("Classpath after: " + classpath);
     }
 
     public String getRoute(Class<? extends Component> clazz) {

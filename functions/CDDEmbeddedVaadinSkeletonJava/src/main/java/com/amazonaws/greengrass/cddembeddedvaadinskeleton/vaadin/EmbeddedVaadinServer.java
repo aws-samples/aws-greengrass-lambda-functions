@@ -117,25 +117,6 @@ public class EmbeddedVaadinServer implements GreengrassStartEventHandler {
         }
     }
 
-    private void tryToMkdir() {
-        log.warn("Trying to mkdir");
-        boolean a = new File("/lambda/lib").mkdirs();
-        log.warn("Made dir? " + a);
-    }
-
-    private void tryToFixClasspath() {
-        Properties properties = System.getProperties();
-        properties.forEach((key, value) -> log.info("PROPERTY: " + key + " - " + value));
-        String classpath = properties.getProperty("java.class.path");
-        log.warn("Classpath before: " + classpath);
-        classpath = Arrays.stream(properties.getProperty("java.class.path").split(":"))
-                .filter(path -> !path.equals("/lambda/lib/*"))
-                .collect(Collectors.joining(":"));
-        System.setProperty("java.class.path", classpath);
-        classpath = properties.getProperty("java.class.path");
-        log.warn("Classpath after: " + classpath);
-    }
-
     public String getRoute(Class<? extends Component> clazz) {
         Route route = clazz.getAnnotation(Route.class);
 
