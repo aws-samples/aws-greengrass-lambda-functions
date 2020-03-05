@@ -8,16 +8,20 @@ plugins {
 
     // Adds dependencyUpdates task
     id 'com.github.ben-manes.versions' version '0.28.0'
+
+    id 'com.vaadin' version '0.5.0'
 }
 
 distZip.enabled = shadowDistZip.enabled = false
 distTar.enabled = shadowDistTar.enabled = false
 
-// Required by shadow but not necessary
-mainClassName = 'not-necessary'
+// Only necessary for debugging JARs locally
+mainClassName = 'com.amazonaws.greengrass.cddembeddedvaadinskeleton.vaadin.EmbeddedVaadin'
 
 group = 'CDDEmbeddedVaadinSkeletonJava'
 version = '1.0-SNAPSHOT'
+def temp = "temp"
+def tempName = "$group-$version-$temp" + ".jar"
 
 description = """"""
 
@@ -42,22 +46,40 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-def cddVersion = '0.8.51'
+// Guidance from: https://stackoverflow.com/questions/23446233/compile-jar-from-url-in-gradle
+def githubJar = { organization, module, revision, name ->
+    File file = new File("$buildDir/libs/${name}.jar")
+    file.parentFile.mkdirs()
+    if (!file.exists()) {
+        def url = "https://github.com/$organization/$module/raw/v$revision/sdk/GreengrassJavaSDK.jar"
+        new URL(url).withInputStream { downloadStream ->
+            file.withOutputStream { fileOut ->
+                fileOut << downloadStream
+            }
+        }
+    }
+    files(file.absolutePath)
+}
+
+def cddVersion = '0.8.61'
 def gsonVersion = '2.8.6'
 def slf4jVersion = '1.7.30'
+def jcabiVersion = '0.18.1'
 def awsSdkVersion = '1.11.734'
 def jacksonVersion = '2.10.2'
 def awsLambdaJavaCoreVersion = '1.2.0'
 def immutablesValueVersion = '2.8.3'
 
 def jettyVersion = '9.4.27.v20200227'
-def vaadinVersion = '8.10.1'
 def daggerVersion = '2.26'
+def vaadinVersion = '14.1.17'
+def awsGreengrassCoreSdkJava = '1.4.1'
 
 dependencies {
     annotationProcessor "org.immutables:value:$immutablesValueVersion"
     compile "org.immutables:value:$immutablesValueVersion"
 
+    compile githubJar('aws', 'aws-greengrass-core-sdk-java', awsGreengrassCoreSdkJava, 'GreengrassJavaSDK')
     compile "com.github.aws-samples:aws-greengrass-lambda-functions:$cddVersion"
 
     // Dagger code generation
@@ -67,35 +89,50 @@ dependencies {
     compile "com.google.dagger:dagger:$daggerVersion"
 
     compile "com.google.code.gson:gson:$gsonVersion"
-    compile "org.slf4j:slf4j-jdk14:$slf4jVersion"
+    compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
+    compile "com.jcabi:jcabi-log:$jcabiVersion"
     compile "com.amazonaws:aws-java-sdk-core:$awsSdkVersion"
     compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.amazonaws:aws-lambda-java-core:$awsLambdaJavaCoreVersion"
 
-    compile "org.eclipse.jetty:jetty-servlet:$jettyVersion"
     compile "org.eclipse.jetty:jetty-continuation:$jettyVersion"
+    compile "org.eclipse.jetty:jetty-server:$jettyVersion"
     compile "org.eclipse.jetty.websocket:websocket-server:$jettyVersion"
+    compile "org.eclipse.jetty.websocket:javax-websocket-server-impl:$jettyVersion"
 
-    compile "com.vaadin:vaadin-server:$vaadinVersion"
-    compile "com.vaadin:vaadin-push:$vaadinVersion"
-    compile "com.vaadin:vaadin-client-compiled:$vaadinVersion"
-    compile "com.vaadin:vaadin-themes:$vaadinVersion"
-}
+    implementation enforcedPlatform("com.vaadin:vaadin-bom:$vaadinVersion")
 
-task depsize  {
-    doLast {
-        final formatStr = "%,10.2f"
-        final conf = configurations.default
-        final size = conf.collect { it.length() / (1024 * 1024) }.sum()
-        final out = new StringBuffer()
-        out << 'Total dependencies size:'.padRight(45)
-        out << "${String.format(formatStr, size)} Mb\n\n"
-        conf.sort { -it.length() }
-            .each {
-                out << "${it.name}".padRight(45)
-                out << "${String.format(formatStr, (it.length() / 1024))} kb\n"
-            }
-        println(out)
+    // Vaadin 14
+    implementation("com.vaadin:vaadin-core") {
+        // Webjars are only needed when running in Vaadin 13 compatibility mode
+        ["com.vaadin.webjar", "org.webjars.bowergithub.insites",
+         "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
+         "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents"]
+                .forEach { group -> exclude(group: group) }
     }
+
+    compile "com.vaadin:flow-server-production-mode:$vaadinVersion"
+
+    compile "javax.servlet:javax.servlet-api:3.1.0"
 }
+
+// Required to build Vaadin frontend
+assemble.dependsOn vaadinBuildFrontend
+
+// Required to stage the shadow JAR without the Greengrass library
+shadowJar {
+    archiveClassifier = temp
+}
+
+// Required to finalize the shadow JAR with the Greengrass library
+task finalizeShadowJar(type: Jar) {
+    archiveClassifier = "all"
+    from zipTree("$buildDir/libs/$tempName")
+    from(file("$buildDir/libs/GreengrassJavaSDK.jar")) { into('lib') }
+    manifest { attributes('Main-Class': mainClassName) }
+}
+
+// Required to trigger finalization of the shadow JAR
+shadowJar.finalizedBy finalizeShadowJar
+
