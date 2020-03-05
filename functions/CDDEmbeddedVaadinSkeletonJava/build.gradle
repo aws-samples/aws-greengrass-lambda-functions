@@ -117,12 +117,15 @@ dependencies {
     compile "javax.servlet:javax.servlet-api:3.1.0"
 }
 
+// Required to build Vaadin frontend
 assemble.dependsOn vaadinBuildFrontend
 
+// Required to stage the shadow JAR without the Greengrass library
 shadowJar {
     archiveClassifier = temp
 }
 
+// Required to finalize the shadow JAR with the Greengrass library
 task finalizeShadowJar(type: Jar) {
     archiveClassifier = "all"
     from zipTree("$buildDir/libs/$tempName")
@@ -130,21 +133,6 @@ task finalizeShadowJar(type: Jar) {
     manifest { attributes('Main-Class': mainClassName) }
 }
 
+// Required to trigger finalization of the shadow JAR
 shadowJar.finalizedBy finalizeShadowJar
 
-task depsize {
-    doLast {
-        final formatStr = "%,10.2f"
-        final conf = configurations.default
-        final size = conf.collect { it.length() / (1024 * 1024) }.sum()
-        final out = new StringBuffer()
-        out << 'Total dependencies size:'.padRight(45)
-        out << "${String.format(formatStr, size)} Mb\n\n"
-        conf.sort { -it.length() }
-                .each {
-                    out << "${it.name}".padRight(45)
-                    out << "${String.format(formatStr, (it.length() / 1024))} kb\n"
-                }
-        println(out)
-    }
-}
