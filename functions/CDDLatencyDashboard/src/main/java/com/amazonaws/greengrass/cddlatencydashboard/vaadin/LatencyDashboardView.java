@@ -69,37 +69,41 @@ public class LatencyDashboardView extends Composite<VerticalLayout> {
     }
 
     public void messageFromCloud(ImmutableMessageFromCloudEvent immutableMessageFromCloudEvent) {
-        try {
-            optionalUi.ifPresent(ui -> ui.access(() -> {
-                Latencies latencies = jsonHelper.fromJson(Latencies.class, immutableMessageFromCloudEvent.getMessage().getBytes());
-                latencyList.add(latencies);
-                latencyGrid.setItems(latencyList);
+        synchronized (LatencyDashboardView.class) {
+            try {
+                optionalUi.ifPresent(ui -> ui.access(() -> {
+                    Latencies latencies = jsonHelper.fromJson(Latencies.class, immutableMessageFromCloudEvent.getMessage().getBytes());
+                    latencyList.add(latencies);
+                    latencyGrid.setItems(latencyList);
 
-                if (latencyGrid.getColumns().size() == 0) {
-                    latencyGrid.removeAllColumns();
-                    IntStream.range(0, latencies.getLatencies().size())
-                            .forEachOrdered(index -> latencyGrid.addColumn(rowValue -> rowValue.getLatencies().get(index).getValue())
-                                    .setHeader(latencies.getLatencies().get(index).getName()));
-                }
+                    if (latencyGrid.getColumns().size() == 0) {
+                        latencyGrid.removeAllColumns();
+                        IntStream.range(0, latencies.getLatencies().size())
+                                .forEachOrdered(index -> latencyGrid.addColumn(rowValue -> rowValue.getLatencies().get(index).getValue())
+                                        .setHeader(latencies.getLatencies().get(index).getName()));
+                    }
 
-                latencyGrid.scrollToEnd();
-            }));
-        } catch (UIDetachedException e) {
-            // Client probably disconnected, ignore
-        } catch (Exception e) {
-            // Do not throw exceptions in event bus subscriber methods
+                    latencyGrid.scrollToEnd();
+                }));
+            } catch (UIDetachedException e) {
+                // Client probably disconnected, ignore
+            } catch (Exception e) {
+                // Do not throw exceptions in event bus subscriber methods
+            }
         }
     }
 
     public void timerFiredEvent(TimerFiredEvent timerFiredEvent) {
-        try {
-            optionalUi.ifPresent(ui -> ui.access(() -> {
-                // Do nothing for now
-            }));
-        } catch (UIDetachedException e) {
-            // Client probably disconnected, ignore
-        } catch (Exception e) {
-            // Do not throw exceptions in event bus subscriber methods
+        synchronized (LatencyDashboardView.class) {
+            try {
+                optionalUi.ifPresent(ui -> ui.access(() -> {
+                    // Do nothing for now
+                }));
+            } catch (UIDetachedException e) {
+                // Client probably disconnected, ignore
+            } catch (Exception e) {
+                // Do not throw exceptions in event bus subscriber methods
+            }
         }
     }
 }
