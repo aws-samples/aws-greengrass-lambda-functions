@@ -65,7 +65,7 @@ public class LatencyDashboardView extends Composite<VerticalLayout> {
         gridLabel.setText(title);
         latencyGrid.setWidth("100%");
 
-        getContent().addAndExpand(gridLabel, latencyGrid);
+        getContent().addAndExpand(new VerticalLayout(gridLabel, latencyGrid));
     }
 
     public void messageFromCloud(ImmutableMessageFromCloudEvent immutableMessageFromCloudEvent) {
