@@ -3,9 +3,7 @@ package com.amazonaws.greengrass.cddembeddedvaadinskeleton.vaadin;
 import com.amazonaws.greengrass.cddembeddedvaadinskeleton.App;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassStartEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
-import com.awslabs.aws.iot.greengrass.cdd.modules.BaselineAppModule;
 import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.interfaces.NativeProcessHelper;
-import com.google.gson.Gson;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinServlet;
@@ -21,8 +19,10 @@ import javax.inject.Inject;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Properties;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EmbeddedVaadinServer implements GreengrassStartEventHandler {
@@ -56,8 +56,8 @@ public class EmbeddedVaadinServer implements GreengrassStartEventHandler {
     }
 
     private static Resource findWebRoot() throws MalformedURLException {
-        // don't look up directory as a resource, it's unreliable: https://github.com/eclipse/jetty.project/issues/4173#issuecomment-539769734
-        // instead we'll look up the /webapp/ROOT and retrieve the parent folder from that.
+        // Don't look up directory as a resource, it's unreliable: https://github.com/eclipse/jetty.project/issues/4173#issuecomment-539769734
+        // Instead we'll look up the /webapp/ROOT and retrieve the parent folder from that.
         final URL f = EmbeddedVaadinServer.class.getResource("/webapp/ROOT");
         if (f == null) {
             throw new IllegalStateException("Invalid state: the resource /webapp/ROOT doesn't exist, has webapp been packaged in as a resource?");
@@ -94,17 +94,6 @@ public class EmbeddedVaadinServer implements GreengrassStartEventHandler {
 
                 ApplicationRouteRegistry applicationRouteRegistry = ApplicationRouteRegistry.getInstance(context.getServletContext());
                 vaadinComponents.forEach(componentClass -> autoWire(applicationRouteRegistry, componentClass));
-
-                log.info("Routes:");
-                log.info(new Gson().toJson(applicationRouteRegistry.getConfiguration().getRoutes()));
-
-                List<Resource> resourceList = context.getMetaData().getContainerResources();
-                log.warn("RESOURCE COUNT: " + resourceList.size());
-                resourceList.forEach(resource -> log.warn("RESOURCE: " + resource.getName()));
-//                Arrays.stream(context.getServerClasses()).forEach(serverClass -> log.warn("SERVER CLASS: " + serverClass));
-//                Arrays.stream(context.getSystemClasses()).forEach(systemClass -> log.warn("SYSTEM CLASS: " + systemClass));
-//                Arrays.stream(context.getServerClasspathPattern().getPatterns()).forEach(serverClasspathPattern -> log.warn("SERVER CLASSPATH PATTERN: " + serverClasspathPattern));
-//                Arrays.stream(context.getSystemClasspathPattern().getPatterns()).forEach(systemClasspathPattern -> log.warn("SERVER CLASSPATH PATTERN: " + systemClasspathPattern));
 
                 server.start();
                 server.join();
