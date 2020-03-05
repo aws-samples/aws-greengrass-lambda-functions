@@ -13,3 +13,7 @@ package-lock.json
 venv
 webpack.generated.js
 node_modules
+/functions/CDDEmbeddedVaadinSkeletonJava/webpack.config.js
+/functions/CDDEmbeddedVaadinSkeletonJava/package.json
+/functions/CDDLatencyDashboard/webpack.config.js
+/functions/CDDLatencyDashboard/package.json
