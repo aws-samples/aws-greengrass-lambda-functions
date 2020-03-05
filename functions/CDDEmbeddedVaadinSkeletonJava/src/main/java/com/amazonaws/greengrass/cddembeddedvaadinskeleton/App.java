@@ -28,7 +28,7 @@ public class App implements BaselineApp {
 
     @Override
     public Set<GreengrassStartEventHandler> getStartupHandlers() {
-        return new HashSet<>(Arrays.asList(appInjector.startupHandler()));
+        return new HashSet<>(Arrays.asList(appInjector.startupHandler(), appInjector.embeddedVaadin()));
     }
 
     @Override

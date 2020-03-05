@@ -11,3 +11,5 @@ credentials
 package-lock.json
 /functions/X86_64SampleC/x86_64samplec.zip
 venv
+webpack.generated.js
+node_modules

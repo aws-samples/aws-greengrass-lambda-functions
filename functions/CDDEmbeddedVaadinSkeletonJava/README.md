@@ -7,7 +7,7 @@ code for Greengrass Cores.  See the `CDDBaseline` README for more information.
 
 ## What is this function?
 
-This function runs an application built on the Vaadin framework inside of Greengrass.  This
+This function runs an application built on the Vaadin 14 framework inside of Greengrass.  This
 provides a full web interface that can interact with Greengrass Devices, Greengrass Lambda
 functions, and local processes.  Since it is running inside of Greengrass it can be accessed even
 when there is no Internet connectivity.
