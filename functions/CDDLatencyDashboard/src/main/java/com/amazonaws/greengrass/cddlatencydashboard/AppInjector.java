@@ -2,23 +2,23 @@ package com.amazonaws.greengrass.cddlatencydashboard;
 
 import com.amazonaws.greengrass.cddlatencydashboard.handlers.InputHandler;
 import com.amazonaws.greengrass.cddlatencydashboard.handlers.StartupHandler;
-import com.amazonaws.greengrass.cddlatencydashboard.vaadin.DaggerUI;
-import com.amazonaws.greengrass.cddlatencydashboard.vaadin.VaadinDaggerModule;
+import com.amazonaws.greengrass.cddlatencydashboard.vaadin.EmbeddedVaadinModule;
+import com.amazonaws.greengrass.cddlatencydashboard.vaadin.EmbeddedVaadinServer;
+import com.amazonaws.greengrass.cddlatencydashboard.vaadin.LatencyDashboardView;
 import com.awslabs.aws.iot.greengrass.cdd.BaselineInjector;
 import com.awslabs.aws.iot.greengrass.cdd.modules.BaselineAppModule;
-import com.vaadin.server.UIProvider;
 import dagger.Component;
 
 import javax.inject.Singleton;
 
 @Singleton
-@Component(modules = {BaselineAppModule.class, VaadinDaggerModule.class})
+@Component(modules = {BaselineAppModule.class, EmbeddedVaadinModule.class})
 public interface AppInjector extends BaselineInjector {
     StartupHandler startupHandler();
 
     InputHandler inputHandler();
 
-    UIProvider uiProvider();
+    EmbeddedVaadinServer embeddedVaadin();
 
-    void inject(DaggerUI daggerUi);
+    void inject(LatencyDashboardView latencyDashboardView);
 }

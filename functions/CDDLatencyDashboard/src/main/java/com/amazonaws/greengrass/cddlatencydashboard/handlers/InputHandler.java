@@ -27,6 +27,8 @@ public class InputHandler implements GreengrassLambdaEventHandler {
 
     @Override
     public void execute(ImmutableGreengrassLambdaEvent immutableGreengrassLambdaEvent) {
-        dispatcher.dispatch(ImmutableMessageFromCloudEvent.builder().topic(immutableGreengrassLambdaEvent.getTopic().get()).message(new Gson().toJson(immutableGreengrassLambdaEvent.getInput())).build());
+        String topic = immutableGreengrassLambdaEvent.getTopic().get();
+        String message = new Gson().toJson(immutableGreengrassLambdaEvent.getInput());
+        dispatcher.dispatch(ImmutableMessageFromCloudEvent.builder().topic(topic).message(message).build());
     }
 }
