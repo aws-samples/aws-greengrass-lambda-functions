@@ -64,6 +64,7 @@ public class LatencyDashboardView extends Composite<VerticalLayout> {
         String title = Optional.ofNullable(System.getenv("TITLE")).orElse("Data grid");
         gridLabel.setText(title);
         latencyGrid.setWidth("100%");
+        latencyGrid.setItems(latencyList);
 
         getContent().addAndExpand(new VerticalLayout(gridLabel, latencyGrid));
     }
@@ -74,7 +75,6 @@ public class LatencyDashboardView extends Composite<VerticalLayout> {
                 optionalUi.ifPresent(ui -> ui.access(() -> {
                     Latencies latencies = jsonHelper.fromJson(Latencies.class, immutableMessageFromCloudEvent.getMessage().getBytes());
                     latencyList.add(latencies);
-                    latencyGrid.setItems(latencyList);
 
                     if (latencyGrid.getColumns().size() == 0) {
                         latencyGrid.removeAllColumns();
@@ -83,6 +83,7 @@ public class LatencyDashboardView extends Composite<VerticalLayout> {
                                         .setHeader(latencies.getLatencies().get(index).getName()));
                     }
 
+                    latencyGrid.getDataProvider().refreshAll();
                     latencyGrid.scrollToEnd();
                 }));
             } catch (UIDetachedException e) {

@@ -81,6 +81,9 @@ public class MainView extends Composite<VerticalLayout> {
         horizontalLayout.addAndExpand(leftGrid, rightGrid);
         verticalLayout.add(horizontalLayout, leftItemCountLabel, rightItemCountLabel, gcCountLabel, gcTimeLabel);
 
+        leftGrid.setItems(leftList);
+        rightGrid.setItems(rightList);
+
         getContent().add(verticalLayout);
     }
 
@@ -104,8 +107,8 @@ public class MainView extends Composite<VerticalLayout> {
     }
 
     private void updateGrids() {
-        leftGrid.setItems(leftList);
-        rightGrid.setItems(rightList);
+        leftGrid.getDataProvider().refreshAll();
+        rightGrid.getDataProvider().refreshAll();
         leftGrid.scrollToEnd();
         rightGrid.scrollToEnd();
         leftItemCountLabel.setText(leftList.size() + " item(s) in the left grid");
