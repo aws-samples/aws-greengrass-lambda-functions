@@ -25,6 +25,6 @@ public class StartupHandler implements GreengrassStartEventHandler {
      */
     @Override
     public void execute(ImmutableGreengrassStartEvent immutableGreengrassStartEvent) {
-        dispatcher.publishMessageEvent(topics.getOutputTopic(), "DMI started [" + System.currentTimeMillis() + "]");
+        dispatcher.publishMessageEvent(topics.getOutputTopic(), "DMI started [" + System.nanoTime() + "]");
     }
 }

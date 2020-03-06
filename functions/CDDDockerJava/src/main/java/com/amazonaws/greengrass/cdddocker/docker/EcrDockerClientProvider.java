@@ -52,14 +52,15 @@ public class EcrDockerClientProvider implements DockerClientProvider {
 
     private AuthorizationData getAuthorizationData() {
         // This logic makes sure that subsequent calls to getAuthorizationData() don't return different results
+        long now = System.nanoTime() / 1000;
 
         // Is the token more than 60 seconds old?
-        if ((System.currentTimeMillis() - lastUsed) > 60000) {
+        if ((now - lastUsed) > 60000) {
             // Yes, clear it out
             authorizationData = Optional.empty();
         }
 
-        lastUsed = System.currentTimeMillis();
+        lastUsed = System.nanoTime() / 1000;
 
         if (authorizationData.isPresent()) {
             return authorizationData.get();

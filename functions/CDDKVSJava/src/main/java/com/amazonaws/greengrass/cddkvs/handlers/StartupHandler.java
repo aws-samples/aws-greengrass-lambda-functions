@@ -52,7 +52,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
      */
     @Override
     public void execute(ImmutableGreengrassStartEvent immutableGreengrassStartEvent) {
-        dispatcher.publishMessageEvent(topics.getOutputTopic(), "KVS streamer started [" + System.currentTimeMillis() + "] [" + uuid + "]");
+        dispatcher.publishMessageEvent(topics.getOutputTopic(), "KVS streamer started [" + System.nanoTime() + "] [" + uuid + "]");
 
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -60,22 +60,22 @@ public class StartupHandler implements GreengrassStartEventHandler {
 
             @Override
             public void run() {
-                dispatcher.publishMessageEvent(topics.getOutputTopic(), "KVS streamer still running [" + System.currentTimeMillis() + "] [" + uuid + "]");
+                dispatcher.publishMessageEvent(topics.getOutputTopic(), "KVS streamer still running [" + System.nanoTime() + "] [" + uuid + "]");
 
                 if (pipe == null) {
-                    dispatcher.publishMessageEvent(topics.getOutputTopic(), "No pipe yet [" + System.currentTimeMillis() + "] [" + uuid + "]");
+                    dispatcher.publishMessageEvent(topics.getOutputTopic(), "No pipe yet [" + System.nanoTime() + "] [" + uuid + "]");
                     return;
                 }
 
                 long seconds = pipe.queryPosition(TimeUnit.SECONDS);
 
                 if (seconds == previousSeconds) {
-                    dispatcher.publishMessageEvent(topics.getOutputTopic(), "Pipe is stalled, restarting [" + seconds + "] [" + System.currentTimeMillis() + "] [" + uuid + "]");
+                    dispatcher.publishMessageEvent(topics.getOutputTopic(), "Pipe is stalled, restarting [" + seconds + "] [" + System.nanoTime() + "] [" + uuid + "]");
                     System.exit(1);
                 }
 
                 previousSeconds = seconds;
-                dispatcher.publishMessageEvent(topics.getOutputTopic(), "Pipe state [" + pipe.getState().name() + "] [" + seconds + "] [" + System.currentTimeMillis() + "] [" + uuid + "]");
+                dispatcher.publishMessageEvent(topics.getOutputTopic(), "Pipe state [" + pipe.getState().name() + "] [" + seconds + "] [" + System.nanoTime() + "] [" + uuid + "]");
             }
         }, START_DELAY_MS, PERIOD_MS);
 

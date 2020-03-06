@@ -32,13 +32,13 @@ public class StartupHandler implements GreengrassStartEventHandler {
      */
     @Override
     public void execute(ImmutableGreengrassStartEvent immutableGreengrassStartEvent) {
-        dispatcher.publishMessageEvent(topics.getOutputTopic(), "Skeleton started [" + System.currentTimeMillis() + "]");
+        dispatcher.publishMessageEvent(topics.getOutputTopic(), "Skeleton started [" + System.nanoTime() + "]");
 
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                dispatcher.publishMessageEvent(topics.getOutputTopic(), "Skeleton still running... [" + System.currentTimeMillis() + "]");
+                dispatcher.publishMessageEvent(topics.getOutputTopic(), "Skeleton still running... [" + System.nanoTime() + "]");
             }
         }, START_DELAY_MS, PERIOD_MS);
     }

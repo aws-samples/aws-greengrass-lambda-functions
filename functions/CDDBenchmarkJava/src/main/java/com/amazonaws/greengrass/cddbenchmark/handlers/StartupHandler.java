@@ -24,7 +24,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
     private static final AtomicLong messagesPublished = new AtomicLong(0);
     private static final AtomicLong errors = new AtomicLong(0);
     // Keep track of when the application started
-    private static final long startTime = System.currentTimeMillis();
+    private static final long startTime = System.nanoTime();
     private final Logger log = LoggerFactory.getLogger(StartupHandler.class);
     @Inject
     Topics topics;
@@ -48,7 +48,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
             @Override
             public void run() {
                 try {
-                    long endTime = System.currentTimeMillis();
+                    long endTime = System.nanoTime();
                     double messagesPerSecond;
                     double seconds = (endTime - startTime) / 1000.0;
 

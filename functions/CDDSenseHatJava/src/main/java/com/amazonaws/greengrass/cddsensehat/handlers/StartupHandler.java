@@ -32,7 +32,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
             }
         }, DELAY_MS, PERIOD_MS);
 
-        dispatcher.publishMessageEvent(topics.getDebugOutputTopic(), "SenseHat started [" + System.currentTimeMillis() + "]");
+        dispatcher.publishMessageEvent(topics.getDebugOutputTopic(), "SenseHat started [" + System.nanoTime() + "]");
         dispatcher.publishMessageEvent(topics.getDebugOutputTopic(), "List topic: " + topics.getListTopic());
         dispatcher.publishMessageEvent(topics.getDebugOutputTopic(), "Start topic: " + topics.getStartTopic());
         dispatcher.publishMessageEvent(topics.getDebugOutputTopic(), "Stop topic: " + topics.getStopTopic());

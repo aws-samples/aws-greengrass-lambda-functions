@@ -24,6 +24,6 @@ public class StartupHandler implements GreengrassStartEventHandler {
      */
     @Override
     public void execute(ImmutableGreengrassStartEvent immutableGreengrassStartEvent) {
-        dispatcher.publishMessageEvent(topics.getResponseTopic(), "Docker agent started [" + System.currentTimeMillis() + "]");
+        dispatcher.publishMessageEvent(topics.getResponseTopic(), "Docker agent started [" + System.nanoTime() + "]");
     }
 }
