@@ -6,7 +6,10 @@ import com.amazonaws.greengrass.cddlatencydashboard.events.Latencies;
 import com.amazonaws.greengrass.cddlatencydashboard.events.TimerFiredEvent;
 import com.amazonaws.greengrass.cddlatencydashboard.helpers.JsonHelper;
 import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
-import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.UIDetachedException;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -29,7 +32,6 @@ import java.util.stream.IntStream;
 @PreserveOnRefresh
 public class LatencyDashboardView extends Composite<VerticalLayout> {
     private final Logger log = LoggerFactory.getLogger(LatencyDashboardView.class);
-    private Optional<UI> optionalUi = Optional.empty();
     private final Label gridLabel = new Label();
     private final Grid<Latencies> latencyGrid = new Grid<>();
     private final List<Latencies> latencyList = new ArrayList<>();
@@ -48,7 +50,6 @@ public class LatencyDashboardView extends Composite<VerticalLayout> {
         App.appInjector.inject(this);
 
         log.warn("Attached! " + attachEvent.getUI().getUIId());
-        this.optionalUi = Optional.ofNullable(attachEvent.getUI());
         consumersToRemove.add(dispatcher.add(ImmutableMessageFromCloudEvent.class, this::messageFromCloud));
         consumersToRemove.add(dispatcher.add(TimerFiredEvent.class, this::timerFiredEvent));
     }
@@ -72,7 +73,7 @@ public class LatencyDashboardView extends Composite<VerticalLayout> {
     public void messageFromCloud(ImmutableMessageFromCloudEvent immutableMessageFromCloudEvent) {
         synchronized (LatencyDashboardView.class) {
             try {
-                optionalUi.ifPresent(ui -> ui.access(() -> {
+                getUI().ifPresent(ui -> ui.access(() -> {
                     Latencies latencies = jsonHelper.fromJson(Latencies.class, immutableMessageFromCloudEvent.getMessage().getBytes());
                     latencyList.add(latencies);
 
@@ -97,7 +98,7 @@ public class LatencyDashboardView extends Composite<VerticalLayout> {
     public void timerFiredEvent(TimerFiredEvent timerFiredEvent) {
         synchronized (LatencyDashboardView.class) {
             try {
-                optionalUi.ifPresent(ui -> ui.access(() -> {
+                getUI().ifPresent(ui -> ui.access(() -> {
                     // Do nothing for now
                 }));
             } catch (UIDetachedException e) {
