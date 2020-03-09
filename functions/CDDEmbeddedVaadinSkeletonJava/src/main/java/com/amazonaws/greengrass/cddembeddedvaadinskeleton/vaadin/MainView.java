@@ -5,7 +5,10 @@ import com.amazonaws.greengrass.cddembeddedvaadinskeleton.events.ImmutableMessag
 import com.amazonaws.greengrass.cddembeddedvaadinskeleton.events.TimerFiredEvent;
 import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 import com.google.gson.Gson;
-import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.UIDetachedException;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -23,7 +26,6 @@ import java.lang.management.ManagementFactory;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 @Route
@@ -31,7 +33,6 @@ import java.util.function.Consumer;
 @PreserveOnRefresh
 public class MainView extends Composite<VerticalLayout> {
     private final Logger log = LoggerFactory.getLogger(MainView.class);
-    private Optional<UI> optionalUi = Optional.empty();
 
     private final Grid<String> leftGrid = new Grid<>();
     private final Grid<String> rightGrid = new Grid<>();
@@ -59,7 +60,6 @@ public class MainView extends Composite<VerticalLayout> {
         App.appInjector.inject(this);
 
         log.warn("Attached! " + attachEvent.getUI().getUIId());
-        this.optionalUi = Optional.ofNullable(attachEvent.getUI());
         consumersToRemove.add(dispatcher.add(ImmutableMessageFromCloudEvent.class, this::messageFromCloud));
         consumersToRemove.add(dispatcher.add(TimerFiredEvent.class, this::timerFiredEvent));
     }
@@ -90,7 +90,7 @@ public class MainView extends Composite<VerticalLayout> {
     public void messageFromCloud(ImmutableMessageFromCloudEvent immutableMessageFromCloudEvent) {
         synchronized (MainView.class) {
             try {
-                optionalUi.ifPresent(ui -> ui.access(() -> {
+                getUI().ifPresent(ui -> ui.access(() -> {
                     String json = new Gson().toJson(immutableMessageFromCloudEvent);
                     leftList.add(json);
                     rightList.add(json);
@@ -118,7 +118,7 @@ public class MainView extends Composite<VerticalLayout> {
     public void timerFiredEvent(TimerFiredEvent timerFiredEvent) {
         synchronized (MainView.class) {
             try {
-                optionalUi.ifPresent(ui -> ui.access(() -> {
+                getUI().ifPresent(ui -> ui.access(() -> {
                     leftList.add(Instant.now().toString());
                     rightList.add(Instant.now().toString());
                     updateGrids();
@@ -154,7 +154,7 @@ public class MainView extends Composite<VerticalLayout> {
         long finalTotalGcCount = totalGcCount;
         long finalTotalGcTime = totalGcTime;
 
-        optionalUi.ifPresent(ui -> ui.access(() -> {
+        getUI().ifPresent(ui -> ui.access(() -> {
             gcCountLabel.setText("GC count: " + finalTotalGcCount);
             gcTimeLabel.setText("GC time: " + finalTotalGcTime);
         }));
