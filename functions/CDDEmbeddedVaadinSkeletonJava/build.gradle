@@ -16,7 +16,7 @@ distZip.enabled = shadowDistZip.enabled = false
 distTar.enabled = shadowDistTar.enabled = false
 
 // Only necessary for debugging JARs locally
-mainClassName = 'com.amazonaws.greengrass.cddembeddedvaadinskeleton.vaadin.EmbeddedVaadin'
+mainClassName = 'com.amazonaws.greengrass.cddembeddedvaadinskeleton.vaadin.EmbeddedVaadinServer'
 
 group = 'CDDEmbeddedVaadinSkeletonJava'
 version = '1.0-SNAPSHOT'
