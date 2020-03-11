@@ -16,7 +16,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.shared.ui.Transport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +28,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @Route
-@Push(transport = Transport.LONG_POLLING)
+@Push
 @PreserveOnRefresh
 public class MainView extends Composite<VerticalLayout> {
     private final Logger log = LoggerFactory.getLogger(MainView.class);

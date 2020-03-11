@@ -12,6 +12,7 @@ import com.vaadin.flow.server.startup.ServletContextListeners;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,6 +88,7 @@ public class EmbeddedVaadinServer implements GreengrassStartEventHandler {
                 // Required or no routes are registered
                 context.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern", ".*");
                 context.addEventListener(new ServletContextListeners());
+                WebSocketServerContainerInitializer.initialize(context); // fixes IllegalStateException: Unable to configure jsr356 at that stage. ServerContainer is null
 
                 Server server = new Server(8001);
 
