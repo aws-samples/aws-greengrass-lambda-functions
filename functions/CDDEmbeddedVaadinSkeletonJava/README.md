@@ -23,3 +23,19 @@ refreshes the page.
 
 Browse to the IP address of your Greengrass Core on the port specified as `PORT` in the
 `environmentVariables` section of `function.conf`.
+
+## Can I test it locally?
+
+Yes! Build the JAR with Gradle like this:
+
+```bash
+./gradlew build -Pvaadin.productionMode
+```
+
+Then run the JAR like this:
+
+```bash
+java -jar build/libs/CDDEmbeddedVaadinSkeletonJava-1.0-SNAPSHOT-all.jar
+```
+
+The server will listen on port 8001 when running locally.
