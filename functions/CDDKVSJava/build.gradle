@@ -46,7 +46,7 @@ def slf4jVersion = '1.7.30'
 def jacksonVersion = '2.10.3'
 def awsLambdaJavaCoreVersion = '1.2.0'
 def junitVersion = '4.13'
-def daggerVersion = '2.26'
+def daggerVersion = '2.27'
 def gstVersion = '1.1.0'
 
 dependencies {
