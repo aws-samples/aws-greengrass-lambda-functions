@@ -4,7 +4,9 @@ import com.amazonaws.greengrass.javasdk.IotDataClient;
 import com.amazonaws.greengrass.javasdk.LambdaClient;
 import com.awslabs.aws.iot.greengrass.cdd.communication.*;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
+import com.awslabs.aws.iot.greengrass.cdd.helpers.TimerHelper;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.implementations.BasicJsonHelper;
+import com.awslabs.aws.iot.greengrass.cdd.helpers.implementations.BasicTimerHelper;
 import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.TempDirNativeProcessHelper;
 import com.awslabs.aws.iot.greengrass.cdd.nativeprocesses.interfaces.NativeProcessHelper;
 import com.awslabs.aws.iot.greengrass.cdd.providers.BasicEnvironmentProvider;
@@ -101,5 +103,10 @@ public class BaselineAppModule {
         }
 
         return dummyEnvironmentProvider;
+    }
+
+    @Provides
+    public TimerHelper providesTimerHelper(BasicTimerHelper basicTimerHelper) {
+        return basicTimerHelper;
     }
 }
