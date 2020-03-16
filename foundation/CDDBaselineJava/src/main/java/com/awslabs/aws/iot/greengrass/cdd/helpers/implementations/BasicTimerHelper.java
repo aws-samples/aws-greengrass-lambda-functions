@@ -4,12 +4,17 @@ import com.awslabs.aws.iot.greengrass.cdd.helpers.TimerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class BasicTimerHelper implements TimerHelper {
     private final Logger log = LoggerFactory.getLogger(BasicTimerHelper.class);
+
+    @Inject
+    public BasicTimerHelper() {
+    }
 
     @Override
     public ScheduledFuture<?> scheduleRunnable(Runnable runnable, int startDelay, int period, TimeUnit timeUnit) {
