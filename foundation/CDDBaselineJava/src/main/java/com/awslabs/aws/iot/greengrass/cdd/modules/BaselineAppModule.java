@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.Optional;
 
@@ -83,13 +84,13 @@ public class BaselineAppModule {
 
     @Provides
     @Singleton
-    public Communication providesCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient) {
+    public Communication providesCommunication(Provider<GreengrassCommunication> greengrassCommunicationProvider, Provider<DummyCommunication> dummyCommunicationProvider) {
         Communication communication;
 
         if (runningInGreegrass()) {
-            communication = new GreengrassCommunication(environmentProvider, lambdaClient, new IotDataClient());
+            communication = greengrassCommunicationProvider.get();
         } else {
-            communication = new DummyCommunication();
+            communication = dummyCommunicationProvider.get();
         }
 
         return communication;

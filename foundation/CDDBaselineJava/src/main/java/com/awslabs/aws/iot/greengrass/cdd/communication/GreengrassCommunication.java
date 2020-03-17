@@ -28,10 +28,7 @@ public class GreengrassCommunication implements Communication {
     JsonHelper jsonHelper;
 
     @Inject
-    public GreengrassCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient, IotDataClient iotDataClient) {
-        this.environmentProvider = environmentProvider;
-        this.lambdaClient = lambdaClient;
-        this.iotDataClient = iotDataClient;
+    public GreengrassCommunication() {
     }
 
     @Override

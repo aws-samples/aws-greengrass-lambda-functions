@@ -3,7 +3,6 @@ package com.awslabs.aws.iot.greengrass.cdd.communication;
 import com.amazonaws.greengrass.javasdk.model.GGIotDataException;
 import com.amazonaws.greengrass.javasdk.model.GGLambdaException;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
