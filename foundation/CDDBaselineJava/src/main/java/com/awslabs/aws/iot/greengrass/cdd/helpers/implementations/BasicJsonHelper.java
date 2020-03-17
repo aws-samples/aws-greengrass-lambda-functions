@@ -4,6 +4,7 @@ import com.awslabs.aws.iot.greengrass.cdd.events.GreengrassLambdaEvent;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
+import io.vavr.gson.VavrGson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,9 @@ public class BasicJsonHelper implements JsonHelper {
         for (TypeAdapterFactory factory : ServiceLoader.load(TypeAdapterFactory.class)) {
             gsonBuilder.registerTypeAdapterFactory(factory);
         }
+
+        // This allows us to use GSON with Vavr - https://github.com/vavr-io/vavr-gson
+        VavrGson.registerAll(gsonBuilder);
 
         return gsonBuilder;
     }
