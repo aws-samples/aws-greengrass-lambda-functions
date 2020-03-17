@@ -5,7 +5,6 @@ import com.amazonaws.greengrass.javasdk.LambdaClient;
 import com.amazonaws.greengrass.javasdk.model.*;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,9 +36,17 @@ public class GreengrassCommunication implements Communication {
 
     @Override
     public void publish(String topic, Object object) throws GGIotDataException, GGLambdaException {
-        PublishRequest publishRequest = new PublishRequest().withTopic(topic).withPayload(ByteBuffer.wrap(jsonHelper.toJson(object).getBytes()));
+        try {
+            log.info("Publish object 1");
+            PublishRequest publishRequest = new PublishRequest().withTopic(topic).withPayload(ByteBuffer.wrap(jsonHelper.toJson(object).getBytes()));
+            log.info("Publish object 2");
 
-        iotDataClient.publish(publishRequest);
+            iotDataClient.publish(publishRequest);
+            log.info("Publish object 3");
+        } catch (Exception e) {
+            log.info("Publish object exception: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Override
