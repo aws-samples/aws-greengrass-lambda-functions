@@ -3,6 +3,7 @@ package com.awslabs.aws.iot.greengrass.cdd.communication;
 import com.amazonaws.greengrass.javasdk.IotDataClient;
 import com.amazonaws.greengrass.javasdk.LambdaClient;
 import com.amazonaws.greengrass.javasdk.model.*;
+import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -24,6 +25,8 @@ public class GreengrassCommunication implements Communication {
     LambdaClient lambdaClient;
     @Inject
     EnvironmentProvider environmentProvider;
+    @Inject
+    JsonHelper jsonHelper;
 
     @Inject
     public GreengrassCommunication(EnvironmentProvider environmentProvider, LambdaClient lambdaClient, IotDataClient iotDataClient) {
@@ -34,7 +37,7 @@ public class GreengrassCommunication implements Communication {
 
     @Override
     public void publish(String topic, Object object) throws GGIotDataException, GGLambdaException {
-        PublishRequest publishRequest = new PublishRequest().withTopic(topic).withPayload(ByteBuffer.wrap(new Gson().toJson(object).getBytes()));
+        PublishRequest publishRequest = new PublishRequest().withTopic(topic).withPayload(ByteBuffer.wrap(jsonHelper.toJson(object).getBytes()));
 
         iotDataClient.publish(publishRequest);
     }
@@ -58,7 +61,7 @@ public class GreengrassCommunication implements Communication {
         String encodedClientContext = ENCODED_EMPTY_CUSTOM_CONTEXT;
 
         if (customContext.isPresent()) {
-            encodedClientContext = Base64.getEncoder().encodeToString(new Gson().toJson(customContext.get()).getBytes());
+            encodedClientContext = Base64.getEncoder().encodeToString(jsonHelper.toJson(customContext.get()).getBytes());
         }
 
         final InvokeRequest invokeRequest = new InvokeRequest()
