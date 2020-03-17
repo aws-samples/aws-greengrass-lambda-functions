@@ -33,17 +33,9 @@ public class GreengrassCommunication implements Communication {
 
     @Override
     public void publish(String topic, Object object) throws GGIotDataException, GGLambdaException {
-        try {
-            log.info("Publish object 1");
-            PublishRequest publishRequest = new PublishRequest().withTopic(topic).withPayload(ByteBuffer.wrap(jsonHelper.toJson(object).getBytes()));
-            log.info("Publish object 2");
+        PublishRequest publishRequest = new PublishRequest().withTopic(topic).withPayload(ByteBuffer.wrap(jsonHelper.toJson(object).getBytes()));
 
-            iotDataClient.publish(publishRequest);
-            log.info("Publish object 3");
-        } catch (Exception e) {
-            log.info("Publish object exception: " + e.getMessage());
-            e.printStackTrace();
-        }
+        iotDataClient.publish(publishRequest);
     }
 
     @Override
