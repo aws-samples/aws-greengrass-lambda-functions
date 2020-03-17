@@ -32,6 +32,11 @@ public class BaselineAppModule {
     private static Optional<Boolean> optionalRunningInGreengrass = Optional.empty();
 
     @Provides
+    public IotDataClient providesIotDataClient() {
+        return new IotDataClient();
+    }
+
+    @Provides
     @Singleton
     public Dispatcher providesDispatcher(BasicDispatcher basicDispatcher) {
         return basicDispatcher;
@@ -64,7 +69,7 @@ public class BaselineAppModule {
     private boolean runningInGreegrass() {
         if (!optionalRunningInGreengrass.isPresent()) {
             try {
-                new IotDataClient();
+                providesIotDataClient();
                 optionalRunningInGreengrass = Optional.of(true);
             } catch (NoClassDefFoundError e) {
                 if (e.getMessage().contains("EnvVars")) {
