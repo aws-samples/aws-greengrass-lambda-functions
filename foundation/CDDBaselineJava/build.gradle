@@ -51,6 +51,7 @@ repositories {
 def daggerVersion = '2.26'
 def gsonVersion = '2.8.6'
 def slf4jVersion = '1.7.30'
+def jcabiVersion = '0.18.1'
 def jacksonVersion = '2.10.3'
 def httpClientVersion = '4.5.11'
 def awsLambdaJavaCoreVersion = '1.2.0'
@@ -74,7 +75,8 @@ dependencies {
 
     compile githubJar('aws', 'aws-greengrass-core-sdk-java', awsGreengrassCoreSdkJava, 'GreengrassJavaSDK')
     compile "com.google.code.gson:gson:$gsonVersion"
-    compile "org.slf4j:slf4j-jdk14:$slf4jVersion"
+    compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
+    compile "com.jcabi:jcabi-log:$jcabiVersion"
     compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
