@@ -15,7 +15,7 @@ public class CddTopics {
 
     private Optional<String> cddBaselineTopic = Optional.empty();
 
-    private String buildCddBaselineTopic() {
+    public String getCddBaselineTopic() {
         if (!cddBaselineTopic.isPresent()) {
             cddBaselineTopic = Optional.of(String.join("/",
                     environmentProvider.getAwsIotThingName().orElseThrow(() -> new UnsupportedOperationException("Thing name missing from environment")),
@@ -26,12 +26,12 @@ public class CddTopics {
     }
 
     public String debugTopic() {
-        return String.join("/", buildCddBaselineTopic(), "debug");
+        return String.join("/", getCddBaselineTopic(), "debug");
     }
 
     public String getCddDriverTopic(Object object) {
         return String.join("/",
-                buildCddBaselineTopic(),
+                getCddBaselineTopic(),
                 environmentProvider.getDriverName(object.getClass()));
     }
 }
