@@ -1,7 +1,6 @@
 package com.awslabs.aws.iot.greengrass.cdd.communication;
 
 import com.amazonaws.greengrass.javasdk.IotDataClient;
-import com.amazonaws.greengrass.javasdk.LambdaClient;
 import com.amazonaws.greengrass.javasdk.model.*;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
 import com.awslabs.aws.iot.greengrass.cdd.providers.interfaces.EnvironmentProvider;
@@ -21,7 +20,7 @@ public class GreengrassCommunication implements Communication {
     @Inject
     IotDataClient iotDataClient;
     @Inject
-    LambdaClient lambdaClient;
+    LambdaClientInterface lambdaClientInterface;
     @Inject
     EnvironmentProvider environmentProvider;
     @Inject
@@ -68,7 +67,7 @@ public class GreengrassCommunication implements Communication {
 
         try {
             final InvokeResponse response;
-            response = lambdaClient.invoke(invokeRequest);
+            response = lambdaClientInterface.invoke(invokeRequest);
             final byte[] bytes = response.getPayload().array();
 
             return Optional.ofNullable(bytes);

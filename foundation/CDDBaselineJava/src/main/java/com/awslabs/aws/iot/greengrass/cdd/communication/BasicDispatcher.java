@@ -38,6 +38,13 @@ public class BasicDispatcher implements Dispatcher {
     }
 
     @Override
+    public <T> void remove(Consumer<T> consumer) {
+        synchronized (BasicDispatcher.class) {
+            dispatchTable.forEach((key, value) -> value.remove(consumer));
+        }
+    }
+
+    @Override
     public <T> void dispatch(T message) {
         Class clazz = message.getClass();
         Optional<Set<Consumer>> optionalConsumerSet = Optional.ofNullable(dispatchTable.get(clazz));

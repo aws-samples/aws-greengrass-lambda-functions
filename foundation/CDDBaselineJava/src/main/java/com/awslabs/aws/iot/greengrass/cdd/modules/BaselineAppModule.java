@@ -2,6 +2,9 @@ package com.awslabs.aws.iot.greengrass.cdd.modules;
 
 import com.amazonaws.greengrass.javasdk.IotDataClient;
 import com.amazonaws.greengrass.javasdk.LambdaClient;
+import com.amazonaws.greengrass.javasdk.model.GGLambdaException;
+import com.amazonaws.greengrass.javasdk.model.InvokeRequest;
+import com.amazonaws.greengrass.javasdk.model.InvokeResponse;
 import com.awslabs.aws.iot.greengrass.cdd.communication.*;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
 import com.awslabs.aws.iot.greengrass.cdd.helpers.TimerHelper;
@@ -28,7 +31,7 @@ import java.util.Optional;
 
 @Module
 public class BaselineAppModule {
-    private final Logger log = LoggerFactory.getLogger(BaselineAppModule.class);
+    private static final Logger log = LoggerFactory.getLogger(BaselineAppModule.class);
     private static Optional<Boolean> optionalRunningInGreengrass = Optional.empty();
 
     @Provides
@@ -66,7 +69,7 @@ public class BaselineAppModule {
         return basicJsonHelper;
     }
 
-    private boolean runningInGreegrass() {
+    public boolean runningInGreengrass() {
         if (!optionalRunningInGreengrass.isPresent()) {
             try {
                 providesIotDataClient();
@@ -76,6 +79,13 @@ public class BaselineAppModule {
                     // Not running in Greengrass
                     optionalRunningInGreengrass = Optional.of(false);
                 }
+
+                log.error("Exception while determining if the environment is Greengrass");
+                log.error(e.getMessage());
+                e.printStackTrace();
+
+                // Assume not running in Greengrass if issues arise
+                optionalRunningInGreengrass = Optional.of(false);
             }
         }
 
@@ -83,8 +93,19 @@ public class BaselineAppModule {
     }
 
     @Provides
-    public LambdaClient providesLambdaClient() {
-        return new LambdaClient();
+    public LambdaClientInterface providesLambdaClientInterface() {
+        if (runningInGreengrass()) {
+            return new LambdaClientInterface() {
+                private LambdaClient lambdaClient = new LambdaClient();
+
+                @Override
+                public InvokeResponse invoke(InvokeRequest invokeRequest) throws GGLambdaException {
+                    return lambdaClient.invoke(invokeRequest);
+                }
+            };
+        } else {
+            return new DummyLambdaClient();
+        }
     }
 
     @Provides
@@ -92,7 +113,7 @@ public class BaselineAppModule {
     public Communication providesCommunication(Provider<GreengrassCommunication> greengrassCommunicationProvider, Provider<DummyCommunication> dummyCommunicationProvider) {
         Communication communication;
 
-        if (runningInGreegrass()) {
+        if (runningInGreengrass()) {
             communication = greengrassCommunicationProvider.get();
         } else {
             communication = dummyCommunicationProvider.get();
@@ -104,7 +125,7 @@ public class BaselineAppModule {
     // Special environment information (thing name, thing ARN, group name)
     @Provides
     public EnvironmentProvider providesEnvironmentProvider(BasicEnvironmentProvider basicEnvironmentProvider, DummyEnvironmentProvider dummyEnvironmentProvider) {
-        if (runningInGreegrass()) {
+        if (runningInGreengrass()) {
             return basicEnvironmentProvider;
         }
 
