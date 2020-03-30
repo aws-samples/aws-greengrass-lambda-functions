@@ -28,7 +28,7 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-def gradleDependencyVersion = '6.2'
+def gradleDependencyVersion = '6.3'
 
 wrapper {
     gradleVersion = gradleDependencyVersion
