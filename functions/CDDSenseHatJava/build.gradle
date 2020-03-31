@@ -47,7 +47,7 @@ def slf4jVersion = '1.7.30'
 def awsSdkVersion = '1.11.738'
 def jacksonVersion = '2.10.3'
 def awsLambdaJavaCoreVersion = '1.2.0'
-def daggerVersion = '2.26'
+def daggerVersion = '2.27'
 
 def jettyVersion = '9.4.27.v20200227'
 
