@@ -94,7 +94,6 @@ TEMP_CONTAINER=$(docker create timmattison/aws-greengrass-provisioner:$TAG)
 docker cp $PWD/foundation $TEMP_CONTAINER:/foundation
 docker cp $PWD/deployments $TEMP_CONTAINER:/deployments
 docker cp $PWD/functions $TEMP_CONTAINER:/functions
-docker cp $PWD/ggds $TEMP_CONTAINER:/ggds
 docker cp $PWD/connectors $TEMP_CONTAINER:/connectors
 
 TEMP_IMAGE=$(uuidgen | tr '[:upper:]' '[:lower:]' | tr -d '-')
