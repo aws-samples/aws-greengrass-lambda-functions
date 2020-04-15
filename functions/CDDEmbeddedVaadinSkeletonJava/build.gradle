@@ -61,7 +61,7 @@ def githubJar = { organization, module, revision, name ->
     files(file.absolutePath)
 }
 
-def cddVersion = '0.8.61'
+def cddVersion = '0.8.73'
 def gsonVersion = '2.8.6'
 def slf4jVersion = '1.7.30'
 def jcabiVersion = '0.18.1'
@@ -74,6 +74,8 @@ def jettyVersion = '9.4.27.v20200227'
 def daggerVersion = '2.27'
 def vaadinVersion = '14.1.17'
 def awsGreengrassCoreSdkJava = '1.4.1'
+
+def embeddedVaadin = '0.1.8'
 
 dependencies {
     annotationProcessor "org.immutables:value:$immutablesValueVersion"
@@ -95,6 +97,8 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.amazonaws:aws-lambda-java-core:$awsLambdaJavaCoreVersion"
+
+    implementation "com.github.timmattison:embedded-vaadin:$embeddedVaadin"
 
     compile "org.eclipse.jetty:jetty-continuation:$jettyVersion"
     compile "org.eclipse.jetty:jetty-server:$jettyVersion"

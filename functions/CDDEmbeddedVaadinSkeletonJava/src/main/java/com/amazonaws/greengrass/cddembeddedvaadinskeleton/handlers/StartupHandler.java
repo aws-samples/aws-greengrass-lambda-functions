@@ -4,16 +4,19 @@ import com.amazonaws.greengrass.cddembeddedvaadinskeleton.events.TimerFiredEvent
 import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
 import com.awslabs.aws.iot.greengrass.cdd.events.ImmutableGreengrassStartEvent;
 import com.awslabs.aws.iot.greengrass.cdd.handlers.interfaces.GreengrassStartEventHandler;
+import com.awslabs.aws.iot.greengrass.cdd.helpers.TimerHelper;
 
 import javax.inject.Inject;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class StartupHandler implements GreengrassStartEventHandler {
-    private final int DELAY_MS = 5000;
-    private final int PERIOD_MS = 5000;
+    private static final int START_DELAY_MS = 5000;
+    private static final int PERIOD_MS = 5000;
+
     @Inject
     Dispatcher dispatcher;
+    @Inject
+    TimerHelper timerHelper;
 
     @Inject
     public StartupHandler() {
@@ -21,12 +24,7 @@ public class StartupHandler implements GreengrassStartEventHandler {
 
     @Override
     public void execute(ImmutableGreengrassStartEvent immutableGreengrassStartEvent) {
-        Timer timer = new Timer(true);
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                dispatcher.dispatch(new TimerFiredEvent());
-            }
-        }, DELAY_MS, PERIOD_MS);
+        Runnable runnable = () -> dispatcher.dispatch(new TimerFiredEvent());
+        timerHelper.scheduleRunnable(runnable, START_DELAY_MS, PERIOD_MS, TimeUnit.MILLISECONDS);
     }
 }

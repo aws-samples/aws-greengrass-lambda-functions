@@ -4,11 +4,10 @@ import com.amazonaws.greengrass.cddembeddedvaadinskeleton.App;
 import com.amazonaws.greengrass.cddembeddedvaadinskeleton.events.ImmutableMessageFromCloudEvent;
 import com.amazonaws.greengrass.cddembeddedvaadinskeleton.events.TimerFiredEvent;
 import com.awslabs.aws.iot.greengrass.cdd.communication.Dispatcher;
-import com.google.gson.Gson;
+import com.awslabs.aws.iot.greengrass.cdd.helpers.JsonHelper;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.UIDetachedException;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,6 +15,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import io.vavr.collection.List;
+import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +24,6 @@ import javax.inject.Inject;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 @Route
@@ -44,12 +43,14 @@ public class MainView extends Composite<VerticalLayout> {
     private final Label leftItemCountLabel = new Label();
     private final Label rightItemCountLabel = new Label();
 
-    private final List<String> leftList = new ArrayList<>();
-    private final List<String> rightList = new ArrayList<>();
-    private final List<Consumer> consumersToRemove = new ArrayList<>();
+    private List<String> leftList = List.empty();
+    private List<String> rightList = List.empty();
+    private List<Consumer> consumersToRemove = List.empty();
 
     @Inject
     Dispatcher dispatcher;
+    @Inject
+    JsonHelper jsonHelper;
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
@@ -59,8 +60,8 @@ public class MainView extends Composite<VerticalLayout> {
         App.appInjector.inject(this);
 
         log.warn("Attached! " + attachEvent.getUI().getUIId());
-        consumersToRemove.add(dispatcher.add(ImmutableMessageFromCloudEvent.class, this::messageFromCloud));
-        consumersToRemove.add(dispatcher.add(TimerFiredEvent.class, this::timerFiredEvent));
+        consumersToRemove = consumersToRemove.append(dispatcher.add(ImmutableMessageFromCloudEvent.class, this::messageFromCloud));
+        consumersToRemove = consumersToRemove.append(dispatcher.add(TimerFiredEvent.class, this::timerFiredEvent));
     }
 
     @Override
@@ -80,56 +81,30 @@ public class MainView extends Composite<VerticalLayout> {
         horizontalLayout.addAndExpand(leftGrid, rightGrid);
         verticalLayout.add(horizontalLayout, leftItemCountLabel, rightItemCountLabel, gcCountLabel, gcTimeLabel);
 
-        leftGrid.setItems(leftList);
-        rightGrid.setItems(rightList);
+        leftGrid.setItems(leftList.asJava());
+        rightGrid.setItems(rightList.asJava());
 
         getContent().add(verticalLayout);
     }
 
-    public void messageFromCloud(ImmutableMessageFromCloudEvent immutableMessageFromCloudEvent) {
-        synchronized (MainView.class) {
-            try {
-                getUI().ifPresent(ui -> ui.access(() -> {
-                    String json = new Gson().toJson(immutableMessageFromCloudEvent);
-                    leftList.add(json);
-                    rightList.add(json);
-                    updateGrids();
-                }));
-
-                updateGcInfo();
-            } catch (UIDetachedException e) {
-                // Client probably disconnected, ignore
-            } catch (Exception e) {
-                // Do not throw exceptions in event bus subscriber methods
-            }
-        }
-    }
-
-    private void updateGrids() {
-        leftGrid.getDataProvider().refreshAll();
-        rightGrid.getDataProvider().refreshAll();
-        leftGrid.scrollToEnd();
-        rightGrid.scrollToEnd();
+    private void updateGrids(String data) {
+        leftList = leftList.append(data);
+        rightList = rightList.append(data);
+        leftGrid.setItems(leftList.asJava());
+        rightGrid.setItems(rightList.asJava());
         leftItemCountLabel.setText(leftList.size() + " item(s) in the left grid");
         rightItemCountLabel.setText(rightList.size() + " item(s) in the right grid");
+        updateGcInfo();
+    }
+
+    public void messageFromCloud(ImmutableMessageFromCloudEvent immutableMessageFromCloudEvent) {
+        // Ignore all exceptions
+        Try.run(() -> getUI().ifPresent(ui -> ui.access(() -> updateGrids(jsonHelper.toJson(immutableMessageFromCloudEvent)))));
     }
 
     public void timerFiredEvent(TimerFiredEvent timerFiredEvent) {
-        synchronized (MainView.class) {
-            try {
-                getUI().ifPresent(ui -> ui.access(() -> {
-                    leftList.add(Instant.now().toString());
-                    rightList.add(Instant.now().toString());
-                    updateGrids();
-                }));
-
-                updateGcInfo();
-            } catch (UIDetachedException e) {
-                // Client probably disconnected, ignore
-            } catch (Exception e) {
-                // Do not throw exceptions in event bus subscriber methods
-            }
-        }
+        // Ignore all exceptions
+        Try.run(() -> getUI().ifPresent(ui -> ui.access(() -> updateGrids(Instant.now().toString()))));
     }
 
     public void updateGcInfo() {

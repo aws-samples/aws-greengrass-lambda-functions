@@ -8,9 +8,11 @@ import java.util.Optional;
 public class Topics {
     @Inject
     CddTopics cddTopics;
+
     private Optional<String> baselineTopic = Optional.empty();
     private Optional<String> inputTopic = Optional.empty();
     private Optional<String> outputTopic = Optional.empty();
+
     @Inject
     public Topics() {
     }
