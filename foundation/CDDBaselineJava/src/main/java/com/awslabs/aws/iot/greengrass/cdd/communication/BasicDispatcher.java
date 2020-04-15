@@ -75,6 +75,7 @@ public class BasicDispatcher implements Dispatcher {
             log.debug("Calling consumer [" + consumer + "] on [" + message + "]");
             consumer.accept(message);
         } catch (Exception e) {
+            log.error(e.getMessage());
             e.printStackTrace();
         }
     }

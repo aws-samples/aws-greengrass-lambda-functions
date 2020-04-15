@@ -16,6 +16,8 @@ import java.util.ServiceLoader;
 public class BasicJsonHelper implements JsonHelper {
     private final Logger log = LoggerFactory.getLogger(BasicJsonHelper.class);
 
+    private Optional<GsonBuilder> optionalGsonBuilder = Optional.empty();
+
     @Inject
     public BasicJsonHelper() {
     }
@@ -30,17 +32,21 @@ public class BasicJsonHelper implements JsonHelper {
     }
 
     private GsonBuilder getGsonBuilder() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
+        if (!optionalGsonBuilder.isPresent()) {
+            GsonBuilder gsonBuilder = new GsonBuilder();
 
-        // This allows us to use GSON with Immutables - https://immutables.github.io/json.html#type-adapter-registration
-        for (TypeAdapterFactory factory : ServiceLoader.load(TypeAdapterFactory.class)) {
-            gsonBuilder.registerTypeAdapterFactory(factory);
+            // This allows us to use GSON with Immutables - https://immutables.github.io/json.html#type-adapter-registration
+            for (TypeAdapterFactory factory : ServiceLoader.load(TypeAdapterFactory.class)) {
+                gsonBuilder.registerTypeAdapterFactory(factory);
+            }
+
+            // This allows us to use GSON with Vavr - https://github.com/vavr-io/vavr-gson
+            VavrGson.registerAll(gsonBuilder);
+
+            optionalGsonBuilder = Optional.of(gsonBuilder);
         }
 
-        // This allows us to use GSON with Vavr - https://github.com/vavr-io/vavr-gson
-        VavrGson.registerAll(gsonBuilder);
-
-        return gsonBuilder;
+        return optionalGsonBuilder.get();
     }
 
     @Override

@@ -17,3 +17,5 @@ node_modules
 /functions/CDDEmbeddedVaadinSkeletonJava/package.json
 /functions/CDDLatencyDashboard/webpack.config.js
 /functions/CDDLatencyDashboard/package.json
+/functions/CDDLlrpDashboardJava/webpack.config.js
+/functions/CDDLlrpDashboardJava/package.json
