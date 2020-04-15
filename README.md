@@ -45,6 +45,7 @@ Check out the [Cloud Device Driver framework](https://gitpitch.com/aws-samples/a
   - [CDDSenseHatJava](functions/CDDSenseHatJava) - shows how to control a SenseHat display on a Raspberry Pi
   - [CDDDockerJava](functions/CDDDockerJava) - shows how to control Docker with Greengrass
   - [CDDLatencyDashboard](functions/CDDLatencyDashboard) - a Vaadin-based dashboard to show latency information (used with LatencyTesterPython3)
+  - [CDDMdnsServiceResolver](functions/CDDMdnsServiceResolver) - resolves mDNS service discovery broadcasts and publishes the discovery information to other functions
 
 - C
   - [ARM32SampleC](functions/ARM32SampleC) - Hello World in C for ARM32 architectures
