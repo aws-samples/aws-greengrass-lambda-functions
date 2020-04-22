@@ -1,4 +1,4 @@
-FROM 216483018798.dkr.ecr.us-west-2.amazonaws.com/aws-iot-greengrass:1.9.4-amazonlinux
+FROM 216483018798.dkr.ecr.us-west-2.amazonaws.com/aws-iot-greengrass:1.10.1-amazonlinux-x86-64
 
 RUN ln -sf /usr/bin/java /usr/local/bin/java8
 RUN yum install -y awscli jq
