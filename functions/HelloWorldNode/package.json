@@ -7,6 +7,6 @@
   "author": "",
   "license": "Apache",
   "dependencies": {
-    "greengrass-core-sdk": "1.5.0"
+    "greengrass-core-sdk": "1.6.1"
   }
 }
