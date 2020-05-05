@@ -75,7 +75,7 @@ def daggerVersion = '2.27'
 def vaadinVersion = '14.1.17'
 def awsGreengrassCoreSdkJava = '1.4.1'
 
-def embeddedVaadin = '0.1.8'
+def embeddedVaadin = '0.1.11'
 
 dependencies {
     annotationProcessor "org.immutables:value:$immutablesValueVersion"
