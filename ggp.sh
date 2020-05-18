@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 
+JAR_NAME="AwsGreengrassProvisioner.jar"
+JAR_LOCATION_1="../aws-greengrass-provisioner/build/libs/$JAR_NAME"
+JAR_LOCATION_2="./$JAR_NAME"
+
+if [ -f "$JAR_LOCATION_1" ]; then
+  JAR_LOCATION=$JAR_LOCATION_1
+elif [ -f "$JAR_LOCATION_2" ]; then
+  JAR_LOCATION=$JAR_LOCATION_2
+fi
+
+if [ ! -z "$JAR_LOCATION" ]; then
+  echo "JAR found, running with Java"
+  set -e
+  java -jar $JAR_LOCATION $@
+  exit 0
+fi
+
 TAG=$(cd ../aws-greengrass-provisioner 2>/dev/null && git symbolic-ref --short HEAD | tr -cd '[:alnum:]._-')
 
 if [ $? -ne 0 ]; then
