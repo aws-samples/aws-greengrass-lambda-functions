@@ -15,7 +15,7 @@ distZip.enabled = shadowDistZip.enabled = false
 distTar.enabled = shadowDistTar.enabled = false
 
 // Required by shadow but not necessary
-mainClassName = 'not-necessary'
+mainClassName = 'com.amazonaws.greengrass.cddskeleton.App'
 
 group = 'CDDSkeletonJava'
 version = '1.0-SNAPSHOT'

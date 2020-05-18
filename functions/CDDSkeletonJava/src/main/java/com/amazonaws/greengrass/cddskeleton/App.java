@@ -20,6 +20,9 @@ public class App implements BaselineApp {
     public App() {
     }
 
+    public static void main(String[] args) {
+    }
+
     @Override
     public BaselineInjector getBaselineInjector() {
         return appInjector;
