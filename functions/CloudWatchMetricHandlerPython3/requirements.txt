@@ -1,2 +1,2 @@
 greengrasssdk==1.5.0
-boto3==1.13.4
+boto3==1.13.11
