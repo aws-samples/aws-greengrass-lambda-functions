@@ -70,7 +70,7 @@ def junitVersion = '4.13'
 def daggerVersion = '2.27'
 def jmdnsVersion = '3.5.5'
 def vavrVersion = '0.10.2'
-def immutablesVersion = '2.8.7'
+def immutablesVersion = '2.8.8'
 
 dependencies {
     implementation githubJar('aws', 'aws-greengrass-core-sdk-java', awsGreengrassCoreSdkJava, 'GreengrassJavaSDK')
