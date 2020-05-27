@@ -17,6 +17,7 @@ if [ ! -z "$JAR_LOCATION" ]; then
   exit 0
 fi
 
+echo "JAR not found, running with Docker"
 TAG=$(cd ../aws-greengrass-provisioner 2>/dev/null && git symbolic-ref --short HEAD | tr -cd '[:alnum:]._-')
 
 if [ $? -ne 0 ]; then
