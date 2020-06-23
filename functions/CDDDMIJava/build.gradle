@@ -47,7 +47,7 @@ def slf4jVersion = '1.7.30'
 def awsSdkVersion = '1.11.802'
 def jacksonVersion = '2.11.0'
 def awsLambdaJavaCoreVersion = '1.2.1'
-def daggerVersion = '2.28'
+def daggerVersion = '2.28.1'
 
 dependencies {
     compile "com.github.aws-samples:aws-greengrass-lambda-functions:$cddVersion"
