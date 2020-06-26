@@ -22,7 +22,6 @@ Check out the [Cloud Device Driver framework](https://gitpitch.com/aws-samples/a
 - Python
   - [BenchmarkPython](functions/BenchmarkPython) - a naive benchmark that creates a pinned function that sends messages to itself
   - [HTTPPython](functions/HTTPPython) - sends HTTP requests from the core to any address (local network or otherwise), triggered by MQTT messages from the cloud
-  - [HelloWorldPython2](functions/HelloWorldPython2) - Hello, World in Python 2
   - [HelloWorldPython3](functions/HelloWorldPython3) - Hello, World in Python 3
   - [HelloWorldPythonWithCloudFormation](functions/HelloWorldPythonWithCloudFormation) - Hello, World in Python with a CloudFormation template that demonstrates how to build republish rules that the provisioner can launch automatically
   - [LiFXPython](functions/LiFXPython) - control LiFX bulbs
