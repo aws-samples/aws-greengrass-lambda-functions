@@ -48,7 +48,7 @@ repositories {
     maven { url "https://plugins.gradle.org/m2/" }
 }
 
-def daggerVersion = '2.28.1'
+def daggerVersion = '2.28.2'
 def gsonVersion = '2.8.6'
 def slf4jVersion = '1.7.30'
 def jcabiVersion = '0.18.1'
