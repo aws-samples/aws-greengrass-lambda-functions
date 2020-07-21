@@ -7,4 +7,4 @@ if [ -z "$CORE" ]; then
   exit 1
 fi
 
-aws iot-data publish --topic $CORE/cdd/sensehat/animation/list --payload '{}'
+aws iot-data publish --topic $CORE/cdd/sensehat/animation/list --cli-binary-format raw-in-base64-out --payload '{}'
