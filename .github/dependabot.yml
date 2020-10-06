@@ -1,0 +1,195 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/functions/CDDLatencyDashboard"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/functions/RaspberryPiGpioPython3"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/functions/LatencyTesterPython3"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/functions/CloudWatchMetricHandlerPython3"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/functions/SecretsManagerPython3"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: npm
+  directory: "/functions/HelloWorldNode"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: gradle
+  directory: "/functions/CDDMdnsServiceResolverJava"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: gradle
+  directory: "/functions/CDDKVSJava"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/functions/MqttClientPython3"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/functions/HelloWorldPython2"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: gradle
+  directory: "/foundation/CDDBaselineJava"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.fasterxml.jackson.core:jackson-core
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+  - dependency-name: com.fasterxml.jackson.core:jackson-databind
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+- package-ecosystem: gradle
+  directory: "/functions/CDDSkeletonJava"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.fasterxml.jackson.core:jackson-core
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+  - dependency-name: com.fasterxml.jackson.core:jackson-databind
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+- package-ecosystem: gradle
+  directory: "/functions/CDDSenseHatJava"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.fasterxml.jackson.core:jackson-core
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+  - dependency-name: com.fasterxml.jackson.core:jackson-databind
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+- package-ecosystem: gradle
+  directory: "/functions/CDDEmbeddedVaadinSkeletonJava"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.fasterxml.jackson.core:jackson-core
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+  - dependency-name: com.fasterxml.jackson.core:jackson-databind
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+- package-ecosystem: gradle
+  directory: "/functions/CDDBenchmarkJava"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.fasterxml.jackson.core:jackson-core
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+  - dependency-name: com.fasterxml.jackson.core:jackson-databind
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+- package-ecosystem: gradle
+  directory: "/functions/CDDDMIJava"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.fasterxml.jackson.core:jackson-core
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+  - dependency-name: com.fasterxml.jackson.core:jackson-databind
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+- package-ecosystem: gradle
+  directory: "/functions/CDDDockerJava"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.fasterxml.jackson.core:jackson-core
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+  - dependency-name: com.fasterxml.jackson.core:jackson-databind
+    versions:
+    - ">= 2.10.0.a"
+    - "< 2.10.1"
+- package-ecosystem: pip
+  directory: "/functions/HTTPPython"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/functions/BasicIngestPythonWithCloudFormation"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/functions/BenchmarkPython"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: npm
+  directory: "/functions/HTTPNode"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/functions/HelloWorldPython3"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/functions/HelloWorldPythonWithCloudFormation"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/functions/SocketServerPython"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: pip
+  directory: "/functions/LiFXPython"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: npm
+  directory: "/functions/WebServerNode"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
