@@ -71,7 +71,7 @@ def awsLambdaJavaCoreVersion = '1.2.1'
 def immutablesValueVersion = '2.8.8'
 
 def jettyVersion = '9.4.34.v20201102'
-def daggerVersion = '2.29.1'
+def daggerVersion = '2.30'
 def vaadinVersion = '14.1.17'
 def awsGreengrassCoreSdkJava = '1.4.1'
 
