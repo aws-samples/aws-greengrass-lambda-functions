@@ -41,6 +41,22 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+// Guidance from: https://stackoverflow.com/questions/23446233/compile-jar-from-url-in-gradle
+def githubJar = { organization, module, revision, name ->
+    File file = new File("$buildDir/libs/${name}.jar")
+    file.parentFile.mkdirs()
+    if (!file.exists()) {
+        def url = "https://github.com/$organization/$module/raw/v$revision/sdk/GreengrassJavaSDK.jar"
+        new URL(url).withInputStream { downloadStream ->
+            file.withOutputStream { fileOut ->
+                fileOut << downloadStream
+            }
+        }
+    }
+    files(file.absolutePath)
+}
+
+def awsGreengrassCoreSdkJava = '1.4.1'
 def cddVersion = '0.8.74'
 def gsonVersion = '2.8.6'
 def slf4jVersion = '2.0.0-alpha1'
@@ -50,6 +66,7 @@ def awsLambdaJavaCoreVersion = '1.2.1'
 def daggerVersion = '2.30.1'
 
 dependencies {
+    implementation githubJar('aws', 'aws-greengrass-core-sdk-java', awsGreengrassCoreSdkJava, 'GreengrassJavaSDK')
     compile "com.github.aws-samples:aws-greengrass-lambda-functions:$cddVersion"
 
     // Dagger code generation

@@ -41,6 +41,22 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+// Guidance from: https://stackoverflow.com/questions/23446233/compile-jar-from-url-in-gradle
+def githubJar = { organization, module, revision, name ->
+    File file = new File("$buildDir/libs/${name}.jar")
+    file.parentFile.mkdirs()
+    if (!file.exists()) {
+        def url = "https://github.com/$organization/$module/raw/v$revision/sdk/GreengrassJavaSDK.jar"
+        new URL(url).withInputStream { downloadStream ->
+            file.withOutputStream { fileOut ->
+                fileOut << downloadStream
+            }
+        }
+    }
+    files(file.absolutePath)
+}
+
+def awsGreengrassCoreSdkJava = '1.4.1'
 def cddVersion = '0.8.74'
 def gsonVersion = '2.8.6'
 def slf4jVersion = '2.0.0-alpha1'
@@ -48,11 +64,15 @@ def awsSdkVersion = '1.11.934'
 def jacksonVersion = '2.11.3'
 def awsLambdaJavaCoreVersion = '1.2.1'
 def daggerVersion = '2.31'
-
+def immutablesValueVersion = '2.8.9-ea-1'
 def jettyVersion = '9.4.35.v20201120'
 
 dependencies {
+    implementation githubJar('aws', 'aws-greengrass-core-sdk-java', awsGreengrassCoreSdkJava, 'GreengrassJavaSDK')
     compile "com.github.aws-samples:aws-greengrass-lambda-functions:$cddVersion"
+
+    annotationProcessor "org.immutables:value:$immutablesValueVersion"
+    compile "org.immutables:value:$immutablesValueVersion"
 
     // Dagger code generation
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"

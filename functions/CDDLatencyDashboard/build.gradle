@@ -61,6 +61,7 @@ def githubJar = { organization, module, revision, name ->
     files(file.absolutePath)
 }
 
+def awsGreengrassCoreSdkJava = '1.4.1'
 def cddVersion = '0.8.74'
 def gsonVersion = '2.8.6'
 def slf4jVersion = '2.0.0-alpha1'
@@ -73,9 +74,9 @@ def immutablesValueVersion = '2.8.9-ea-1'
 def jettyVersion = '9.4.35.v20201120'
 def daggerVersion = '2.31'
 def vaadinVersion = '14.1.17'
-def awsGreengrassCoreSdkJava = '1.4.1'
 
 dependencies {
+    implementation githubJar('aws', 'aws-greengrass-core-sdk-java', awsGreengrassCoreSdkJava, 'GreengrassJavaSDK')
     annotationProcessor "org.immutables:value:$immutablesValueVersion"
     compile "org.immutables:value:$immutablesValueVersion"
     compile "org.immutables:gson:$immutablesValueVersion"
