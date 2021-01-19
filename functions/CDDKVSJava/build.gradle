@@ -23,7 +23,7 @@ distTar.enabled = shadowDistTar.enabled = false
 // Required by shadow but not necessary
 mainClassName = 'not-necessary'
 
-group = 'CDDMotorMeasurementJava'
+group = 'CDDKVSJava'
 version = '1.0-SNAPSHOT'
 
 description = """"""
