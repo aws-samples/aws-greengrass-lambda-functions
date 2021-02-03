@@ -15,7 +15,7 @@ group = 'com.awslabs.aws.iot.greengrass.cdd'
 
 description = """"""
 
-def gradleDependencyVersion = '6.8'
+def gradleDependencyVersion = '6.8.1'
 
 wrapper {
     gradleVersion = gradleDependencyVersion
