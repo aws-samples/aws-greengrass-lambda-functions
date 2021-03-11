@@ -1,2 +1,2 @@
 greengrasssdk==1.6.0
-ping3==2.6.6
+ping3==2.7.0
