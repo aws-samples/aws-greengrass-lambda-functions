@@ -66,7 +66,7 @@ def awsLambdaJavaCoreVersion = '1.2.1'
 def immutablesValueVersion = '2.8.9-ea-1'
 def dockerJavaVersion = '3.2.10'
 def vavrVersion = '0.10.3'
-def daggerVersion = '2.37'
+def daggerVersion = '2.40.1'
 
 dependencies {
     implementation githubJar('aws', 'aws-greengrass-core-sdk-java', awsGreengrassCoreSdkJava, 'GreengrassJavaSDK')
