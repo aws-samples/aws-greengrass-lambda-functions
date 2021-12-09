@@ -9,7 +9,7 @@ plugins {
     // Adds dependencyUpdates task
     id 'com.github.ben-manes.versions' version '0.39.0'
 
-    id 'com.vaadin' version '20.0.3'
+    id 'com.vaadin' version '22.0.1'
 }
 
 distZip.enabled = shadowDistZip.enabled = false
