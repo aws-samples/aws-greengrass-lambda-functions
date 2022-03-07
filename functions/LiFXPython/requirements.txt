@@ -1,2 +1,2 @@
-greengrasssdk==1.6.0
+greengrasssdk==1.6.1
 lifx-sdk==0.7
