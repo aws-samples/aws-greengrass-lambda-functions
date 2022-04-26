@@ -8,6 +8,6 @@
   "license": "Apache",
   "dependencies": {
     "greengrass-core-sdk": "1.6.1",
-    "express": "4.17.1"
+    "express": "4.18.0"
   }
 }
