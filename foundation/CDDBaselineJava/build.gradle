@@ -5,7 +5,7 @@ plugins {
     id 'maven'
 
     // Adds dependencyUpdates task
-    id 'com.github.ben-manes.versions' version '0.39.0'
+    id 'com.github.ben-manes.versions' version '0.43.0'
 }
 
 // Required by shadow but not necessary
