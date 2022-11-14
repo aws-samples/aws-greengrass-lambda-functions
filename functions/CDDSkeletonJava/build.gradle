@@ -67,7 +67,7 @@ def jacksonVersion = '2.11.3'
 def awsLambdaJavaCoreVersion = '1.2.1'
 def awsGreengrassCoreSdkJava = '1.4.1'
 def junitVersion = '4.13.2'
-def daggerVersion = '2.37'
+def daggerVersion = '2.44.2'
 
 dependencies {
     implementation githubJar('aws', 'aws-greengrass-core-sdk-java', awsGreengrassCoreSdkJava, 'GreengrassJavaSDK')
