@@ -65,7 +65,7 @@ def jacksonVersion = '2.11.3'
 def awsLambdaJavaCoreVersion = '1.2.1'
 def immutablesValueVersion = '2.8.9-ea-1'
 def dockerJavaVersion = '3.2.10'
-def vavrVersion = '0.10.3'
+def vavrVersion = '0.10.4'
 def daggerVersion = '2.37'
 
 dependencies {
