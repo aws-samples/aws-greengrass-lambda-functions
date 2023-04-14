@@ -1,2 +1,2 @@
-greengrasssdk==1.6.0
+greengrasssdk==1.6.1
 # Do not include the RPi.GPIO dependency here, it will cause exceptions in the Python function on Greengrass that say it is unable to load "RPi._GPIO"
