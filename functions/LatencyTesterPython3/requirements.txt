@@ -1,2 +1,2 @@
-greengrasssdk==1.6.0
+greengrasssdk==1.6.1
 ping3==2.7.0
