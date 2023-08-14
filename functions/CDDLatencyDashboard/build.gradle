@@ -73,7 +73,7 @@ def immutablesValueVersion = '2.8.9-ea-1'
 
 def jettyVersion = '9.4.42.v20210604'
 def daggerVersion = '2.37'
-def vaadinVersion = '14.1.17'
+def vaadinVersion = '24.1.5'
 
 dependencies {
     implementation githubJar('aws', 'aws-greengrass-core-sdk-java', awsGreengrassCoreSdkJava, 'GreengrassJavaSDK')
